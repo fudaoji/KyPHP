@@ -466,22 +466,27 @@ class BaseModel extends Model
 
     /**
      * 获取group by结果列表
-     * @param string $group_field  分组字段
-     * @param bool $field  需要查询字段
-     * @param array $limit 分页参数
-     * @param array $where 查询条件
-     * @param array $order  排序规则
-     * @param string $having  聚合条件
-     * @param int $refresh  是否刷新缓存
+     * @param array $params 参数
      * @return mixed
      * @author: Doogie<461960962@qq.com>
      */
-    public function getGroupList($group_field, $field = true, $limit = [], $where = [], $order = [], $having='', $refresh = 0){
-        $cache_key = config('database.hostname') . config('database.database') . $this->getTrueTable($where) . '::' . serialize($group_field) . ':' . serialize($field).':' . serialize($limit) . ':' . serialize($where) . ':' . serialize($order) . serialize($having);
+    public function getGroupList($params = []){
+        if(empty($params['group_field'])){
+            exception("缺少group_filed字段", 10006);
+        }
+        $group_field = $params['where'];
+        $field = empty($params['field']) ? true : $params['field'];
+        $limit = empty($params['limit']) ? [1,1] : $params['limit'];
+        $where = empty($params['where']) ? [] : $params['where'];
+        $order = empty($params['order']) ? [] : $params['order'];
+        $having = empty($params['having']) ? '' : $params['having'];
+        $refresh = empty($params['refresh']) ? 0 : $params['refresh'];
+
+        $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) .__FUNCTION__. serialize($params));
         $refresh && cache($cache_key, null);
         $selector = $this->getBuilder($where)->field($field);
         if($this->isCache){
-            $selector->cache($cache_key, $this->expire);
+            $selector->cache($cache_key, $this->expire, $this->getTrueTable($where));
         }
         if($having){
             $selector->having($having);
@@ -500,12 +505,12 @@ class BaseModel extends Model
      * @author Jason<1589856452@qq.com>
      */
     public function sums($field = '', $where = [], $refresh = 0) {
-        $cache_key = config('database.hostname') . config('database.database') . $this->getTrueTable($where) . '::sums' . ':' . $field . ':' . serialize($where);
+        $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) . __FUNCTION__ . $field . serialize($where));
         $refresh && cache($cache_key, null);
         $selector = $this->getBuilder($where);
         $this->_where($selector, $where);
         if($this->isCache){
-            $selector->cache($cache_key, $this->expire);
+            $selector->cache($cache_key, $this->expire, $this->getTrueTable($where));
         }
         $data = $selector->sum($field);
 
@@ -532,11 +537,11 @@ class BaseModel extends Model
         $order = empty($params['order']) ? [] : $params['order'];
         $field = empty($params['field']) ? true : $params['field'];
         $refresh = empty($params['refresh']) ? 0 : $params['refresh'];
-        $cache_key = config('database.hostname') . config('database.database') . $this->getTrueTable($where) . '::' . md5(serialize($params));
+        $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) . __FUNCTION__ . md5(serialize($params)));
         $refresh && cache($cache_key, null);
         $selector = $this->getBuilder($where)->field($field);
         if($this->isCache){
-            $selector->cache($cache_key, $this->expire);
+            $selector->cache($cache_key, $this->expire, $this->getTrueTable($where));
         }
         if(!empty($params['alias'])){
             $selector->alias($params['alias']);
@@ -567,11 +572,11 @@ class BaseModel extends Model
         $order = empty($params['order']) ? [] : $params['order'];
         $field = empty($params['field']) ? true : $params['field'];
         $refresh = empty($params['refresh']) ? 0 : $params['refresh'];
-        $cache_key = config('database.hostname') . config('database.database') . $this->getTrueTable($where) . '::' . md5(serialize($params));
+        $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) . __FUNCTION__ . md5(serialize($params)));
         $refresh && cache($cache_key, null);
         $selector = $this->getBuilder($where)->field($field);
         if($this->isCache){
-            $selector->cache($cache_key, $this->expire);
+            $selector->cache($cache_key, $this->expire, $this->getTrueTable($where));
         }
         if(!empty($params['alias'])){
             $selector->alias($params['alias']);
@@ -598,11 +603,11 @@ class BaseModel extends Model
     public function totalJoin($params = []){
         $where = empty($params['where']) ? [] : $params['where'];
         $refresh = empty($params['refresh']) ? 0 : $params['refresh'];
-        $cache_key = config('database.hostname') . config('database.database') . $this->getTrueTable($where) . '::totalJoin' . md5(serialize($params));
+        $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) . __FUNCTION__ . md5(serialize($params)));
         $refresh && cache($cache_key, null);
         $selector = $this->getBuilder($where);
         if($this->isCache){
-            $selector->cache($cache_key, $this->expire);
+            $selector->cache($cache_key, $this->expire, $this->getTrueTable($where));
         }
         if(!empty($params['alias'])){
             $selector->alias($params['alias']);
@@ -635,7 +640,7 @@ class BaseModel extends Model
         $order = empty($params['order']) ? [] : $params['order'];
         $field = empty($params['field']) ? true : $params['field'];
         $refresh = empty($params['refresh']) ? 0 : $params['refresh'];
-        $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) . serialize($params));
+        $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) .__FUNCTION__. serialize($params));
         $refresh && cache($cache_key, null);
         $selector = $this->getBuilder($where)->field($field);
         if($this->isCache){
@@ -666,12 +671,12 @@ class BaseModel extends Model
         $having = empty($params['having']) ? '' : $params['having'];
         $group_field = empty($params['group']) ? '' : $params['group'];
 
-        $cache_key = config('database.hostname') . config('database.database') . $this->getTrueTable($where) . '::' . md5(serialize($params));
+        $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) . __FUNCTION__ . serialize($params));
         $refresh && cache($cache_key, null);
 
         $selector = $this->getBuilder($where)->field($field);
         if($this->isCache){
-            $selector->cache($cache_key, $this->expire);
+            $selector->cache($cache_key, $this->expire, $this->getTrueTable($where));
         }
         if($having){
             $selector->having($having);
