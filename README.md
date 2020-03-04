@@ -15,7 +15,7 @@
 1.  拉取项目
 2.  将项目根目录下的env文件改为.env
 3.  修改runtime 和 public/uploads的读写权限为777
-4. composer update
+4.  composer update
 
 #### 使用说明
 
@@ -26,7 +26,7 @@
 #### 参与贡献
 
 1.  Fork 本仓库
-2.  新建 develop 分支
+2.  新建 dev 分支
 3.  提交代码
 4.  新建 Pull Request
 
