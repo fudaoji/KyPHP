@@ -1,10 +1,13 @@
-# KyPHP
+# 酷云微信营销系统（KyPHP）
 
 #### 介绍
-KyPHP
+基于thinkphp5.1的微信营销系统
 
 #### 软件架构
-软件架构说明
+- thinkPHP5.1
+- EasyWeChat
+- Mysql
+- Memcached & Redis
 
 
 #### 安装教程
