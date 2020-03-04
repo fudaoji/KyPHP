@@ -8,7 +8,7 @@
 - EasyWeChat
 - Mysql
 - Memcached & Redis
-
+- Layui
 
 #### 安装教程
 
