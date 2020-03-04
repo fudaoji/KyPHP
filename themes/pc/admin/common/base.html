@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name="keywords" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <title><?= config("app_title");?></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="__STATIC__/libs/layui/css/layui.css">
+    <link rel="stylesheet" href="__STATIC__/css/icon.css?v=<?= $static_version?>">
+    <link rel="stylesheet" href="__STATIC__/css/admin/admin_base.css?v=<?= $static_version?>">
+    {block name="css"}{/block}
+    <script src="__STATIC__/libs/layui/layui.js"></script>
+    <style>
+        {if $setScreen ==1}
+        .topbar,.header{min-width: auto;}
+        .container_body, .wrap{width: 100%;}
+        .sidebar{float:left;width: 12%;}
+        .content{float: left;width: 87%;}
+        .main-logo{margin-left: 5px;}
+        .menu dl dt .type-ico{margin-left: 5%}
+        .menu dl dd a{padding-left: 22%;}
+        #addon_menu .item-icon{margin-left: 5%;}
+        .addon_menu-left-nav-a .item-icon{left: 0;}
+        .addon_menu-left-nav-a {padding-left: 23%;}
+        {/if}
+    </style>
+</head>
+<body class="trade-order">
+<div class="topbar" id="gotop">
+    <div class="wrap">
+        <ul>
+            <li>你好，<a class="name" href="" id="username">{$admin.admin_name}</a>
+                {notempty name="mp_info"}
+                <span class="quit">当前公众号：<a href="{:url('mp/index/index',['mid'=>$mp_info['id']])}">{$mp_info.name}</a>
+                    <i style="font-size: 9px; margin-left: 5px;"><?php echo model('mp')->serviceTypes($mp_info['type']); ?></i>
+                    {eq name="$mp_info.valid_status" value="1"}
+                    <i style="font-size: 9px; margin-left: 5px;">已接入</i>
+                    {else/}
+                    <i style="font-size: 9px; margin-left: 5px; color: red">未接入</i>
+                    {/eq}
+                </span>
+                <a class="quit" href="{:url('mp/index/mplist')}">切换公众号</a>
+                <a href="{:url('mp/message/messagelist')}"><i class="layui-icon">&#xe645;</i>用户消息
+                    <span class="num-feed rhaphp-msg-user show" style="display: none;">0</span>
+                </a>
+                {/notempty}
+                <!--<a href="javascript:;" onclick="cacheClear()"><i class="layui-icon">&#xe640;</i>清空缓存</a>-->
+                <a href="javascript:;" onclick="setScreen();"><i style="font-size: 14px;" class="rha-icon">&#xe879;</i>{$setScreen ==1 ? '窄屏' : '宽屏'}</a>
+                <a class="quit" href="{:url('admin/auth/logout')}"><i class="rha-icon">&#xe696;</i>退出</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="header">
+    <div class="wrap">
+        <div class="logo">
+            <h1 class="main-logo"><a href="{:url('mp/mp/index')}"></a></h1>
+            <div class="sub-logo"></div>
+        </div>
+        <div class="nav">
+            <!--top menus-->
+            <ul>
+                {volist name="t_menu" id="t"}
+                <li class="{eq name="topNode" value="$t['url']"}selected{/eq}"><a href="{:url($t['url'])}">{$t.name}</a></li>
+                {/volist}
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container_body wrap">
+    <div class="sidebar">
+        <div class="menu">
+            {volist name="menu" id="t"}
+            <dl>
+                <dt><i class="type-ico ico-trade rha-icon {eq name="t['shows']" value="1"}{/eq}">{$t.icon|raw}</i>{$t.name}</dt>
+                {volist name="$t['child']" id="c"}
+                <dd class="{eq name="c['shows']" value="1"}selected{/eq}"><a href="{:url($c['url'])}">{$c.name}</a></dd>
+                {/volist}
+            </dl>
+            {/volist}
+            {block name="leftMenu"}{/block}
+            <dl>
+                {php} if(!isset($menu_app))$menu_app=null;{/php}
+                {if condition="$menu_app neq '' "}<dt><i class="type-ico ico-trade rha-icon">&#xe6f0;</i>{$menu_app_title}</dt>{/if}
+                {volist name="menu_app" id="v"}
+                <dd class=""><a href="{:url('mp/App/index',['name'=>$v.addon,'type'=>'news','mid'=>$mid])}">{$v.name}</a></dd>
+                {/volist}
+            </dl>
+        </div>
+    </div>
+    <div class="content" id="tradeSearchBd">
+        <div class="content-hd">
+            <div class="content-breadcrumb">
+                {block name="breadcrumb"}{/block}
+            </div>
+            <div class="content-tool-bar">
+                {block name="tool_bar"}{/block}
+            </div>
+        </div>
+        <div id="{$controller}-{$action}" class="content-body">
+            {block name="body"}主内容{/block}
+        </div>
+    </div>
+</div>
+<div class="footer">
+    <div class="wrap">
+        <!--请遵守安装使用协议，未经允许不得删除或者屏蔽有关KyPHP字样与版权-->
+        Powered By KyPHP<?= config("version")?> <?= config("app_title");?> Copyright © {:date('Y')} All Rights Reserved.
+    </div>
+</div>
+</body>
+<script src="__STATIC__/libs/jquery/jquery-1.11.0.min.js"></script>
+
+<script>
+    var element = layui.element;
+    var layer = layui.layer;
+    layui.use(['element', 'layer'], function(){
+        element = layui.element;
+        layer = layui.layer;
+    });
+    function getMaterial(paramName,type){
+        layer.open({
+            type: 2,
+            title: '选择素材',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['750px', '480px'],
+            content: '{:url("mp/material/getMeterial","","")}/type/'+type+'/param/'+paramName //iframe的url
+        });
+    }
+    function controllerByVal(value,paramName,type) {
+        $('.form_'+paramName).attr('src',value);
+        $("input[name="+paramName+"]").val(value);
+    }
+
+    $(function () {
+        //  setInterval(getMsgTotal,20000);
+        function getMsgTotal() {
+            $.get("{:url('mp/Message/getMsgStatusTotal')}",{},function (res) {
+                if(res.msgTotal==0){
+                    //TODO
+                }else{
+                    $('.rhaphp-msg-user').show();
+                    $('.rhaphp-msg-user').text(res.msgTotal);
+                }
+            })
+        }
+    });
+
+    //清空缓存
+    function cacheClear() {
+        var index = layer.load(1);
+        $.post("{:url('admin/system/cacheClear')}",function (res) {
+            layer.close(index);
+            layer.alert(res.msg);
+        })
+    }
+    //设置宽屏
+    function setScreen() {
+        var index = layer.load(1);
+        $.post("{:url('admin/system/setScreen')}",function (res) {
+            layer.close(index);
+            window.location.reload();
+        })
+    }
+    //click button to go before page
+    if(document.getElementById("back-btn")){
+        document.getElementById("back-btn").addEventListener("click", function(){
+            history.go(-1);
+        });
+    }
+</script>
+
+{block name="js"}{/block}
+
+<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+<!--[if lt IE 9]>
+<script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+</html>

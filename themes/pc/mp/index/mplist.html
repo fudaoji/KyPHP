@@ -1,0 +1,85 @@
+{extend name="../admin/common/base" /}
+
+{block name="breadcrumb"}
+<h2>
+    <span class="layui-breadcrumb" lay-separator="/">
+        <a><cite>公众号管理</cite></a>
+    </span>
+</h2>
+{/block}
+
+{block name="tool_bar"}
+<div class="layui-row">
+    <div class="layui-col-md3 layui-col-md-offset9 tr">
+        <a href="{:url('mp/index/addMp')}"class="layui-btn layui-btn-sm bg-success">增加公众号</a>
+    </div>
+</div>
+{/block}
+
+{block name="body"}
+<div>
+    <table class="layui-table" lay-skin="line">
+        <colgroup>
+            <col width="">
+            <col width="80" >
+            <col width="280">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>公众信息</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="mp_list" id="vo"}
+            <tr id="row-{$vo.id}">
+                <td>
+                    <div class="mp-logo">
+                        <div class="logo-left">
+                            <img src="{$vo.logo}">
+                        </div>
+                    </div>
+                    <div class="logo-right">
+                        <p class="p1">{$vo.name}</p>
+                        <p class="p2">类型：{$vo.type}</p>
+                    </div>
+                </td>
+                <th>{if condition="$vo.status=='1'"} 正常{else/}停用{/if}</th>
+                <td>
+                    <a class="rha-bt-a" href="{:url('mp/Mp/index',['mid'=>$vo['id']])}">进入公众号</a>
+                    <a class="rha-bt-a" href="{:url('mp/index/updateMp',['id'=>$vo.id])}">更改配置</a>
+                    <a class="rha-bt-a" href="{:url('mp/index/index',['mid'=>$vo['id']])}">接入信息</a>
+                    <a class="rha-bt-a" href="javascript:;" onclick="delReply('{$vo.id}')">删除</a>
+                </td>
+            </tr>
+        {/volist}
+        </tbody>
+    </table>
+</div>
+{/block}
+
+{block name="js"}
+<script>
+    function delReply(id) {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.confirm('请谨慎操作，你确定需要删除吗？', {
+                btn: ['是','不'] //按钮
+            }, function(){
+                $.post("{:url('mp/index/delMp')}",{'id':id},function (res) {
+                    if(res.code == 1){
+                        layer.alert(res.msg, function (index) {
+                            $("#row-"+id).remove();
+                            layer.close(index);
+                        });
+                    }else{
+                        layer.alert(res.msg);
+                    }
+                })
+            });
+        });
+
+    }
+</script>
+{/block}
