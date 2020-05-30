@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 /**
  * Created by PhpStorm.
- * Script Name: ${FILE_NAME}
+ * Script Name: Define.php
  * Create: 2020/3/1 16:59
  * Description:  Define some constance
  * Author: fudaoji<fdj@kuryun.cn>
@@ -25,8 +25,5 @@ class Define
         define('MODULE_NAME', $module);
         define('CONTROLLER_NAME', $Controller);
         define('ACTION_NAME', $action);
-
-        define('ENTR_PATH','');
-        define('UPLOAD_PATH', env('root_path') . 'public/uploads/');
     }
 }

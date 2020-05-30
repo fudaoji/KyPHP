@@ -12,4 +12,17 @@ class Index extends Base
     {
         $this->redirect('mp/mp/index');
     }
+
+    /**
+     * set page width mode
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function setScreen()
+    {
+        if (cookie('screen_size')) {
+            cookie('screen_size', null);
+        } else {
+            cookie('screen_size', 1);
+        }
+    }
 }

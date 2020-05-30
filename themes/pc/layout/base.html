@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {include file="../common/header" /}
+    <style>
+        {if $screen_size == 1}
+        .header{min-width: auto;}
+        .wrap{width: 100%;}
+        .container_body{width: 95%;}
+        .sidebar{float:left;width: 14%;}
+        .content{float: left;width: 85%;}
+        .main-logo{margin-left: 5px;}
+        .menu dl dt .type-ico{margin-left: 5%}
+        .menu dl dd a{padding-left: 22%;}
+        #addon_menu .item-icon{margin-left: 5%;}
+        .addon_menu-left-nav-a .item-icon{left: 0;}
+        .addon_menu-left-nav-a {padding-left: 23%;}
+        {/if}
+    </style>
+    {block name="css"}{/block}
+</head>
+<body>
+
+<div class="header">
+    <div class="wrap">
+        <div class="logo">
+            <h1 class="main-logo"><a href="{:url('mp/mp/index')}"></a></h1>
+            <div class="sub-logo"></div>
+        </div>
+        <div class="nav">
+            <!--top menus-->
+            <ul>
+                {volist name="t_menus" id="t"}
+                <li class="<?=($top_menu && $t['id'] == $top_menu['id']) ? 'selected' : '';?>">
+                    <a href="{:url($t['url'])}">{$t.title}</a>
+                </li>
+                {/volist}
+            </ul>
+        </div>
+        <ul class="layui-nav">
+            <!--<li class="layui-nav-item ">
+                <a href="/doc/">消息</a>
+            </li>-->
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <i class="fa fa-user" style="margin-right: 2px;"></i>
+                    {$admin.username}<span class="layui-nav-more"></span>
+                </a>
+                <dl class="layui-nav-child layui-anim layui-anim-upbit" style="left: auto; right: -22px; text-align: center;">
+                    <dd>
+                        <a href="{:url('system/admin/myinfo')}">我的账号</a>
+                        <hr>
+                    </dd>
+                    <dd>
+                        <a href="{:url('admin/auth/logout')}"><i class="fa fa-sign-out"></i>退出</a>
+                    </dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+</div>
+<style>
+    .set-screen{
+        position: absolute;
+        right: -27px;
+        top: -1px;
+        width: 25px;
+        padding: 15px 0;
+        background-color: #fff;
+        text-align: center;
+        border: 1px solid #c7c7c7;
+        border-left: 0;
+    }
+</style>
+
+<div class="container_body wrap">
+    {block name="body_head"}{/block}
+    <a href="javascript:setScreen();" class="set-screen" title="加宽">宽屏</a>
+    <div class="sidebar">
+        <div class="menu">
+            {volist name="side_menus" id="t"}
+            <dl>
+                <dt>
+                    <i class="type-ico ico-trade {$t.icon}"></i>{$t.title}
+                </dt>
+                {volist name="$t['child']" id="c"}
+                <dd class="<?=($side_menu && $c['id'] == $side_menu['id']) ? 'selected' : '';?>">
+                    <a href="{:url($c['url'])}">{$c.title}</a>
+                </dd>
+                {/volist}
+            </dl>
+            {/volist}
+            {block name="leftMenu"}<!--预留菜单位置-->{/block}
+            <dl>
+                {php} if(!isset($menu_app)) $menu_app=null; {/php}
+                {if condition="$menu_app neq '' "}
+                <dt><i class="type-ico ico-trade rha-icon">&#xe6f0;</i>{$menu_app_title}</dt>
+                {/if}
+                {volist name="menu_app" id="v"}
+                <dd class="">
+                    <a href="{:url('mp/app/index',['name'=>$v.addon,'type'=>'news','mid'=>$mp_id])}">{$v.name}</a>
+                </dd>
+                {/volist}
+            </dl>
+        </div>
+    </div>
+    <div class="content">
+        <div class="content-hd">
+            <div class="content-breadcrumb">
+                {block name="breadcrumb"}
+                <?php if($current_menu['type'] == 2 && $side_menu):?>
+                <h2>
+                    <span class="layui-breadcrumb" lay-separator="/">
+                        <a href="{:url($side_menu['url'])}">{$side_menu['title']}</a>
+                        <a><cite>{$current_menu['title']}</cite></a>
+                    </span>
+                </h2>
+                <?php endif;?>
+                {/block}
+            </div>
+            <div class="content-tool-bar">
+                {block name="tool_bar"}{/block}
+            </div>
+        </div>
+        <div id="{$controller}-{$action}" class="content-body" style="padding-top: 10px;">
+            {block name="body"}主内容{/block}
+        </div>
+    </div>
+</div>
+<div class="footer">
+    <div class="wrap">
+        <!--请遵守安装使用协议，未经允许不得删除或者屏蔽有关KyPHP字样与版权-->
+        Powered By KyPHP<?= config("version")?> <?= config("app_title");?> Copyright © {:date('Y')} All Rights Reserved.
+    </div>
+</div>
+</body>
+
+<script>
+    var element = layui.element,
+        layer = layui.layer;
+
+    layui.use(['element', 'layer', 'util'], function(){
+        element = layui.element;
+        layer = layui.layer;
+        layui.util.fixbar();
+    });
+
+    $(function () {
+        //  setInterval(getMsgTotal,20000);
+        function getMsgTotal() {
+            $.get("{:url('mp/Message/getMsgStatusTotal')}",{},function (res) {
+                if(res.msgTotal==0){
+                    //TODO
+                }else{
+                    $('.rhaphp-msg-user').show();
+                    $('.rhaphp-msg-user').text(res.msgTotal);
+                }
+            })
+        }
+
+        var screenSize = parseInt("{$screen_size}");
+        $('.set-screen').text(screenSize > 0 ? '正常' : '宽屏' );
+    });
+
+    //清空缓存
+    function cacheClear() {
+        var index = layer.load(1);
+        $.post("{:url('admin/system/cacheClear')}",function (res) {
+            layer.close(index);
+            layer.alert(res.msg);
+        })
+    }
+
+    //设置宽屏
+    function setScreen() {
+        var index = layer.load(1);
+        $.post("{:url('admin/index/setScreen')}",function (res) {
+            layer.close(index);
+            window.location.reload();
+        })
+    }
+
+    //click button to go before page
+    if(document.getElementById("back-btn")){
+        document.getElementById("back-btn").addEventListener("click", function(){
+            history.go(-1);
+        });
+    }
+</script>
+
+{block name="js"}{/block}
+
+{include file="../common/footer" /}

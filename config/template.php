@@ -34,7 +34,7 @@ return [
     'taglib_end'   => '}',
     // 视图中使用的常量
     'tpl_replace_string'  =>  [
-        '__STATIC__' => '/static/',
+        '__STATIC__' => '/public/static/',
         '__ADDONSTATIC__'=>'',
     ]
 ];

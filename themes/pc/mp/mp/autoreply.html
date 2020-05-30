@@ -1,4 +1,5 @@
 {extend name="../admin/common/base" /}
+
 {block name="breadcrumb"}
 <h2>
     <span class="layui-breadcrumb" lay-separator="/">
@@ -43,25 +44,35 @@
 {include file="/common/autoreplay_nav" /}
 <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
     <ul class="layui-tab-title">
-        <li {eq name="type" value="text" }class="layui-this" {
-        /eq} ><a href="{:url('mp/Mp/autoReply',['type'=>'text'])}">回复文字</a></li>
-        <li {eq name="type" value="news" }class="layui-this" {
-        /eq}><a href="{:url('mp/Mp/autoReply',['type'=>'news'])}">回复图文</a></li>
-        <li {eq name="type" value="addon" }class="layui-this" {
-        /eq}><a href="{:url('mp/Mp/autoReply',['type'=>'addon'])}">回复应用</a></li>
-        <li {eq name="type" value="voice" }class="layui-this" {
-        /eq}><a href="{:url('mp/Mp/autoReply',['type'=>'voice'])}">回复语音</a></li>
-        <li {eq name="type" value="image" }class="layui-this" {
-        /eq}><a href="{:url('mp/Mp/autoReply',['type'=>'image'])}">回复图片</a></li>
-        <li {eq name="type" value="video" }class="layui-this" {
-        /eq}><a href="{:url('mp/Mp/autoReply',['type'=>'video'])}">回复视频</a></li>
-        <li {eq name="type" value="music" }class="layui-this" {
-        /eq}><a href="{:url('mp/Mp/autoReply',['type'=>'music'])}">回复音乐</a></li>
+        <li class="<?=$type == 'text' ? 'layui-this' : '';?>">
+            <a href="{:url('mp/Mp/autoReply',['type'=>'text'])}">回复文字</a>
+        </li>
+        <li class="<?=$type == 'news' ? 'layui-this' : '';?>">
+            <a href="{:url('mp/Mp/autoReply',['type'=>'news'])}">回复图文</a>
+        </li>
+        <li class="<?=$type == 'addon' ? 'layui-this' : '';?>">
+            <a href="{:url('mp/Mp/autoReply',['type'=>'addon'])}">回复应用</a>
+        </li>
+
+        <li class="<?=$type == 'voice' ? 'layui-this' : '';?>">
+            <a href="{:url('mp/Mp/autoReply',['type'=>'voice'])}">回复语音</a>
+        </li>
+
+        <li class="<?=$type == 'image' ? 'layui-this' : '';?>">
+            <a href="{:url('mp/Mp/autoReply',['type'=>'image'])}">回复图片</a>
+        </li>
+        <li class="<?=$type == 'video' ? 'layui-this' : '';?>">
+            <a href="{:url('mp/Mp/autoReply',['type'=>'video'])}">回复视频</a>
+        </li>
+        <li class="<?=$type == 'music' ? 'layui-this' : '';?>">
+            <a href="{:url('mp/Mp/autoReply',['type'=>'music'])}">回复音乐</a>
+        </li>
+
         {if input('keyword')}
-        <li {eq name="type" value="search" }class="layui-this" {
-        /eq}><a>搜索全部</a></li>
+        <li class="<?=$type == 'search' ? 'layui-this' : '';?>"><a>搜索全部</a></li>
         {/if}
     </ul>
+
     <div class="layui-tab-content">
 
         {switch name="type"}
@@ -104,6 +115,7 @@
         </table>
         {$data->render()|raw}
         {/case}
+
         {case value="news"}
         <table class="layui-table" lay-skin="line">
             <col width="120">
@@ -152,6 +164,7 @@
         </table>
         {$data->render()|raw}
         {/case}
+
         {case value="addon"}
         <table class="layui-table" lay-skin="line">
             <col width="120">
@@ -193,7 +206,6 @@
             {/volist}
             </tbody>
         </table>
-
         {/case}
 
         {case value="voice"}
@@ -235,6 +247,7 @@
         </table>
         {$data->render()|raw}
         {/case}
+
         {case value="image"}
         <table class="layui-table" lay-skin="line">
             <col width="">
@@ -281,6 +294,7 @@
             </tbody>
         </table>
         {$data->render()|raw}
+
         {/case}
         {case value="video"}
         <table class="layui-table" lay-skin="line">
@@ -332,6 +346,7 @@
         </table>
         {$data->render()|raw}
         {/case}
+
         {case value="music"}
         <table class="layui-table" lay-skin="line">
             <col width="80">
@@ -376,6 +391,7 @@
         </table>
         {$data->render()|raw}
         {/case}
+
         {case value="search"}
         <table class="layui-table" lay-skin="line">
             <colgroup>
@@ -418,6 +434,9 @@
         {/switch}
     </div>
 </div>
+{/block}
+
+{block name="js"}
 <script>
     var layer;
     var form;
@@ -429,6 +448,7 @@
             })
         });*/
     });
+
     function delReply(id) {
         layui.use('layer', function () {
             var layer = layui.layer;
@@ -452,6 +472,7 @@
         });
 
     }
+
     function updateReply(id, status) {
         layui.use('layer', function () {
             var layer = layui.layer;

@@ -1,0 +1,115 @@
+<div class="form-group">
+    <label class="control-label col-sm-3 {$form['extra_class']}">
+        {$form['title']}
+        {if condition="is_int(strpos($form['extra_attr'], 'required'))"}
+        <span class="text-danger">*</span>
+        {/if}
+    </label>
+    <div class="col-sm-8">
+        <div class="row">
+            <div class="col-sm-3">
+                <select class="form-control" id="province" name="province">
+                {notempty name="form.options.provinces"}
+                    {volist name="form.options.provinces" id="vo"}
+                        <option value="{$vo['id']}" {if condition="$form['options']['value'][0] eq $vo['id']"} selected {/if}>{$vo['title']}</option>
+                    {/volist}
+                {/notempty}
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <select class="form-control" id="city" name="city"></select>
+            </div>
+            <div class="col-sm-3">
+                <select class="form-control" id="area" name="area"></select>
+            </div>
+            <div class="col-md-3">
+                <span class="text-info">{$form['tip']}</span>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        head.ready(function () {
+            var province = parseInt("{$form['options']['value'][0]}");
+            var city = parseInt("{$form['options']['value'][1]}");
+            var area = parseInt("{$form['options']['value'][2]}");
+
+            //根据省份id获取城市列表
+            var getCityList = function() {
+                if(province > 0){
+                    $.ajax({
+                        url: "{:url('district/listcitypost')}",
+                        data: {provinceId: province},
+                        success: function(res) {
+                            if(res.code) {
+                                var data = res.data;
+                                $('#city').empty().append('<option value="0">==选择地市==</option>');
+                                $.each(data, function(n, value) {
+                                    $("#city").append($(setData(city,value)));
+                                });
+                                getArea();
+                            }
+                        }
+                    });
+                }else{
+                    $('#city').empty().append('<option value="0">==选择地市==</option>');
+                }
+            };
+
+            //根据城市id获取区列表
+            var getAreaList = function() {
+                if(city > 0){
+                    $.ajax({
+                        url: "{:url('district/listareapost')}",
+                        data: {cityId: city},
+                        success: function(res) {
+                            if(res.code) {
+                                var data = res.data;
+                                $('#area').empty().append('<option value="0">==选择区县==</option>');
+                                $.each(data, function(n, value) {
+                                    $("#area").append($(setData(area,value)));
+                                });
+                            }
+                        }
+                    });
+                }else{
+                    $('#area').empty().append('<option value="0">==选择区县==</option>');
+                }
+            };
+
+            /**
+             * 拼装html
+             * @param type
+             * @param data
+             * @returns {string}
+             */
+            var setData = function(id, data) {
+                return '<option value="'+ data.id +'" rel="'+ data.id +'"'+ (data.id == id ? "selected" : "") +'>'+ data.title +'</option>';
+            };
+            /**
+             * 初始化市
+             */
+            var init = function() {
+                province = parseInt($('#province').val());
+                getCityList();
+            };
+            /**
+             * 初始化县、区
+             */
+            var getArea = function() {
+                getAreaList();
+            };
+
+
+            init();
+
+            $('#province').change(function() {
+                init();
+            });
+
+            $('#city').change(function() {
+                city = parseInt($('#city').val());
+                getArea();
+            });
+        });
+    </script>
+</div>

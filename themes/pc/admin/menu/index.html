@@ -1,0 +1,86 @@
+{extend name="../layout/base" /}
+
+{block name="tool_bar"}
+<div class="layui-row">
+    <div class="layui-col-md3 layui-col-md-offset9 tr">
+        <a href="{:url('add')}" class="layui-btn layui-btn-sm bg-success">增加菜单</a>
+    </div>
+</div>
+{/block}
+
+{block name="body"}
+<form class="layui-form" action="">
+    <table class="layui-table">
+        <colgroup>
+            <col width="100">
+            <col width="500">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th>排序</th>
+            <th>菜单名称</th>
+            <th>url</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="menu_list" id="v"}
+        <tr>
+            <td><input style="width: 35px; text-align:center" name="{$v.id}_{$v.sort}" value="{$v.sort}"></td>
+            <td>{$v.title_show|raw}</td>
+            <td>{$v.url}</td>
+            <td>
+                <a class="bt-a" href="{:url('edit',['id'=>$v['id']])}">修改</a>
+                <a href="javascript:;" onclick="delMenu('{$v.id}')" class="bt-a" >删除</a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn  layui-btn-sm bg-success" lay-submit lay-filter="updateSort">更新排序</button>
+        </div>
+    </div>
+</form>
+<script>
+    //删除菜单
+    function delMenu(id) {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.confirm('删除操作可能引起系统不能正常使用，你确定需要删除吗？', {
+                btn: ['是','不'] //按钮
+            }, function(){
+                $.post("{:url('delete')}",{'id':id},function (res) {
+                    if(res.code === 1){
+                        layer.msg(res.msg, {time: 1000}, function (index) {
+                            window.location.reload();
+                            layer.close(index);
+                        });
+                    }else{
+                        layer.alert(res.msg);
+                    }
+                })
+            }, function(){
+            });
+        });
+    }
+
+    layui.use('form', function(){ //更新排序
+        var form = layui.form;
+        form.on('submit(updateSort)', function(data){
+            $.post("{:url('updateSort')}", data.field, function (res) {
+                if(res.code === 1 ){
+                    layer.msg(res.msg, {time:1000}, function () {
+                        window.location.reload();
+                    });
+                }else {
+                    layer.alert(res.msg);
+                }
+            });
+            return false;
+        });
+    });
+</script>
+{/block}

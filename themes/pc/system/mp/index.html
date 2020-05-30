@@ -1,0 +1,74 @@
+{extend name="../layout/base" /}
+
+
+{block name="tool_bar"}
+<div class="layui-row">
+    <div class="layui-col-md3 layui-col-md-offset9 tr">
+        <a href="{:url('choose')}"class="layui-btn layui-btn-sm bg-success">增加公众号</a>
+    </div>
+</div>
+{/block}
+
+{block name="body"}
+<div>
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th>公众信息</th>
+            <th>接入状态</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="mp_list" id="vo"}
+            <tr id="row-{$vo.id}">
+                <td>
+                    <div class="mp-logo">
+                        <div class="logo-left">
+                            <img src="{$vo.head_img}">
+                        </div>
+                    </div>
+                    <div class="logo-right">
+                        <p class="p1">{$vo.nick_name}</p>
+                        <p class="p2">类型：{$vo.type}</p>
+                    </div>
+                </td>
+                <td>
+                    {if condition="$vo.is_auth=='1'"} 已接入{else/}未接入{/if}
+                </td>
+                <th>{if condition="$vo.status=='1'"} 正常{else/}停用{/if}</th>
+                <td>
+                    <a class="bt-a" href="{:url('mp/index/index',['mid'=>$vo['id']])}">进入公众号</a>
+                    <a class="bt-a" href="{:url('info',['mid'=>$vo['id']])}">管理设置</a>
+                </td>
+            </tr>
+        {/volist}
+        </tbody>
+    </table>
+</div>
+{/block}
+
+{block name="js"}
+<script>
+
+    function delReply(id) {
+        layer.confirm('删除后无法恢复，你确定吗？', {
+            btn: ['是','不'] //按钮
+        }, function(){
+            var loading_index = layer.load(1);
+            $.post("{:url('delete')}", {'id':id}, function (res) {
+                if(res.code === 1){
+                    layer.msg(res.msg, {time: 1000}, function (index) {
+                        $("#row-"+id).remove();
+                        layer.close(loading_index);
+                    });
+                }else{
+                    layer.alert(res.msg);
+                }
+            })
+        });
+
+    }
+</script>
+{/block}

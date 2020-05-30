@@ -13,8 +13,9 @@ Route::get('think', function () {
     return 'hello,ThinkPHP5!';
 });
 
-Route::get('hello/:name', 'index/hello');
-
+Route::rule(ADDON_ROUTE . ':addon/:col/:act', '\\app\\mp\controller\\Call@run');  //公众号
+Route::rule('/api/:_mid/:addon/:col/:act', '\\app\\miniapp\controller\\Call@run'); //小程序接口
+Route::rule('miniprogram/:_mid', 'miniapp/entr/index');
 return [
 
 ];

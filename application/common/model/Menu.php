@@ -20,5 +20,5 @@ use ky\BaseModel;
 
 class Menu extends BaseModel
 {
-    protected $isCache = true;
+    protected $isCache = false;
 }

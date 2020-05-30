@@ -1,0 +1,59 @@
+<!--百度编辑器-->
+<div class="form-group" id="ueditor_{$form['name']}">
+    <label for="{$form['name']}" class="control-label col-sm-3 {$form['extra_class']}">
+        {$form['title']}
+        {if condition="is_int(strpos($form['extra_attr'], 'required'))"}
+            <span class="text-danger">*</span>
+        {/if}
+    </label>
+    <div class="col-sm-8">
+        <textarea name="{$form['name']}" id="{$form['name']}" style="width: 100%;">{$form['tip']}</textarea>
+        <div class="hidden" id="{$form['name']}_copy">{$form['value'] ?? ''}</div>
+    </div>
+
+    <script>
+        if(typeof(UE) === 'undefined'){
+            document.write("<script src='/static/vendor/ueditor/ueditor.config.js'><\/script>" +
+                "<script src='/static/vendor/ueditor/ueditor.all.min.js'><\/script>" +
+                "<script src='/static/vendor/ueditor/lang/zh-cn/zh-cn.js'><\/script>"
+            );
+        }
+    </script>
+
+    <script type="text/javascript">
+        UE.Editor.prototype.placeholder = function (justPlainText) {
+            var _editor = this;
+            _editor.addListener("focus", function () {
+                var localHtml = _editor.getPlainTxt();
+                if ($.trim(localHtml) === $.trim(justPlainText)) {
+                    _editor.setContent(" ");
+                }
+            });
+            _editor.addListener("blur", function () {
+                var localHtml = _editor.getContent();
+                if (!localHtml) {
+                    _editor.setContent(justPlainText);
+                }
+            });
+            _editor.ready(function () {
+                _editor.fireEvent("blur");
+            });
+        };
+
+        var ue_{$form['name']} = UE.getEditor("{$form['name']}", {
+            initialFrameHeight: 300,
+            maximumWords: 5000,
+            serverUrl: "{:url('admin/upload/editorpost')}",
+            autoFloatEnabled: true,
+            topOffset: 40
+        });
+        ue_{$form['name']}.placeholder("{$form['tip']}");
+
+        var value_{$form['name']} = document.getElementById("{$form['name']}_copy").innerHTML;
+        if(value_{$form['name']}){
+            ue_{$form['name']}.ready(function() {
+                ue_{$form['name']}.setContent(value_{$form['name']});
+            });
+        }
+    </script>
+</div>

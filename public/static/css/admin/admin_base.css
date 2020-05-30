@@ -5,7 +5,7 @@ h1, h2, h3, h4, h5, h6 { font-size: 100%; font-weight: 400; }
 ul, ol, li { list-style: outside none none; }
 img, fieldset { border: medium none; }
 i, em { font-style: normal; }
-img { vertical-align: top; }
+/*img { vertical-align: top; }*/
 table { width: 100%; border-collapse: collapse; border-spacing: 0px; word-break: break-all; overflow-wrap: break-word; }
 *::-moz-placeholder { color: rgb(163, 163, 163); }
 a { text-decoration: none; }

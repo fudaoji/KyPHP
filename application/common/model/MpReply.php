@@ -21,7 +21,8 @@ use ky\BaseModel;
 
 class MpReply extends BaseModel
 {
-    protected $key = 'mp_id';
+    protected $autoWriteTimestamp = false;
+    protected $key = 'rp_mpid';
     protected $rule = [
         'type' => 'mod', // 分表方式
         'num'  => 5      // 分表数量

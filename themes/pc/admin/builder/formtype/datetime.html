@@ -1,0 +1,31 @@
+<div class="form-group">
+    <label for="{$form['name']}" class="control-label col-sm-3 {$form['extra_class']}">
+        {$form['title']}
+        {if condition="is_int(strpos($form['extra_attr'], 'required'))"}
+        <span class="text-danger">*</span>
+        {/if}
+    </label>
+    <div class="col-sm-8">
+        <input type="text" class="form-control" id="{$form['name']}" name="{$form['name']}"
+               placeholder="{$form['tip']}" value="{notempty name='form.value'}{$form['value']|date='Y-m-d H:i:s',###}{/notempty}" {$form['extra_attr']}/>
+    </div>
+    <script type="text/javascript">
+        head.ready(function(){
+            head.load(
+                    '<?php echo $static_url;?>/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css',
+                    '<?php echo $static_url;?>/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js',
+                    '<?php echo $static_url;?>/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js',
+                    function(){
+                        $("#{$form['name']}").datetimepicker({
+                            format      : 'yyyy-mm-dd hh:ii:ss',
+                            autoclose   : true,
+                            //minView     : 'month',
+                            todayBtn    : 'linked',
+                            language    : 'zh-CN',
+                            fontAwesome : true
+                        });
+                    }
+            );
+        });
+    </script>
+</div>

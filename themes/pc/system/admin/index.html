@@ -1,0 +1,75 @@
+{extend name="../layout/base" /}
+
+{block name="tool_bar"}
+<div class="layui-row">
+    <div class="layui-col-md3 layui-col-md-offset9 tr">
+        <a href="{:url('add')}" class="layui-btn layui-btn-sm bg-success">增加成员</a>
+    </div>
+</div>
+{/block}
+
+{block name="body"}
+<div >
+    <table class="layui-table" lay-even="" lay-skin="line">
+        <colgroup>
+            <col>
+            <col>
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>账号</th>
+            <th>手机号</th>
+            <th>姓名</th>
+            <th>上次登录时间</th>
+            <th>登录 IP</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="admin_list" id="vo"}
+        <tr>
+            <td>{$vo.id}</td>
+            <td>{$vo.username}</td>
+            <td>{$vo.mobile}</td>
+            <td>{$vo.realname}</td>
+            <td>{:date('Y-m-d H:s:i',$vo.last_time)}</td>
+            <td>{$vo.ip}</td>
+            <td>{if condition="$vo.status eq '1'"}正常{else/}禁用中{/if}</td>
+            <td>
+                <a class="bt-a" href="{:url('edit',['id'=>$vo.id])}">编辑</a>
+                <a class="bt-a" href="{:url('updatePwd',['id'=>$vo.id])}">改密码</a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+</div>
+{/block}
+
+{block name="js"}
+<script>
+    //启用/禁用
+    function disabledAdmin(id, status) {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.confirm('你确定需要'+(status === 1 ? '启用' : '禁用')+'吗？', {
+                btn: ['是','不'] //按钮
+            }, function(){
+                $.post("{:url('setStatus')}",{'id':id, 'status':status},function (res) {
+                    if(res.code === 1){
+                        layer.alert(res.msg,function (index) {
+                            window.location.reload();
+                            layer.close(index);
+                        })
+                    }else{
+                        layer.alert(res.msg)
+                    }
+                });
+            })
+        });
+    }
+</script>
+{/block}

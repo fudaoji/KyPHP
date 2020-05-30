@@ -1,0 +1,125 @@
+{include file="../layout/header" /}
+
+<body style="background: #ffffff;">
+<div class="layui-row" id="apps-info">
+    <div class="layui-col-xs2 pd">
+        <div class="apps-info-logo">
+            <img src="{$info.logo}" style="width: 100%;" />
+        </div>
+    </div>
+    <div class="layui-col-xs8 pd">
+        <div class="layui-row">
+            <div class="layui-col-xs10">
+                <span class="apps-info-title">{$info.title}
+                    <span class="layui-badge layui-bg-gray">{$info.type}</span>
+                    <span class="layui-badge layui-bg-blue">{if($info.money>0)}
+                                        {$info.money} 元
+                                        {else /}
+                                        免费
+                                        {/if}</span>
+                </span>
+                <div class="apps-info-desc">
+                    <p>作者：{$info.author}</p>
+                    <p>版本：{$info.version}</p>
+                    <p>分类：{$info.cate}</p>
+                    <p>创建时间：{$info.create_time}</p>
+                    <p>更新时间：{$info.update_time}</p>
+                </div>
+            </div>
+            <div class="layui-col-xs2">
+                <div class="apps-into-install">
+                    <button onclick="downloadApp('{$info.id}')" class="layui-btn layui-btn-sm layui-btn-normal">
+                        <i class="layui-icon">&#xe601;</i>立即下载
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-xs2 pd preview-qrcode">
+        {if $info.preview_url != ''}
+        <img style="width: 100%;margin-top: 0;" src="http://qr.topscan.com/api.php?bg=ffffff&gc=222222&el=q&w=300&m=10&text={:urlencode($info.preview_url)}">
+        <span class="apps-info-preview_text">扫码预览</span>
+        {else/}
+
+        {/if}
+    </div>
+</div>
+<hr>
+<div style="padding: 0px 10px;">
+    小提示
+    <hr>
+    <blockquote style="border-left:5px solid  #ea6e0c;" class="layui-elem-quote">{$info.warning|raw}</blockquote>
+    应用简介
+    <hr>
+    <blockquote class="layui-elem-quote">{$info.description|raw}</blockquote>
+    <div class="layui-tab layui-tab-card">
+        <ul class="layui-tab-title">
+            <li class="layui-this">应用详情</li>
+            <li>升级日志</li>
+        </ul>
+        <div class="layui-tab-content" style="height: auto;">
+            <div class="layui-tab-item layui-show">
+                <div class="apps-info-content">
+                    {$info.content|raw}
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <ul class="layui-timeline">
+                    {if isset($info['upgrade'])}
+                    {volist name="$info.upgrade" id="v"}
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text">
+                            <h3 class="layui-timeline-title">{$v.create_time|date="Y-m-d H:i"}</h3>
+                            <p>
+                                {$v.description|raw}
+                            </p>
+                        </div>
+                    </li>
+                    {/volist}
+                    {/if}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+</div>
+<script>
+    var layer, form, element;
+
+    layui.use(['layer','form','element'], function() {
+        element = layui.element;
+        layer = layui.layer;
+        form = layui.form;
+    });
+
+    var window_index = parent.layer.getFrameIndex(window.name);
+
+    function downloadApp(id) {
+        var tip = '{if($info.money>0)}你确定付费{$info.money}元下载使用此应用吗？{else /}此应用是免费的，你确定要下载使用吗？{/if}';
+        layer.confirm(tip, {
+            btn: ['是的','不的']
+        }, function(){
+            var index = layer.load(1);
+            $.post("{:url('download')}", {app_id:id}, function (res) {
+                if(res.code === 1){
+                    layer.msg(res.msg, {time:3000}, function () {
+                        parent.parent.redirect(res.data.type);
+                        parent.layer.close(index);
+                    });
+                }else{
+                    layer.close(index);
+                    layer.alert(res.msg);
+                }
+            }).error(function (error) {
+                layer.alert('500 Internal Server Error');
+                layer.close(index)
+            })
+        }, function(){});
+        return false;
+    }
+</script>
+</body>
+
+{include file="../layout/footer" /}

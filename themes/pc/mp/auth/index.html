@@ -1,0 +1,116 @@
+{extend name="../layout/base" /}
+
+{block name="body"}
+<div class="index-content">
+    <div class="title">公众号接入</div>
+    <div>
+        <div class="bind-account">
+            <div class="bind-step">
+                <span class="step-gray step-green"></span>
+                <span class="step-line"></span>
+                <span class="step-gray"></span>
+            </div>
+            <div class="bind-text">
+                <span class="bind-text1 bind-text-green">
+					1.公众号授权登录
+				</span>
+                <span class="bind-text2">
+					2.接入成功
+				</span>
+            </div>
+        </div>
+    </div>
+    <div class="info">
+        <p class="help-text">点击按钮进入微信公众平台官方授权</p>
+        <p class="help-text">
+            <a href="{$url}" title="微信公众号授权登录">
+                <img src="__STATIC__/imgs/mp/ico_weixin_open.png">
+            </a>
+        </p>
+        <p>授权之前，请确认</p>
+        <p>1）您有一个正常使用的微信公众号</p>
+        <p>2）已开启公众号安全助手(<a href="https://mp.weixin.qq.com/cgi-bin/readtemplate?t=setting/safe-protect-faq2_tmpl&amp;lang=zh_CN" target="_blank">如何开启？</a>)</p>
+    </div>
+</div>
+{/block}
+
+{block name="css"}
+<style>
+    .bind-account {
+        width: 750px;
+        height: 60px;
+        margin: 0 auto;
+    }
+    .bind-account span {
+        display: inline-block;
+        float: left;
+    }
+    .bind-step {
+        height: 23px;
+        margin-left: 55px;
+    }
+    .step-gray {
+        background: url(__STATIC__/imgs/mp/circle-gray.png) no-repeat;
+        height: 22px;
+        width: 23px;
+        margin: 0;
+        padding: 0;
+    }
+    .step-green {
+        background: url(__STATIC__/imgs/mp/circle-green.png) no-repeat;
+        padding: 0 1px 0 0;
+    }
+    .step-line {
+        background-color: #cccccc;
+        width: 580px;
+        height: 4px;
+        margin: 9px -1px;
+        padding: 0;
+        line-height: 22px;
+    }
+    .step-line-green {
+        background-color: #34BD6B;
+    }
+    .bind-text1,.bind-text2,.bind-text3 {
+        color: #cccccc;
+        margin-top: 5px;
+    }
+    .bind-text3{
+        padding-left: 24px;
+    }
+    .bind-text-green {
+        color: #34BD6B;
+    }
+    .bind-text1 {
+        width: 130px;
+    }
+    .bind-text2 {
+        width: 570px;
+        text-align: right;
+    }
+    .index-content {
+        background-color: #fff;
+        margin: 0 auto;
+        text-align: center;
+        padding: 40px 0 10px;
+        position: relative
+    }
+    .index-content .title{
+        color: #999;
+        font-size: 28px;
+        margin-bottom: 30px;
+    }
+    .info {
+        margin: 50px auto;
+        width: 254px;
+        padding: 50px;
+        border: #ddd 1px solid;
+        text-align: left;
+        line-height: 24px;
+    }
+    .help-text {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+</style>
+{/block}

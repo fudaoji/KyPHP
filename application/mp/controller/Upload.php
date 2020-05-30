@@ -171,7 +171,7 @@ class Upload {
                     'code' => 0,
                     'data' => [
                         'picId' => $pictureInfo['id'],
-                        'src' => request()->domain() . '/uploads/' . $saveName
+                        'src' => request()->domain() . '/public/uploads/' . $saveName
                     ]
                 ];
                 return json_encode($res);
@@ -205,9 +205,9 @@ class Upload {
                 'name' => $name,
                 'mpid' => $this->mid,
                 'type' => $this->type,
-                'thumb' => 'uploads/thumb/' . $saveName,
-                'picture' => 'uploads/' . $saveName,
-                'reduce' => 'uploads/reduce/' . $saveName,
+                'thumb' => 'public/uploads/thumb/' . $saveName,
+                'picture' => 'public/uploads/' . $saveName,
+                'reduce' => 'public/uploads/reduce/' . $saveName,
                 'create_time' => time()
             ];
             $pic = model('picture')->addOne($_data);
@@ -215,7 +215,7 @@ class Upload {
                 'code' => 0,
                 'data' => [
                     'picId' => $pic['id'],
-                    'src' => request()->domain() . '/uploads/' . $saveName
+                    'src' => request()->domain() . '/public/uploads/' . $saveName
                 ]
             ];
             return json_encode($res);

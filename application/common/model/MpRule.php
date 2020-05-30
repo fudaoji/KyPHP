@@ -21,7 +21,9 @@ use ky\BaseModel;
 
 class MpRule extends BaseModel
 {
-    protected $key = 'mpid';
+    protected $autoWriteTimestamp = false;
+    //protected $isCache = true;
+    protected $key = 'rule_mpid';
     protected $rule = [
         'type' => 'mod', // 分表方式
         'num'  => 5      // 分表数量

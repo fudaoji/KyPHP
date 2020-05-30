@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name="keywords" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <title><?= config("app_title");?></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="__STATIC__/libs/layui/css/layui.css">
+    <link rel="stylesheet" href="__STATIC__/css/icon.css?v=<?= $static_version?>">
+    <link rel="stylesheet" href="__STATIC__/css/admin/admin_base.css?v=<?= $static_version?>">
+    {block name="css"}{/block}
+    <script src="__STATIC__/libs/jquery/jquery-1.11.0.min.js"></script>
+    <script src="__STATIC__/libs/layui/layui.js"></script>
+</head>
+<body style="background: rgb(255, 255, 255) none repeat scroll 0 0;padding-top: 15px;">
+{block name="body"}{/block}
+</body>
+{block name="js"}{/block}
+<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+<!--[if lt IE 9]>
+<script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+</html>

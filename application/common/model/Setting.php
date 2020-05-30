@@ -9,9 +9,9 @@
 
 /**
  * Created by PhpStorm.
- * Script Name: ${FILE_NAME}
+ * Script Name: Setting.php
  * Create: 2020/3/2 下午8:56
- * Description: 
+ * Description:  配置
  * Author: fudaoji<fdj@kuryun.cn>
  */
 
@@ -20,5 +20,24 @@ use ky\BaseModel;
 
 class Setting extends BaseModel
 {
+    protected $cacheTag = 'setting';
 
+    /**
+     * 全局设置
+     * @param int $refresh
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function settings($refresh = 0){
+        $list = $this->getAll(['where' => ['mpid' => 0], 'refresh' => $refresh]);
+        $data = [];
+        foreach ($list as $v){
+            $data[$v['name']] = json_decode($v['value'], true);
+        }
+        config(['system' => array_merge(config('system.'), $data)]);
+        return $data;
+    }
 }

@@ -1,0 +1,79 @@
+<div class="form-group">
+    <label class="control-label col-sm-3 {$form['extra_class']}">
+        {$form['title']}
+        {if condition="is_int(strpos($form['extra_attr'], 'required'))"}
+        <span class="text-danger">*</span>
+        {/if}
+    </label>
+    <div class="col-sm-8">
+        <div class="row">
+            <div class="col-sm-3">
+                <select class="form-control" id="{$form['options']['name'][0]}" name="{$form['options']['name'][0]}">
+                    <?php foreach($form['options']['parent'] as $k => $v):?>
+                    <option value="{$k}" <?= $form['options']['value'][0] == $k ? 'selected' : '';?> >{$v}</option>
+                    <?php endforeach?>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <select class="form-control" id="{$form['options']['name'][1]}" name="{$form['options']['name'][1]}"></select>
+            </div>
+            <div class="col-md-3">
+                <span class="text-info">{$form['tip']}</span>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        head.ready(function () {
+            var province = parseInt("{$form['options']['value'][0]}");
+            var city = parseInt("{$form['options']['value'][1]}");
+            var province_id = "{$form['options']['name'][0]}";
+            var city_id = "{$form['options']['name'][1]}";
+
+            //根据省份id获取城市列表
+            var getCityList = function() {
+                if(province > 0){
+                    $.ajax({
+                        url: "{$form['options']['url'][0]}",
+                        data: {"province": province},
+                        success: function(res) {
+                            if(res.code) {
+                                var data = res.data;
+                                $('#'+city_id).empty().append('<option value="0">==请选择==</option>');
+                                $.each(data, function(n, value) {
+                                    // console.log(n);
+                                    // console.log(value);
+                                    $("#"+city_id).append($(setData(city, n, value)));
+                                });
+                            }
+                        }
+                    });
+                }else{
+                    $('#'+city_id).empty().append('<option value="0">==请选择==</option>');
+                }
+            };
+
+            /**
+             * 拼装html
+             * @param type
+             * @param data
+             * @returns {string}
+             */
+            var setData = function(id, key, value) {
+                return '<option value="'+ key +'" rel="'+ key +'"'+ (key == id ? "selected" : "") +'>'+ value +'</option>';
+            };
+            /**
+             * 初始化市
+             */
+            var init = function() {
+                province = parseInt($('#'+province_id).val());
+                getCityList();
+            };
+
+            init();
+
+            $('#'+province_id).change(function() {
+                init();
+            });
+        });
+    </script>
+</div>

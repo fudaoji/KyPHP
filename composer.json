@@ -20,7 +20,8 @@
         "topthink/framework": "5.1.*",
         "topthink/think-captcha": "^2.0",
         "overtrue/wechat": "^4.2",
-        "topthink/think-image": "^1.0"
+        "topthink/think-image": "^1.0",
+        "qiniu/php-sdk": "^7.0"
     },
     "autoload": {
         "psr-4": {

@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="__STATIC__/css/admin/admin_base.css?v=<?= $static_version?>">
     {block name="css"}{/block}
     <script src="__STATIC__/libs/layui/layui.js"></script>
+    <script src="__STATIC__/libs/jquery/jquery-1.11.0.min.js"></script>
     <style>
         {if $setScreen ==1}
         .topbar,.header{min-width: auto;}
@@ -82,12 +83,16 @@
                 {/volist}
             </dl>
             {/volist}
-            {block name="leftMenu"}{/block}
+            {block name="leftMenu"}<!--预留菜单位置-->{/block}
             <dl>
-                {php} if(!isset($menu_app))$menu_app=null;{/php}
-                {if condition="$menu_app neq '' "}<dt><i class="type-ico ico-trade rha-icon">&#xe6f0;</i>{$menu_app_title}</dt>{/if}
+                {php} if(!isset($menu_app)) $menu_app=null; {/php}
+                {if condition="$menu_app neq '' "}
+                <dt><i class="type-ico ico-trade rha-icon">&#xe6f0;</i>{$menu_app_title}</dt>
+                {/if}
                 {volist name="menu_app" id="v"}
-                <dd class=""><a href="{:url('mp/App/index',['name'=>$v.addon,'type'=>'news','mid'=>$mid])}">{$v.name}</a></dd>
+                <dd class="">
+                    <a href="{:url('mp/app/index',['name'=>$v.addon,'type'=>'news','mid'=>$mp_id])}">{$v.name}</a>
+                </dd>
                 {/volist}
             </dl>
         </div>
@@ -95,7 +100,15 @@
     <div class="content" id="tradeSearchBd">
         <div class="content-hd">
             <div class="content-breadcrumb">
-                {block name="breadcrumb"}{/block}
+                {block name="breadcrumb"}
+                {if condition="isset($menu_title)"}
+                <h2>
+                    <span class="layui-breadcrumb" lay-separator="/">
+                        <a><cite>{$menu_title}</cite></a>
+                    </span>
+                </h2>
+                {/if}
+                {/block}
             </div>
             <div class="content-tool-bar">
                 {block name="tool_bar"}{/block}
@@ -113,7 +126,6 @@
     </div>
 </div>
 </body>
-<script src="__STATIC__/libs/jquery/jquery-1.11.0.min.js"></script>
 
 <script>
     var element = layui.element;

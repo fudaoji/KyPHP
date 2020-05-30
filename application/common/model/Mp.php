@@ -25,14 +25,32 @@ class Mp extends BaseModel
      * 授权方公众号类型
      * @param null $id
      * @return array|mixed
-     * Author: fudaoji<fdj@kuryun.cn>
+     * Author: Doogie<fdj@kuryun.cn>
      */
     public static function serviceTypes($id = null){
         $list = [
-            1 => '普通订阅号',
-            2 => '认证订阅号',
-            3 => '普通服务号',
-            4 => '认证服务号(媒体、政府)'
+            0 => '订阅号',
+            1 => '历史老帐号升级后的订阅号',
+            2 => '服务号',
+        ];
+        return isset($list[$id]) ? $list[$id] : $list;
+    }
+
+    /**
+     * 认证类型
+     * @param null $id
+     * @return array|mixed
+     * Author: Doogie<fdj@kuryun.cn>
+     */
+    public static function verifyTypes($id = null){
+        $list = [
+            -1 => '未认证',
+            0 => '微信认证',
+            1 => '新浪微博认证',
+            2 => '腾讯微博认证',
+            3 => '已资质认证通过但还未通过名称认证',
+            4 => '已资质认证通过、还未通过名称认证，但通过了新浪微博认证',
+            5 => '已资质认证通过、还未通过名称认证，但通过了腾讯微博认证'
         ];
         return isset($list[$id]) ? $list[$id] : $list;
     }

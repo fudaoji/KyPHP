@@ -1,92 +1,118 @@
 <!DOCTYPE html>
+<html>
 <head>
-    <meta charset="utf-8">
-    <title><?= config("app_title");?></title>
-    {CSS href="__STATIC__/css/admin/admin_base.css" /}
-    {css href="__STATIC__/libs/layui/css/layui.css" /}
-    {js href="__STATIC__/libs/jquery/jquery-2.1.4.js" /}
-    {js href='__STATIC__/libs/layui/layui.js' /}
+    <meta charset="UTF-8">
+    <title>会员登录</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="__STATIC__/libs/layui/css/layui.css" media="all">
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        html, body {width: 100%;height: 100%;overflow: hidden}
+        body {background: #009688;}
+        body:after {content:'';background-repeat:no-repeat;background-size:cover;-webkit-filter:blur(3px);-moz-filter:blur(3px);-o-filter:blur(3px);-ms-filter:blur(3px);filter:blur(3px);position:absolute;top:0;left:0;right:0;bottom:0;z-index:-1;}
+        .layui-container {width: 100%;height: 100%;overflow: hidden}
+        .admin-login-background {width:360px;height:300px;position:absolute;left:50%;top:40%;margin-left:-180px;margin-top:-100px;}
+        .logo-title {text-align:center;letter-spacing:2px;padding:14px 0;}
+        .logo-title h1 {color:#009688;font-size:25px;font-weight:bold;}
+        .login-form {background-color:#fff;border:1px solid #fff;border-radius:3px;padding:14px 20px;box-shadow:0 0 8px #eeeeee;}
+        .login-form .layui-form-item {position:relative;}
+        .login-form .layui-form-item label {position:absolute;left:1px;top:1px;width:38px;line-height:36px;text-align:center;color:#d2d2d2;}
+        .login-form .layui-form-item input {padding-left:36px;}
+        .captcha {width:60%;display:inline-block;}
+        .captcha-img {display:inline-block;width:34%;float:right;}
+        .captcha-img img {border:1px solid #e6e6e6;height:36px;width:100%;}
+        .layui-btn{background-color: #009688;}
+    </style>
 </head>
-<body class="login_body">
-<div id="login_wrapper">
-    <div class="rha_login">
-        <div class="mod-body ">
-            <div class="content">
-                <h2><?= config("app_title");?></h2>
-                <form class="layui-form" id="loginform">
-                    <ul>
-                        <li>
-                            <input name="user_name" lay-verify="required" placeholder="请输入登录用户名" type="text"
-                                   autocomplete="off" class="layui-input">
-                        </li>
-                        <li>
-                            <input name="password" lay-verify="required" placeholder="请输入登录密码" type="password"
-                                   autocomplete="off" class="layui-input">
-                        </li>
-
-                        <li>
-                            <div class="layui-row">
-                                <div class="layui-col-md5">
-                                    <input name="verify" lay-verify="required" placeholder="请输入验证码" type="text"
-                                           autocomplete="off" class="layui-input">
-                                </div>
-                                <div class="layui-col-md6" style="padding-left: 10px;">
-                                    <img id="code-img" src="{:url('verify')}" onclick="this.src='{:url('verify')}?'+Math.random();">
-                                </div>
-                            </div>
-                        </li>
-                        <li class="alert alert-danger collapse error_message">
-                            <i class="icon icon-delete"></i> <em></em>
-                        </li>
-                        <li class="last">
-                            <div class="layui-input-inline login-btn">
-                                <button type="submit" lay-submit="" lay-filter="login" class="layui-btn">登录</button>
-                            </div>
-                        </li>
-                    </ul>
-                </form>
-            </div>
+<body>
+<div class="layui-container">
+    <div class="admin-login-background">
+        <div class="layui-form login-form">
+            <form class="layui-form" action="">
+                <div class="layui-form-item logo-title">
+                    <h1><?= config("app_title");?></h1>
+                </div>
+                {:token()}
+                <div class="layui-form-item">
+                    <label class="layui-icon layui-icon-username"></label>
+                    <input type="text" value="{$username}" name="username" lay-verify="required|username" placeholder="账号" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-icon layui-icon-password"></label>
+                    <input type="password" name="password" lay-verify="required|password" placeholder="密码" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-item layui-row">
+                    <div class="layui-col-md6">
+                        <input name="verify" lay-verify="required" placeholder="请输入验证码" type="text"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-col-md6" style="padding-left: 10px;">
+                        <img id="code-img" src="{:url('verify')}" onclick="changeCode();">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <input type="checkbox" name="keeplogin" value="1" lay-skin="primary" title="记住账号">
+                </div>
+                <div class="layui-form-item">
+                    <button class="layui-btn layui-btn-fluid" lay-submit="" lay-filter="login">登 录</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-<div class="footer" style="position: fixed;bottom: 0;left: 0;right: 0;">
-    <div class="wrap">
-        <!--请遵守安装使用协议，未经允许不得删除或者屏蔽有关RhaPHP字样-->
-        Powered By KyPHP <?= config("app_name");?> Copyright © {:date('Y')} All Rights Reserved.
-    </div>
-</div>
-
+<script src="__STATIC__/libs/jquery/jquery-2.1.4.js" charset="utf-8"></script>
+<script src="__STATIC__/libs/layui/layui.js" charset="utf-8"></script>
+<script src="__STATIC__/libs/jq-module/jquery.particleground.min.js" charset="utf-8"></script>
 <script>
+    //切换验证码
+    var changeCode = function(){
+        document.getElementById("code-img").src = '{:url("verify")}?'+Math.random();
+    };
+    layui.use(['form'], function () {
+        var form = layui.form,
+            layer = layui.layer;
 
-    layui.use('form', function () {
-        (function () {
-            var isIE = function () {
-                var U = navigator.userAgent,
-                    IsIE = U.indexOf('MSIE') > -1,
-                    a = IsIE ? /\d+/.exec(U.split(';')[1]) : 'no ie';
-                return a <= 8;
-            }();
-            if (isIE) {
-                layer.alert('你的浏览器内核版本过低,若有极速模式请选择使用极速模式或者使用谷歌、火狐浏览器。');
-            }
-        })();
+        // 粒子线条背景
+        $(document).ready(function(){
+            $('.layui-container').particleground({
+                dotColor:'#5cbdaa',
+                lineColor:'#5cbdaa'
+            });
+        });
 
-        var form = layui.form;
+        // 进行登录操作
         form.on('submit(login)', function (data) {
-            $.post(
-                "{:url('login')}",
-                data.field,
-                function (res) {
-                    if (res.code == 1) {
-                        layer.msg(res.msg, {icon: 1, time: 2000}, function () {
-                            location.href = res.url;
-                        });
-                    } else {
-                        document.getElementById("code-img").src = "{:url('verify')}" + "?v=" + (new Date).getDate();
-                        layer.alert(res.msg);
+
+            form.verify({
+                username: function (value) {
+                    if (value.length < 3) {
+                        return '账号错误';
                     }
-                }, "json"
-            );
+                }
+                , password: [
+                    /^[\S]{6,20}$/
+                    , '密码必须6到20位，且不能出现空格'
+                ]
+            });
+
+            $.post(data.form.action, data.field, function(res){
+                layer.msg(res.msg, {time:1500}, function(){
+                    if(res.code === 1){
+                        location.href = res.url;
+                    }else{
+                        changeCode();
+                        $('input[name=__token__]').val(res.data.token);
+                    }
+                });
+            });
             return false;
         });
     });

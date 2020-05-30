@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 /**
  * Created by PhpStorm.
- * Script Name: ${FILE_NAME}
+ * Script Name: Base.php
  * Create: 2020/3/1 12:13
  * Description: Base controller
  * Author: fudaoji<fdj@kuryun.cn>
@@ -20,24 +20,39 @@ class Base extends \app\admin\controller\Base
 {
     protected $mpId;
     protected $mpInfo;
+    protected $app;
+    protected $openPlatform;
+    protected $needMpId = true;
 
     public function initialize(){
         parent::initialize();
-        $this->setMp();
+        $this->setMpInfo();
+        $this->setApp();
+    }
+
+    /**
+     * 设置授权公众号应用
+     * @author fudaoji<fdj@kuryun.cn>
+     */
+    protected function setApp() {
+        if($this->mpInfo) {
+            $this->app = controller('mp', 'event')->getApp($this->mpInfo);
+        }
+        $this->openPlatform = controller('mp', 'event')->getOpenPlatform();
     }
 
     /**
      * set mp info
      * @author: fudaoji<fdj@kuryun.cn>
      */
-    protected function setMp(){
+    protected function setMpInfo(){
         $mp_id = input('mid', 0,'intval');
         if(empty($mp_id)){
             $mp_id = (int)session("mpId");
         }
         if($mp_id <= 0){
             $mp_ids = model('mp')->getAll([
-                'where' => ['status' => 1, 'user_id' => $this->adminId],
+                'where' => ['status' => 1, 'uid' => $this->adminId],
                 'order' => ['update_time' => 'desc']
             ]);
             if(count($mp_ids)){
@@ -46,27 +61,32 @@ class Base extends \app\admin\controller\Base
             }
         }
         if($mp_id <= 0){
-            $this->error("请先添加公众号", url('mp/index/addmp'));
+            $this->needMpId && $this->error("请先添加公众号", url('system/mp/choose'));
         }
         $this->mpId = $mp_id;
         if(empty($mp_info)){
             $mp_info = model('mp')->getOne($this->mpId);
         }
-        if(empty($mp_info) || $mp_info['user_id'] != $this->adminId){
-            $this->error("请先添加公众号", url('mp/index/addmp'));
+        if(empty($mp_info) || $mp_info['uid'] != $this->adminId){
+            $this->needMpId && $this->error("请先添加公众号", url('system/mp/choose'));
         }
         session("mpId", $this->mpId);
+        session("storeId", $this->mpId);
         $this->mpInfo = $mp_info;
-
-        /*$options = array(
-            'appid' => $this->mpInfo['appid'],
-            'appsecret' => $this->mpInfo['appsecret'],
-            'token' => $this->mpInfo['valid_token'],
-            'encodingaeskey' => $this->mpInfo['encodingaeskey']
-        );*/
-        //$this->getAddonForMenu();
+        cookie('mpInfo', $mp_info);
         // $this->mpListByMenu();
         $this->assign('mp_info', $this->mpInfo);
         $this->assign('mp_id',$this->mpId);
+        //$this->getAddonForMenu();
+    }
+
+    /**
+     * 获取应用放入菜单中
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function getAddonForMenu(){
+        $list = model('addons')->getAll(['menu_show'=>1, 'status'=>1]);
+        $this->assign['menu_app'] = $list;
+        $this->assign['menu_app_title'] = '应用扩展';
     }
 }

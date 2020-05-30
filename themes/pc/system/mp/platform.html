@@ -1,0 +1,253 @@
+{extend name="../layout/base" /}
+
+{block name="body"}
+<form class="layui-form" action="" id="ajax-form" method="post">
+    <table class="layui-table" lay-skin="line" >
+        <thead>
+        <tr>
+            <th style="width: 200px">微信开放平台开发信息</th>
+            <th class="tr">
+                <a href="{:url('mp/auth/index')}" class="layui-btn layui-btn-sm bg-success"><i class="fa fa-wechat"></i>微信公众号登录授权</a>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td colspan="2">
+                <blockquote class="layui-elem-quote">开发信息需开放平台审核通过后才可以看到，填写完后才可以使用授权登录功能</blockquote>
+            </td>
+        </tr>
+        <tr>
+            <td>AppID</td>
+            <td>
+                <div class="layui-input-inline">
+                    <input
+                            title="在微信开放平台注册且审核通过后可以获取到AppId"
+                            type="text"
+                            value="{$platform.appid}"
+                            name="appid"
+                            placeholder="在微信开放平台注册且审核通过后可以获取到AppId"
+                            autocomplete="off"
+                            class="layui-input"
+                            ／>
+                </div>
+                <a href="javascript:;" class="layui-btn submit-btn" data-field="appid">保存</a>
+            </td>
+        </tr>
+        <tr>
+            <td>AppSecret</td>
+            <td>
+                <div class="layui-input-inline">
+                    <input
+                            title="在微信开放平台注册且审核通过后可以获取到AppSecret"
+                            type="text"
+                            value="{$platform.appsecret}"
+                            name="appsecret"
+                            placeholder="在微信开放平台注册且审核通过后可以获取到AppSecret"
+                            autocomplete="off"
+                            class="layui-input"
+                            ／>
+                </div>
+                <a href="javascript:;" class="layui-btn submit-btn" data-field="appsecret">保存</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="layui-table" lay-skin="line" style="margin: 30px 0;">
+        <thead>
+        <tr>
+            <th style="width: 200px">微信开放平台接入配置项</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>登录授权的发起页域名</td>
+            <td class="auth_url">
+                {:request()->host()} <span class="tip-auth_url bt-a text-green"></span>
+            </td>
+            <td><a href="javascript:;" class="bt-a js-zclip" data-name="auth_url">点击复制</a></td>
+        </tr>
+        <!--<tr>
+            <td>发起授权页的体验URL</td>
+            <td>
+
+            </td>
+            <td><a href="javascript:;" class="bt-a js-zclip" data-name="url">点击复制</a></td>
+        </tr>-->
+        <tr>
+            <td>授权事件接受URL</td>
+            <td class="ticket_url">
+                {:request()->domain() . url('mp/api/ticket')} <span class="tip-ticket_url bt-a text-green"></span>
+            </td>
+            <td><a href="javascript:;" class="bt-a js-zclip" data-name="ticket_url">点击复制</a></td>
+        </tr>
+        <tr>
+            <td>公众号消息校验Token</td>
+            <td>
+                <div class="layui-input-inline">
+                    <input
+                            title="与公众平台接入设置值一致，必须为英文或者数字，长度为3到32个字符. 请妥善保管, Token 泄露将可能被窃取或篡改平台的操作数据."
+                            type="text"
+                            value="{$platform.token}"
+                            name="token"
+                            placeholder="与公众平台接入设置值一致，必须为英文或者数字，长度为3到32个字符. 请妥善保管, Token 泄露将可能被窃取或篡改平台的操作数据."
+                            autocomplete="off"
+                            class="layui-input token"
+                            ／>
+                </div>
+                <a href="javascript:;" class="layui-btn submit-btn" data-field="token">保存</a>
+                <span class="tip-token bt-a text-green"></span>
+            </td>
+            <td>
+                <a href="javascript:;" class="bt-a js-zclip" data-name="token">点击复制</a>
+            </td>
+        </tr>
+        <tr>
+            <td>公众号消息加解密Key</td>
+            <td>
+                <div class="layui-input-inline">
+                    <input
+                            title="与公众平台接入设置值一致，必须为英文或者数字，长度为43个字符. 请妥善保管, EncodingAESKey 泄露将可能被窃取或篡改平台的操作数据."
+                            type="text"
+                            value="{$platform.aes_key}"
+                            name="aes_key"
+                            placeholder="与公众平台接入设置值一致，必须为英文或者数字，长度为43个字符. 请妥善保管, EncodingAESKey 泄露将可能被窃取或篡改平台的操作数据."
+                            autocomplete="off"
+                            class="layui-input aes_key"
+                            ／>
+                </div>
+                <a href="javascript:;" class="layui-btn submit-btn" data-field="aes_key">保存</a>
+                <span class="tip-aes_key bt-a text-green"></span>
+            </td>
+            <td>
+                <a href="javascript:;" class="bt-a js-zclip" data-name="aes_key">点击复制</a>
+            </td>
+        </tr>
+        <tr>
+            <td>公众号消息与事件接受URL</td>
+            <td class="message_url">
+                {:request()->domain() . '/mp/api/index/appid/$APPID$'}
+                <span class="tip-message_url bt-a text-green"></span>
+            </td>
+            <td><a href="javascript:;" class="bt-a js-zclip" data-name="message_url">点击复制</a></td>
+        </tr>
+        <tr>
+            <td>网页开发域名</td>
+            <td class="url">
+                {:request()->host()}
+                <span class="tip-url bt-a text-green"></span>
+            </td>
+            <td><a href="javascript:;" class="bt-a js-zclip" data-name="url">点击复制</a></td>
+        </tr>
+        <tr>
+            <td>检验文件</td>
+            <td>
+                <div class="layui-input-inline">
+                    <input
+                            readonly
+                            type="text"
+                            value="{$platform.verify_file}"
+                            name="verify_file"
+                            placeholder="从开放平台中下载的校验文件"
+                            autocomplete="off"
+                            class="layui-input"
+                            />
+                </div>
+                <a href="javascript:;" class="layui-btn" id="picker"><i class="fa fa-upload"></i>选择文件</a>
+            </td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+{/block}
+
+{block name="js"}
+{js href='__STATIC__/libs/zclip/jquery.zclip.min.js' /}
+<script>
+    $(function () {
+        layui.use(['upload'],function(){
+            var upload = layui.upload
+                ,upload_index;
+            upload.render({
+                elem: '#picker'
+                ,url: '{:url("verifyFilePost")}'
+                ,accept: 'file' //允许上传的文件类型
+                ,size: "2" //最大允许上传的文件大小
+                ,exts: "txt"
+                ,before: function () {
+                    upload_index = layer.load(1);
+                }
+                ,done: function(res, index, upload){ //上传后的回调
+                    layer.close(upload_index);
+                    if(res.code === 1){
+                        layer.msg(res.msg);
+                        $('input[name=verify_file]').val(res.data.src);
+                    }else{
+                        layer.alert(res.msg);
+                    }
+                }
+                ,error: function (index, upload) {
+                    layer.close(upload_index);
+                }
+            });
+        });
+
+        $('.submit-btn').on('click', function () {
+            let field = $(this).data('field');
+            let value = $.trim($("input[name="+field+"]").val());
+            if(value === ''){
+                layer.alert('请输入内容');
+                return;
+            }
+            let loading_index;
+            let param = {};
+            param[field] = value;
+            $.ajax({
+                url : "",
+                method: 'post',
+                data: param,
+                beforeSend: function(){
+                    loading_index = layer.load(1);
+                },
+                success : function(res) {
+                    if(res.code === 1 ) {
+                        layer.msg(res.msg, {time: 1000}, function(){});
+                    } else{
+                        layer.alert(res.msg);
+                    }
+                },
+                error: function(request, textStatus){
+                    layer.msg('500 Internal Server Error');
+                },
+                complete: function(){
+                    layer.close(loading_index);
+                }
+            });
+        });
+
+        $('.js-zclip').zclip({
+            path: '__STATIC__/libs/zclip/ZeroClipboard.swf',
+            copy: function(){
+                var name = $(this).data('name');
+                $(".tip-"+name).show();
+                var value = $('.' + name).text();
+                if(!value) value = $('.' + name).val();
+                return value;
+            },
+            afterCopy: function(){
+                var name = $(this).data('name');
+                $(".tip-" + name).insertAfter($('.tip-' + name)).html('复制成功').fadeOut(2000);
+            }
+        });
+    });
+</script>
+{/block}
+{block name="css"}
+<style>
+    .layui-input-inline{width: 400px;}
+</style>
+{/block}

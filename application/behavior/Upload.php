@@ -48,10 +48,10 @@ class Upload {
                 }
 
                 if (!empty($mid = session('mid')) || !empty($mid = input('mid'))) {
-                    $sting = getSetting($mid, 'cloud');
+                    /*$sting = getSetting($mid, 'cloud');
                     if (isset($sting['qiniu']['status']) && $sting['qiniu']['status'] == 1) {
                         $param['cloud'] = 'qiniu';
-                    }
+                    }*/
                 }
                 if (isset($param['cloud'])) {
                     if ($param['cloud'] == 'qiniu') {

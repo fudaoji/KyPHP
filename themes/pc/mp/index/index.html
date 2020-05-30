@@ -1,86 +1,90 @@
-{extend name="../admin/common/base" /}
+{extend name="common/base" /}
 
-{block name="jscss"}
-{js href='__STATIC__/libs/zclip/jquery.zclip.min.js' /}
-{/block}
 
 {block name="body"}
-
-<div style="padding: 0px 10px 0px 10px;">
-    <table class="layui-table" lay-skin="line" >
-        <thead>
-        <tr>
-            <th>公众号接口通信配置</th>
-            <th></th>
-            <th>操作</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>URL(服务器地址)</td>
-            <td class="apiUrl">{$mp.url}<span class="tip1 rha-bt-a"></span></td>
-            <td><a href="javascript:;" id="apiUrl" class="rha-bt-a">复制</a></td>
-        </tr>
-        <tr>
-            <td>Token(令牌)</td>
-            <td class="valid_token">{$mp.valid_token}<span class="tip2 rha-bt-a"></span></td>
-            <td><a id="valid_token" href="javascript:;" class="rha-bt-a">复制</a></td>
-        </tr>
-        <tr>
-            <td>EncodingAESKey<br>(消息加解密密钥)</td>
-            <td class="encodingaeskey">{$mp.encodingaeskey}<span class="tip3 rha-bt-a"></span></td>
-            <td><a id="encodingaeskey" href="javascript:;" class="rha-bt-a">复制</a></td>
-        </tr>
-        <tr>
-            <td>IP白名单</td>
-            <td class="server_ip">{:request()->ip()}<span class="tip4 rha-bt-a"></span></td>
-            <td><a id="server_ip" href="javascript:;" class="rha-bt-a">复制</a></td>
-        </tr>
-        </tbody>
-    </table>
+<div>
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="fa fa-warning icon"></i>今日关键指标/昨日关键指标
+        </div>
+        <div class="layui-card-body">
+            <div class="welcome-module">
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-xs3">
+                        <div class="panel layui-bg-number">
+                            <div class="panel-body">
+                                <div class="panel-title">
+                                    <h5>新关注</h5>
+                                </div>
+                                <div class="panel-content">
+                                    <h1 class="no-margins">
+                                        <span class="today">{$statics['subscribe']['today']}</span>/{$statics['subscribe']['yesterday']}
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs3">
+                        <div class="panel layui-bg-number">
+                            <div class="panel-body">
+                                <div class="panel-title">
+                                    <h5>取消关注</h5>
+                                </div>
+                                <div class="panel-content">
+                                    <h1 class="no-margins">
+                                        <span class="today">{$statics['unsubscribe']['today']}</span>/{$statics['unsubscribe']['yesterday']}
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs3">
+                        <div class="panel layui-bg-number">
+                            <div class="panel-body">
+                                <div class="panel-title">
+                                    <h5>净增关注</h5>
+                                </div>
+                                <div class="panel-content">
+                                    <h1 class="no-margins">
+                                        <span class="today">{$statics['subscribe']['today'] - $statics['unsubscribe']['today']}</span>/
+                                        {$statics['subscribe']['yesterday'] - $statics['unsubscribe']['yesterday']}
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs3">
+                        <div class="panel layui-bg-number">
+                            <div class="panel-body">
+                                <div class="panel-title">
+                                    <h5>累计关注</h5>
+                                </div>
+                                <div class="panel-content">
+                                    <h1 class="no-margins">
+                                        <span class="today">{$statics['subscribe']['total']}</span>/{$statics['subscribe']['beforetoday']}
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<script type="text/javascript">
-    $(function(){
-        $('#apiUrl').zclip({
-            path: '__STATIC__/libs/zclip/ZeroClipboard.swf',
-            copy: function(){
-                $(".tip1").show();
-                return $('.apiUrl').text();
-            },
-            afterCopy: function(){
-                $(".tip1").insertAfter($('.tip1')).html('复制成功').fadeOut(2000);
-            }
-        });
-        $('#valid_token').zclip({
-            path: '__STATIC__/libs/zclip/ZeroClipboard.swf',
-            copy: function(){
-                $(".tip2").show();
-                return $('.valid_token').text();
-            },
-            afterCopy: function(){
-                $(".tip2").insertAfter($('.tip2')).html('复制成功').fadeOut(2000);
-            }
-        });
-        $('#encodingaeskey').zclip({
-            path: '__STATIC__/libs/zclip/ZeroClipboard.swf',
-            copy: function(){
-                $(".tip3").show();
-                return $('.encodingaeskey').text();
-            },
-            afterCopy: function(){
-                $(".tip3").insertAfter($('.tip3')).html('复制成功').fadeOut(2000);
-            }
-        });
-        $('#server_ip').zclip({
-            path: '__STATIC__/libs/zclip/ZeroClipboard.swf',
-            copy: function(){
-                $(".tip4").show();
-                return $('.server_ip').text();
-            },
-            afterCopy: function(){
-                $(".tip4").insertAfter($('.tip4')).html('复制成功').fadeOut(2000);
-            }
-        });
-    });
-</script>
+
+{/block}
+
+{block name="js"}
+
+
+{/block}
+{block name="css"}
+<style>
+    .layui-card-header{background-color: #f4f6f9;}
+    .layui-card-body{text-align: center;font-size: 16px;color: #98999a;}
+    .layui-card-body .no-margins{font-size: 24px;}
+    .layui-card-body .today{font-size: 30px;color: #4c4c4c;}
+</style>
+
 {/block}

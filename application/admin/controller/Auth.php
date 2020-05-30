@@ -12,46 +12,83 @@ namespace app\admin\controller;
 
 use think\captcha\Captcha;
 use think\Controller;
+use think\Validate;
 
 
 class Auth extends Controller
 {
+    /**
+     * 登录
+     * @return bool|\think\response\View
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
     public function login()
     {
-        if (request()->isAjax()) {
-            $captcha = new Captcha();
-            if(!$captcha ->check(input('verify'), 2)){
-                return ['code' => -1, 'msg' => '验证码错误'];
+        if (request()->isPost()) {
+            $post_data = input('post.');
+
+            Validate::extend([
+                'checkCode'=> function ($value) {
+                    $captcha = new Captcha();
+                    return $captcha ->check($value, 2) ? true : '验证码错误';
+                }
+            ]);
+            $rule = [
+                'verify'    => 'checkCode',
+                'username'   => 'require|length:3,50',
+                'password'  => 'require|length:6,20',
+                '__token__' => 'require|token',
+            ];
+            $msg = [
+                'username.require'  => '请填写账号',
+                'username.length'   => '账号错误',
+                'password.require' => '请填写密码',
+                'password.length'  => '密码错误',
+            ];
+            $data = [
+                'verify'   => $post_data['verify'],
+                'username'   => $post_data['username'],
+                'password'  => $post_data['password'],
+                '__token__' => $post_data['__token__'],
+            ];
+            $validate = new Validate($rule, $msg);
+            $result = $validate->check($data);
+            if (!$result) {
+                $this->error($validate->getError(), null, ['token' => request()->token()]);
+                return false;
             }
 
-            $user_name = input('user_name');
-            $password = input('password');
-            $admin = model("admin")->getOneByMap(['admin_name' => $user_name,'status'=>1]);
-            $pwd = md5($password . $admin['rand_str']);
-            if (empty($admin)) {
-                return ['code' => -1, 'msg' => '用户不存在'];
+            $admin = model("admin")->getOneByMap(['username' => $post_data['username']]);
+            if ($admin && $admin['status'] == 1) {
+                if(password_verify($post_data['password'], $admin['password'])){
+                    model("admin")->updateOne([
+                        'id' => $admin['id'],
+                        'ip' => request()->ip(),
+                        'last_time' => time()
+                    ]);
+                    session('adminId', $admin['id']);
+                    if(!empty($post_data['keeplogin'])){
+                        cookie('record_username', $post_data['username']);
+                    }
+                    $this->success('登录成功!', cookie('redirect_url') ? cookie('redirect_url') : url('mp/mp/index'));
+                }else{
+                    $this->error('账号或密码错误', '', ['token' => request()->token()]);
+                }
+            }else{
+                $this->error('用户不存在或已被禁用', '', ['token' => request()->token()]);
             }
-            if ($admin['password'] == $pwd) {
-                model("admin")->updateOne(['id' => $admin['id'], 'ip' => request()->ip(), 'last_time' => time()]);
-                unset($admin['password'], $admin['rand_str']);
-                session('adminId', $admin['id']);
-                cookie('admin', ['admin_name' => $admin['admin_name'], 'admin_id' => $admin['id']]);
-                $this->success('登录成功!', cookie('redirect_url') ? cookie('redirect_url') : url('mp/mp/index'));
-            } else {
-                $this->error('账号或密码错误');
-            }
+
         }else{
             if(session('adminId')){
                 $this->redirect('mp/mp/index');
             }
         }
-        return view('');
+        return view('', ['username' => cookie('record_username')]);
     }
 
     public function logout()
     {
         session(null, config("app_prefix"));
-        cookie(null, config("app_prefix"));
         $this->redirect('admin/auth/login');
     }
 
