@@ -91,7 +91,8 @@ class Upload extends BaseModel
                     $insert_data['name'] = $v['name'];
                     $insert_data['original_name'] = $v['original_name'];
                 }
-                $pics[] = $this->addOne($insert_data);
+                //$pics[] = $this->addOne($insert_data);
+                $pics[] = $insert_data;
             }
             $return['code'] = 1;
             $return['data'] = $pics;
@@ -280,10 +281,22 @@ class Upload extends BaseModel
             'hash'     => true, //是否生成hash编码
             'callback' => false, //检测文件是否存在回调函数，如果存在返回文件信息数组
         ];
-        if($media_type === 'file'){
-            $config['savePath'] = '/file/';
-            $config['maxSize'] = self::$setting['file_size'];
-            $config['exts'] = self::$setting['file_ext'] ?:'jpg,gif,png,jpeg,zip,rar,tar,gz,7z,doc,docx,txt,xml,mp3,mp4,xls,xlsx,pdf';
+        switch ($media_type){
+            case 'file':
+                $config['savePath'] = '/file/';
+                $config['maxSize'] = self::$setting['file_size'];
+                $config['exts'] = self::$setting['file_ext'] ?:'jpg,gif,png,jpeg,zip,rar,tar,gz,7z,doc,docx,txt,xml,mp3,mp4,xls,xlsx,pdf';
+                break;
+            case 'voice':
+                $config['savePath'] = '/voice/';
+                $config['maxSize'] = self::$setting['voice_size'];
+                $config['exts'] = self::$setting['voice_ext'] ?:'mp3,wma,wav,amr';
+                break;
+            case 'video':
+                $config['savePath'] = '/video/';
+                $config['maxSize'] = self::$setting['video_size'];
+                $config['exts'] = self::$setting['video_ext'] ?:'mp4';
+                break;
         }
 
         return $config;

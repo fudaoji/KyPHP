@@ -7,349 +7,298 @@
 // | Author: fudaoji <fdj@kuryun.cn>
 // +----------------------------------------------------------------------
 
+/**
+ * Created by PhpStorm.
+ * Script Name: Material.php
+ * Create: 2020/5/25 下午9:28
+ * Description: 素材管理
+ * @link https://developers.weixin.qq.com/doc/offiaccount/Asset_Management/Adding_Permanent_Assets.html  (微信素材文档说明)
+ * Author: fudaoji<fdj@kuryun.cn>
+ */
 
 namespace app\mp\controller;
 
+use app\common\model\MediaImage;
+use app\common\model\MediaMusic;
+use app\common\model\MediaText;
+use app\common\model\MediaVideo;
+use app\common\model\MediaVoice;
+use app\common\model\Upload;
 
-use app\common\model\MpReply;
-use think\facade\Request;
-
-
-class   Material extends Base
+class Material extends Base
 {
     /**
-     * 同步公众号素材
-     * @author geeson 314835050@qq.com
-     * @param string $type
-     * @param int $page
-     * @return \think\response\View
+     * @var \think\Model
      */
-    public function sycMaterial($type = 'image', $offset = 0)
+    private $uploadM;
+    /**
+     * @var \think\Model
+     */
+    private $imageM;
+    /**
+     * @var \think\Model
+     */
+    private $textM;
+    /**
+     * @var \think\Model
+     */
+    private $voiceM;
+    /**
+     * @var \think\Model
+     */
+    private $videoM;
+    /**
+     * @var \think\Model
+     */
+    private $musicM;
+    private $types = [
+        'text','image', 'video', 'voice', 'music', 'news'
+    ];
+    public function initialize()
     {
-
-        $weObj = getWechatActiveObj();
-        $count = $weObj->getForeverCount();
-        $data['mpid'] = $this->mid;
-        $url = '';
-        $text = '';
-        switch ($type) {
-            case 'image':
-                $image_count = $count['image_count'];
-                $images = getForeverMaterial('image', $offset, 50);
-                $i = 0;
-                if (!empty($images['item'])) {
-                    foreach ($images['item'] as $key => $val) {
-                        $i++;
-                        $data['create_time'] = $val['update_time'];
-                        $data['media_id'] = $val['media_id'];
-                        $data['title'] = $val['name'];
-                        $data['url'] = getHostDomain() . url('mp/Show/image','','').'?url='.urlencode($val['url']);
-                        if(!empty($val['url'])){
-                            $model = new \app\common\model\Material();
-                            $model->addMaterialByMp($type, $data);
-                        }
-                    }
-                    $url = getHostDomain() . url('mp/Material/sycMaterial', ['type' => $type, 'offset' => $offset + $i]);
-                    $jdtCss ='100%'; //ceil(($offset / ($image_count)) * 100) . '%';
-                    $text = '正在同步'.$offset.'张图片';
-                } else {
-                    $text = '同步完成';
-                    $url = '';
-                    $jdtCss = '100%';
-                }
-                break;
-            case 'voice':
-                $voice_count = $count['voice_count'];
-                $voice = getForeverMaterial('voice', $offset, 20);
-                $i = 0;
-                if (!empty($voice['item'])) {
-                    foreach ($voice['item'] as $key => $val) {
-                        $i++;
-                        $data['create_time'] = $val['update_time'];
-                        $data['media_id'] = $val['media_id'];
-                        $data['title'] = $val['name'];
-                        $model = new \app\common\model\Material();
-                        $model->addMaterialByMp($type, $data);
-                    }
-                    $url = getHostDomain() . url('mp/Material/sycMaterial', ['type' => $type, 'offset' => $offset + $i]);
-                    $jdtCss = ceil(($offset / $voice_count) * 100) . '%';
-                    $text = $jdtCss;
-                } else {
-                    $text = '同步完成';
-                    $url = '';
-                    $jdtCss = '100%';
-                }
-                break;
-            case 'video':
-                $video_count = $count['video_count'];
-                $video = getForeverMaterial('video', $offset, 20);
-                $i = 0;
-                if (!empty($video['item'])) {
-                    foreach ($video['item'] as $key => $val) {
-                        $i++;
-                        $data['create_time'] = $val['update_time'];
-                        $data['media_id'] = $val['media_id'];
-                        $data['title'] = $val['name'];
-                        $model = new \app\common\model\Material();
-                        $model->addMaterialByMp($type, $data);
-                    }
-                    $url = getHostDomain() . url('mp/Material/sycMaterial', ['type' => $type, 'offset' => $offset + $i]);
-                    $jdtCss = ceil(($offset / $video_count) * 100) . '%';
-                    $text = $jdtCss;
-                } else {
-                    $text = '同步完成';
-                    $url = '';
-                    $jdtCss = '100%';
-                }
-                break;
-            case 'news':
-                $news_count = $count['news_count'];
-                $news = getForeverMaterial('news', $offset, 20);
-                $i = 0;
-                if (!empty($news['item'])) {
-                    foreach ($news['item'] as $key => $val) {
-                        $i++;
-                        $data['create_time'] = $val['update_time'];
-                        $data['media_id'] = $val['media_id'];
-                        $data['content'] = json_encode($val['content']);
-                        $model = new \app\common\model\Material();
-                        $model->addMaterialByMp($type, $data);
-                    }
-                    $url = getHostDomain() . url('mp/Material/sycMaterial', ['type' => $type, 'offset' => $offset + $i]);
-                    $jdtCss = ceil(($offset / $news_count) * 100) . '%';
-                    $text = $jdtCss;
-                } else {
-                    $text = '同步完成';
-                    $url = '';
-                    $jdtCss = '100%';
-                }
-                break;
-        }
-
-        $this->assign('text', $text);
-        $this->assign('jdtCss', $jdtCss);
-        $this->assign('url', $url);
-        return view('syc');
+        parent::initialize(); // TODO: Change the autogenerated stub
+        $this->uploadM = new Upload();
+        $this->imageM = new MediaImage();
+        $this->textM = new MediaText();
+        $this->voiceM = new MediaVoice();
+        $this->videoM = new MediaVideo();
+        $this->musicM = new MediaMusic();
+        $this->assign('config', config('system.upload'));
+        set_time_limit(0);
     }
-
-    public function addMaterial(){
-        if(Request::isAjax()){
-
-        }else{
-
-            return view();
-        }
-    }
-
 
     /**
-     * 普通上传图片
+     * 素材上传
+     * Author: fudaoji<fdj@kuryun.cn>
      */
-    public function uploadImg()
-    {
+    public function uploadPost(){
+        if(request()->isPost()) {
+            $post_data = input('');
+            $res = $this->uploadM->upload($_FILES, Upload::config($post_data['type']), ['uid' => $this->adminId]);
 
-        $file = \request()->file('image');
-        $info = $file->rule('md5')->validate(['ext' => 'jpg,png,gif,jpeg'])->move(ROOT_PATH . DS . 'uploads');
-
-        if ($info) {
-            $info->getSaveName();
-            header('Content-Type:application/json; charset=utf-8');
-            $res = [
-                'code' => 0,
-
-                'data' => [
-                    'src' => getHostDomain() . '/uploads' . DS . $info->getSaveName()
-                ]
-
-            ];
-            return json_encode($res);
-
-        } else {
-            // 上传失败获取错误信息
-            $res = [
-                'code' => 1,
-                'msg' => $file->getError()
-            ];
-            return json_encode($res);
-        }
-    }
-
-    public function uploadFileBYmpVerify()
-    {
-        $file = \request()->file('file');
-        $info = $file->validate(['ext' => 'mp3,wma,wav,amr,rm,rmvb,wmv,avi,mpg,mpeg,mp4,txt,zip,rar'])->move(ROOT_PATH . DS, '');
-
-        if ($info) {
-            $info->getSaveName();
-            header('Content-Type:application/json; charset=utf-8');
-            $res = [
-                'code' => 0,
-                'data' => [
-                    'src' => getHostDomain() . '/uploads' . DS . $info->getSaveName()
-                ]
-            ];
-            return json_encode($res);
-
-
-        } else {
-            // 上传失败获取错误信息
-            $res = [
-                'code' => 1,
-                'msg' => $file->getError()
-            ];
-            return json_encode($res);
-        }
-
-    }
-
-    public function index($type = '', $from_type = '')
-    {
-        if ($type == '' || $from_type == '') {
-            $this->redirect('mp/Material/index', ['type' => 'image', 'from_type' => 1]);
-        }
-        $model = new \app\common\model\Material();
-        $data = $model->getMaterialList($type, $this->mid, $from_type, 20);
-        if ($type == 'news') {
-            $news = [];
-            foreach ($data as $key => $val) {
-                $news[$key]['media_id'] = $val['media_id'];
-                $newsItem = json_decode($val['content'], true);
-                foreach ($newsItem['news_item'] as $key1 => $val2) {
-                    $news[$key]['news_item'][$key1]['title'] = $val2['title'];
-                    $news[$key]['news_item'][$key1]['url'] = $val2['url'];
-                    $news[$key]['news_item'][$key1]['thumb_url'] = getHostDomain() . url('mp/Show/image','','').'?url='.urlencode($val2['thumb_url']);
+            if($res['code']){
+                foreach ($res['data'] as $item){
+                    $insert_data = [
+                        'uid' => $item['uid'],
+                        'mpid' => $this->mpId,
+                        'title' => $item['original_name'],
+                        'url' => $item['url'],
+                        'size' => $item['size'],
+                        'ext' => $item['ext'],
+                        'location' => $item['location']
+                    ];
+                    $data = model('media_' . $post_data['type'])->addOne($insert_data);
+                    if($post_data['from'] == 'mp'){
+                        $this->uploadMedia2Wx($post_data['type'], $data['id']);
+                    }
                 }
+                $this->success('上传成功');
+            }else{
+                $this->error($res['msg']);
             }
-            $this->assign('page', $data->render());
-            $this->assign('data', $news);
-        } else {
-            $this->assign('data', $data);
-        }
-
-        $this->assign('type', $type);
-        $this->assign('fron_type', $from_type);
-        return view();
-    }
-
-    public function uploadMedia()
-    {
-        $file = \request()->file('media');
-        $info = $file->rule('md5')->validate(['ext' => 'mp3,wma,wav,amr,rm,rmvb,wmv,avi,mpg,mpeg,mp4'])->move(ROOT_PATH . DS . 'uploads');
-
-        if ($info) {
-            $info->getSaveName();
-            header('Content-Type:application/json; charset=utf-8');
-            $res = [
-                'code' => 0,
-                'data' => [
-                    'src' => getHostDomain() . '/uploads' . DS . $info->getSaveName()
-                ]
-            ];
-            return json_encode($res);
-
-        } else {
-            // 上传失败获取错误信息
-            $res = [
-                'code' => 1,
-                'msg' => $file->getError()
-            ];
-            return json_encode($res);
-        }
-    }
-    public function uploadFile()
-    {
-        $file = \request()->file('media');
-        $info = $file->rule('md5')->validate(['ext' => 'mp3,wma,wav,amr,rm,rmvb,wmv,avi,mpg,mpeg,mp4,txt,zip,rar'])->move(ROOT_PATH . DS . 'uploads');
-
-        if ($info) {
-            $info->getSaveName();
-            header('Content-Type:application/json; charset=utf-8');
-            $res = [
-                'code' => 0,
-                'data' => [
-                    'src' => getHostDomain() . '/uploads' . DS . $info->getSaveName()
-                ]
-            ];
-            return json_encode($res);
-
-        } else {
-            // 上传失败获取错误信息
-            $res = [
-                'code' => 1,
-                'msg' => $file->getError()
-            ];
-            return json_encode($res);
         }
     }
 
     /**
-     * 显示二维码图
-     * @param $url
+     * 上传素材至微信
+     * Author: fudaoji<fdj@kuryun.cn>
      */
-    public function qrcode($url)
-    {
-        header("Content-type: image/png");
-        $url = urldecode($url);
-        include_once EXTEND_PATH.'/phpqrcode/phpqrcode.php';
-        \Qrcode::png($url, $file = false, $level = 'L', $size = 4);
-        exit();
-
-    }
-
-    public function getMeterial($type = '', $from_type = 1)
-    {
-        $model = new \app\common\model\Material();
-        $result = $model->getMaterialList($type, $this->mpId, $from_type);
-        $this->assign('page', $result->render());
-        $this->assign('type', $type);
-        $this->assign('from_type', $from_type);
-        $this->assign('param', input('param'));
-        $this->assign('material', $result);
-        return view('getmeterial');
-    }
-
-    public function getMeterialByImages($type = '', $from_type = 1)
-    {
-        $model = new \app\common\model\Material();
-        $result = $model->getMaterialList($type, $this->mid, $from_type);
-        $this->assign('page', $result->render());
-        $this->assign('type', $type);
-        $this->assign('from_type', $from_type);
-        $this->assign('param', input('param'));
-        $this->assign('material', $result);
-        return view();
-    }
-
-    public function sendMaterial($media_id = '', $type = '')
-    {
-        if (!$media_id || !$type) {
-            ajaxMsg(0, '参数不完整');
+    public function materialSyncPost(){
+        if(request()->isPost()){
+            $post_data = input('post.');
+            $media = model('media_'.$post_data['type'])->getOne(['id' => $post_data['id'], 'uid' => $this->adminId, 'mpid' => $this->mpId]);
+            if(empty($media)){
+                $this->error('非法操作');
+            }
+            $this->uploadMedia2Wx($post_data['type'], $post_data['id']);
+            $this->success('上传成功');
         }
-        $model = new \app\common\model\Material();
-        switch ($type) {
-            case 'image':
-                $result = $model->sendMaterialByImage($media_id);
-                if (!$result['errCode']) {
-                    ajaxMsg('1', '群发成功');
-                } else {
-                    ajaxMsg(0, '群发失败:' . json_encode($result));
-                }
-                break;
-        }
-
-
     }
 
-    public function delMaterial($media_id = '', $type = '')
-    {
-        if (!$media_id || !$type) {
-            ajaxMsg(0, '参数不完整');
+    /**
+     * 删除素材
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function materialDelPost(){
+        $post_data = input();
+        $ids = $post_data['ids'];
+        $model = model('media_'.$post_data['type']);
+        foreach ($ids as $id){
+            $data = $model->getOne(['uid' => $this->adminId, 'id' => $id], 1);
+            if($model->delOne(['uid' => $this->adminId, 'id' => $id])){
+                !empty($data['location']) && strtolower($data['location']) == 'local' && @unlink($data['path']); //删除本地文件
+                !empty($data['media_id']) && $this->mpApp->material->delete($data['media_id']); //删除永久素材
+            }
         }
-        $model = new \app\common\model\Material();
-        $res = $model->delMaterial($media_id, $this->mid);
-        if ($res)
-            ajaxMsg('1', '删除成功');
-        else
-            ajaxMsg('0', '删除失败');
+        $this->success('删除成功');
+    }
+
+    /**
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function index(){
+        $types = [
+            'image' => '图片',
+            'news' => '图文',
+            'voice' => '音频',
+            'video' => '视频'
+        ];
+        $froms = [
+            'local' => '本地',
+            'mp' => '微信',
+        ];
+        $from = input('from', 'local');
+        $type = input('type', 'image');
+        $search_key = input('search_key', '');
+        $where = ['uid' => $this->adminId, 'media_id' => '', 'mpid' => $this->mpId];
+        $from == 'mp' && $where['media_id'] = ['neq', ''];
+        $search_key && $where['title'] = ['like', '%'.$search_key.'%'];
+        $data_list = model('media_' . $type)->page(12, $where, ['id' => 'desc'], true, 1);
+        $pager = $data_list->appends(['from' => $from, 'type' => $type, 'search_key' => $search_key])->render();
+        $assign = [
+            'data_list' => $data_list,
+            'from' => $from,
+            'froms' => $froms,
+            'type' => $type,
+            'types' => $types,
+            'pager' => $pager
+        ];
+        return $this->show($assign);
+    }
+
+    /**
+     * frame素材列表
+     * @return mixed
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function handle(){
+        $params = input();
+        if(empty($params['type'])){
+            $type = 'image';
+        }else{
+            if(in_array($params['type'], $this->types)){
+                $type = $params['type'];
+            }else{
+                echo "type参数错误";exit;
+            }
+        }
+        if(method_exists($this, $type)){
+            return call_user_func([$this, $type]);
+        }else{
+            echo $type . "方法不存在";exit;
+        }
+    }
+
+    /**
+     * 音频
+     * @return mixed
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function voice(){
+        $from = input('from', 'local'); //本地或微信
+        $field = input('field', ''); //目标input框
+        $where = ['uid' => $this->adminId, 'mpid' => $this->mpId];
+        if($from == 'mp'){
+            $where['media_id'] = ['neq', ''];
+        }
+        $data_list = $this->voiceM->page(7, $where, ['id' => 'desc'], 'id,title,url', 1);
+        $pager = $data_list->render();
+        $assign = ['data_list' => $data_list, 'pager' => $pager, 'field' => $field, 'from' => $from];
+        return $this->show($assign, __FUNCTION__);
+    }
+
+    /**
+     * 文本
+     * @return mixed
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function text(){
+        if(request()->isPost()){
+            $post_data = input('post.');
+            $post_data['uid'] = $this->adminId;
+            if($res = $this->textM->addOne($post_data)){
+                $this->success('保存成功');
+            }
+            $this->error('保存失败，请刷新重试');
+        }
+        $field = input('field', ''); //目标input框
+        $where = ['uid' => $this->adminId];
+        $data_list = $this->textM->page(7, $where, ['id' => 'desc'], 'id,content', 1);
+        $pager = $data_list->render();
+        $assign = ['data_list' => $data_list, 'pager' => $pager, 'field' => $field];
+        return $this->show($assign, __FUNCTION__);
+    }
+
+    /**
+     * 删除文本素材
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function textDelPost(){
+        $post_data = input();
+        $ids = $post_data['ids'];
+        foreach ($ids as $id){
+            $this->textM->delOne(['uid' => $this->adminId, 'id' => $id]);
+        }
+        $this->success('操作成功');
+    }
+
+    /**
+     * 图片
+     * @return mixed
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function image(){
+        $from = input('from', 'local'); //本地或微信
+        $field = input('field', ''); //目标input框
+        $where = ['uid' => $this->adminId, 'media_id' => '', 'mpid' => $this->mpId];
+        if($from == 'mp'){
+            $where['media_id'] = ['neq', ''];
+        }
+        $data_list = $this->imageM->page(12, $where, ['id' => 'desc'], 'id,url,title', 1);
+        $pager = $data_list->appends(['from' => $from])->render();
+        $assign = ['data_list' => $data_list, 'pager' => $pager, 'from' => $from, 'field' => $field];
+        return $this->show($assign, __FUNCTION__);
+    }
+
+    /**
+     * 音乐
+     * @return mixed
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function music(){
+        if(request()->isPost()){
+            $post_data = input('post.');
+            $post_data['uid'] = $this->adminId;
+            $post_data['mpid'] = $this->mpId;
+            if($res = $this->musicM->addOne($post_data)){
+                $this->success('保存成功');
+            }
+            $this->error('保存失败，请刷新重试');
+        }
+        $from = input('from', 'local'); //本地或微信
+        $field = input('field', ''); //目标input框
+        $where = ['uid' => $this->adminId, 'mpid' => $this->mpId];
+        $data_list = $this->musicM->page(7, $where, ['id' => 'desc'], 'id,url,title', 1);
+        $pager = $data_list->appends(['from' => $from])->render();
+        $assign = ['data_list' => $data_list, 'pager' => $pager, 'field' => $field];
+        return $this->show($assign, __FUNCTION__);
+    }
+
+    /**
+     * 视频
+     * @return mixed
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function video(){
+        $from = input('from', 'local'); //本地或微信
+        $field = input('field', ''); //目标input框
+        $where = ['uid' => $this->adminId, 'media_id' => '', 'mpid' => $this->mpId];
+        if($from == 'mp'){
+            $where['media_id'] = ['neq', ''];
+        }
+        $data_list = $this->videoM->page(12, $where, ['id' => 'desc'], 'id,url,title', 1);
+        $pager = $data_list->appends(['from' => $from])->render();
+        $assign = ['data_list' => $data_list, 'pager' => $pager, 'from' => $from, 'field' => $field];
+        return $this->show($assign, __FUNCTION__);
     }
 }

@@ -9,7 +9,8 @@
 
 namespace ky;
 
-class Tree {
+class Tree
+{
 
     private $formatTree;
 

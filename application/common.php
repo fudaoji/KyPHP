@@ -8,6 +8,44 @@
 // +----------------------------------------------------------------------
 // | Author: 流年 <liu21st@gmail.com>
 // +----------------------------------------------------------------------
+
+/**
+ * 下载远程文件到本地
+ * @param $url
+ * @param string $type
+ * @param string $filename
+ * @return string
+ * Author: Doogie<fdj@kuryun.cn>
+ */
+function download_file($url, $type = 'image', $filename = '')
+{
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    $file = curl_exec($ch);
+    curl_close($ch);
+    switch ($type){
+        case 'voice':
+            $ext = '.mp3';
+            break;
+        case 'video':
+            $ext = '.mp4';
+            break;
+        default:
+            $ext = '.png';
+    }
+    $filename = $filename ? $filename : md5(pathinfo($url, PATHINFO_BASENAME) . time()).$ext;
+    $path = UPLOAD_PATH . '/temp/';
+    if(! file_exists($path)){
+        @mkdir($path, 0777);
+    }
+    $resource = fopen($path . $filename, 'a');
+    fwrite($resource, $file);
+    fclose($resource);
+    return $path . $filename;
+}
 /**
  * 获取服务器ip
  * @return array|false|mixed|string

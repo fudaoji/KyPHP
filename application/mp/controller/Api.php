@@ -44,10 +44,10 @@ class Api extends WechatMp
             //全网发布
             return $this->release();
         }
-        $this->app->server->push(TextMessageHandler::class, Message::TEXT);
-        $this->app->server->push(EventMessageHandler::class, Message::EVENT);
+        $this->mpApp->server->push(TextMessageHandler::class, Message::TEXT);
+        $this->mpApp->server->push(EventMessageHandler::class, Message::EVENT);
         //其他事件可按此依次注册事件处理器...
-        $this->app->server->serve()->send();
+        $this->mpApp->server->serve()->send();
     }
 
     /**
@@ -66,7 +66,7 @@ class Api extends WechatMp
      * @author Jason<dcq@kuryun.cn>
      */
     public function release() {
-        $this->app->server->push(ReleaseMessageHandler::class, Message::TEXT|Message::EVENT);
-        $this->app->server->serve()->send();
+        $this->mpApp->server->push(ReleaseMessageHandler::class, Message::TEXT|Message::EVENT);
+        $this->mpApp->server->serve()->send();
     }
 }

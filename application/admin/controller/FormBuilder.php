@@ -19,7 +19,7 @@ class FormBuilder extends Base {
     private $_extra_html;            // 额外功能代码
     private $_ajax_submit = true;    // 是否ajax提交
     private $_template;              // 模版
-    private $_tip = '';
+    private $_tip = '';              // 提示语
 
     /**
      * 初始化方法
@@ -29,13 +29,16 @@ class FormBuilder extends Base {
         $this->_template = '../admin/builder/form';
     }
 
+
     /**
      * 设置表单顶部的tip
      * @param string $tip
+     * @return FormBuilder
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function setTip($tip = ''){
         $this->_tip = $tip;
+        return $this;
     }
 
     /**
@@ -184,7 +187,7 @@ class FormBuilder extends Base {
             'form_items' =>  $this->_form_items,  //表单项目
             'ajax_submit' => $this->_ajax_submit,  //是否ajax提交
             'extra_html' => $this->_extra_html,    // 额外HTML代码
-            'tip'   => $this->_tip
+            'tip'   => $this->_tip,
         ], $assign);
         unset($this->_meta_title, $this->_tab_nav,$this->_post_url,$this->_form_items,$this->_ajax_submit,$this->_extra_html);
         return parent::show($assign, $this->_template);

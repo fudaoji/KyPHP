@@ -9,9 +9,9 @@
 
 /**
  * Created by PhpStorm.
- * Script Name: ${FILE_NAME}
- * Create: 2020/3/3 下午11:16
- * Description: 回复规则
+ * Script Name: MediaMusic.php
+ * Create: 2020/6/6 下午4:55
+ * Description: 音乐素材
  * Author: fudaoji<fdj@kuryun.cn>
  */
 
@@ -19,32 +19,12 @@ namespace app\common\model;
 
 use ky\BaseModel;
 
-class MpRule extends BaseModel
+class MediaMusic extends BaseModel
 {
-    protected $autoWriteTimestamp = false;
-    //protected $isCache = true;
-    protected $key = 'rule_mpid';
+    protected $isCache = true;
+    protected $key = 'uid';
     protected $rule = [
         'type' => 'mod', // 分表方式
         'num'  => 5      // 分表数量
     ];
-
-    /**
-     * 回复类型
-     * @param null $id
-     * @return array|mixed
-     * Author: fudaoji<fdj@kuryun.cn>
-     */
-    public static function types($id = null){
-        $list = [
-            'text' => '文本',
-            'image' => '图片',
-            'news' => '图文',
-            'voice' => '语音',
-            'music' => '音乐',
-            'video' => '视频',
-            'addon' => '应用'
-        ];
-        return isset($list[$id]) ? $list[$id] : $list;
-    }
 }

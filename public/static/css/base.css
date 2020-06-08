@@ -8,6 +8,7 @@
 :root{
     --bg: #E7E8EB;
     --green: #44b549;
+    --main-color: #44b549;
 }
 body, p, ul, ol, li, dl, dt, dd, h1, h2, h3, h4, h5, h6, fieldset, legend, input, select, textarea, button, th, td, img { margin: 0px; padding: 0px; }
 body { color: #222; background: var(--bg) none repeat scroll 0% 0%; }
@@ -33,8 +34,9 @@ a { text-decoration: none; }
 .ico-new, .ico-hot, .ico-top { display: inline-block; width: 17px; height: 9px; margin-left: 5px; overflow: hidden; }
 .bt-a{ color: #459ae9; text-decoration: none; padding: 0px 3px 0px 3px}
 .bt-a:hover{ color: #28a4c9; text-decoration: none;}
-.error-msg,.text-danger{color: red;}
+.error-msg,.text-danger{color: #FF5722;}
 .text-green{color: var(--green);}
+.text-ellipsis{text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
 
 /*覆写layui部分*/
 .layui-btn{background-color: var(--green);}
@@ -43,6 +45,9 @@ a { text-decoration: none; }
 .layui-btn.layui-btn-normal{background-color: #1E9FFF;}
 .layui-btn-disabled, .layui-btn-disabled:active, .layui-btn-disabled:hover{background-color: #FBFBFB;}
 .layui-bg-green{color: var(--green);}
+.layui-elem-quote{border-left-color: var(--main-color);}
+#page{margin: 20px auto;text-align: center;}
+#page .layui-laypage .layui-laypage-curr .layui-laypage-em{background-color: var(--main-color);}
 
 .header {min-width: 1200px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border-bottom: 1px solid rgb(217, 218, 220); }
 .header .logo { float: left; padding: 10px 15px 10px 0px; }
@@ -82,7 +87,6 @@ a { text-decoration: none; }
 .content-hd .title-tab li a { display: block; padding: 0px 22px; color: rgb(34, 34, 34); }
 .content-hd .title-tab li a:hover { text-decoration: none; }
 .content-bd { padding: 30px; }
-/*.content-body .layui-form{padding-right: 10px;}*/
 
 .set-style dl dd {font-size: 14px;line-height: 32px;vertical-align: top;letter-spacing: normal;word-spacing: normal;display: inline-block;width: 62%;padding: 10px 0 10px 0;}
 .set-style dl {width: 100%;font-size: 0;line-height: 20px;clear: both;padding: 0;margin: 0;overflow: hidden;}

@@ -9,7 +9,7 @@
 
 /**
  * Created by PhpStorm.
- * Script Name: ${FILE_NAME}
+ * Script Name: Base.php
  * Create: 2020/2/29 下午10:18
  * Description: admin controller base
  * Author: Doogie<461960962@qq.com>
@@ -22,6 +22,7 @@ use ky\KyTree;
 class Base extends BaseCtl {
     protected $adminId;
     protected $adminInfo;
+    protected $pageSize = 15;
 
     public function initialize()
     {

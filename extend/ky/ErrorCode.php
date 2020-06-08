@@ -52,5 +52,19 @@ class ErrorCode
 
     const SMSError   = 200000; // 发送短信接口异常
 
+    /**
+     * 微信公众号官方错误
+     * @param int $code
+     * @param string $msg
+     * @return mixed|string
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    static function mpError($code = 0, $msg = '未知错误'){
+        $list = [
+            40001 => '获取 access_token 时 AppSecret 错误，或者 access_token 无效。请比对 AppSecret 的正确性，或查看是否正在为恰当的公众号调用接口',
+            40113 => '素材文件格式不合法',
+        ];
+        return isset($list[$code]) ? $list[$code] : $msg;
+    }
 
 }

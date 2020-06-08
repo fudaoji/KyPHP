@@ -18,6 +18,13 @@ namespace app\mp\event;
 use app\common\event\Base;
 use app\common\model\AdminStore;
 use EasyWeChat\Factory;
+use EasyWeChat\Kernel\Messages\Image;
+use EasyWeChat\Kernel\Messages\Music;
+use EasyWeChat\Kernel\Messages\News;
+use EasyWeChat\Kernel\Messages\NewsItem;
+use EasyWeChat\Kernel\Messages\Text;
+use EasyWeChat\Kernel\Messages\Video;
+use EasyWeChat\Kernel\Messages\Voice;
 use ky\ErrorCode;
 
 class Mp extends Base
@@ -150,5 +157,95 @@ class Mp extends Base
         }
 
         return $result;
+    }
+
+    /**
+     * 文本回复
+     * @param array $media
+     * @return Text
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function replyText($media = []){
+        return new Text($media['content']);
+    }
+
+    /**
+     * 图片回复
+     * @param array $media
+     * @return Image
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function replyImage($media = []){
+        return new Image($media['media_id']);
+    }
+
+    /**
+     * 语音回复
+     * @param array $media
+     * @return Voice
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function replyVoice($media = []){
+        return new Voice($media['media_id']);
+    }
+
+    /**
+     * 视频回复
+     * @param array $media
+     * @return Video
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function replyVideo($media = []){
+        return new Video($media['media_id'], [
+            'title' => $media['title'],
+            'description' => $media['desc'],
+        ]);
+    }
+
+    /**
+     * 音乐回复
+     * @param array $media
+     * @return Music
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function replyMusic($media = []){
+        return new Music([
+            'title' => $media['title'],
+            'description' => $media['desc'],
+            'url' => $media['url'],
+            'hq_url' => $media['hq_url'],
+            'thumb_media_id' => $media['thumb_media_id']
+        ]);
+    }
+
+    /**
+     * 图文回复
+     * @param array $media
+     * @return News
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function replyNews($media = []){
+        $items = [
+            new NewsItem([
+                'title'       => $media['title'],
+                'description' => $media['digest'],
+                'url'         => $media['content_source_url'] != '' ? $media['content_source_url'] : '',
+                'image'       => $media['cover_url'],
+            ]),
+        ];
+        if($list = model('MediaNews')->getAll([
+            'where' => ['mpid' => $this->mpInfo['id'], 'pid' => $media['id']],
+            'order' => ['sort' => 'asc']
+        ])) {
+            foreach ($list as $vo) {
+                array_push($items, new NewsItem([
+                    'title'         => $vo['title'],
+                    'description'   => $vo['digest'],
+                    'url'           => $vo['content_source_url'] != '' ? $vo['content_source_url'] : '',
+                    'image'         => $vo['cover_url'],
+                ]));
+            }
+        }
+        return new News($items);
     }
 }

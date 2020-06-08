@@ -90,15 +90,25 @@ class Setting extends Base
                     'image_ext' => 'jpg,gif,png,jpeg',
                     'file_ext' => 'jpg,gif,png,jpeg,zip,rar,tar,gz,7z,doc,docx,txt,xml,mp3,mp4,xls,xlsx,pdf',
                 ];
-                $builder->addFormItem('driver', 'select', '上传驱动', '上传驱动', model('upload')->locations())
-                    ->addFormItem('file_size', 'number', '文件大小限制', '单位B', [], 'required min=1 max=1000000000')
-                    ->addFormItem('image_size', 'number', '图片大小限制', '单位B', [], 'required min=1 max=1000000000')
-                    ->addFormItem('image_ext', 'text', '图片格式支持', '多个用逗号隔开', [], 'required')
-                    ->addFormItem('file_ext', 'text', '文件格式支持', '多个用逗号隔开', [], 'required')
+                $builder->addFormItem('driver_title', 'legend', '上传驱动', '上传驱动')
+                    ->addFormItem('driver', 'select', '上传驱动', '上传驱动', model('upload')->locations())
                     ->addFormItem('qiniu_ak', 'text', '七牛accessKey', '七牛accessKey')
                     ->addFormItem('qiniu_sk', 'text', '七牛secretKey', '七牛secretKey')
                     ->addFormItem('qiniu_bucket', 'text', '七牛bucket', '七牛bucket')
-                    ->addFormItem('qiniu_domain', 'url', '七牛domain', '七牛domain');
+                    ->addFormItem('qiniu_domain', 'url', '七牛domain', '七牛domain')
+                    ->addFormItem('image_title', 'legend', '图片设置', '图片设置')
+                    ->addFormItem('image_size', 'number', '图片大小限制', '单位B', [], 'required min=1 max=1000000000')
+                    ->addFormItem('image_ext', 'text', '图片格式支持', '多个用逗号隔开', [], 'required')
+                    ->addFormItem('file_title', 'legend', '文件设置', '文件设置')
+                    ->addFormItem('file_size', 'number', '文件大小限制', '单位B', [], 'required min=1 max=1000000000')
+                    ->addFormItem('file_ext', 'text', '文件格式支持', '多个用逗号隔开', [], 'required')
+                    ->addFormItem('voice_title', 'legend', '音频设置', '音频设置')
+                    ->addFormItem('voice_size', 'number', '音频大小限制', '单位B', [], 'required min=1 max=1000000000')
+                    ->addFormItem('voice_ext', 'text', '音频格式支持', '多个用逗号隔开', [], 'required')
+                    ->addFormItem('video_title', 'legend', '视频设置', '视频设置')
+                    ->addFormItem('video_size', 'number', '视频大小限制', '单位B', [], 'required min=1 max=1000000000')
+                    ->addFormItem('video_ext', 'text', '视频格式支持', '多个用逗号隔开', [], 'required')
+                    ;
                 break;
         }
         $builder->setFormData($data);

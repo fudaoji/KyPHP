@@ -18,12 +18,12 @@ namespace app\common\model;
 
 use ky\BaseModel;
 
-class MediaImg extends BaseModel
+class MediaImage extends BaseModel
 {
     protected $isCache = true;
     protected $key = 'uid';
     protected $rule = [
         'type' => 'mod', // 分表方式
-        'num'  => 10      // 分表数量
+        'num'  => 5      // 分表数量
     ];
 }

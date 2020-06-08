@@ -59,7 +59,7 @@ class EventMessageHandler extends WechatMp implements EventHandlerInterface
                 'subscribe_time' => time(),
             ];
         }else{
-            $wx_user = $this->app->user->get($event['FromUserName']);
+            $wx_user = $this->mpApp->user->get($event['FromUserName']);
             $data = [
                 'mpid'     => $this->mpInfo['id'],
                 'openid'        => $wx_user['openid'],

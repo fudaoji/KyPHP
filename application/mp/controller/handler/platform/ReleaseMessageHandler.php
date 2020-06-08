@@ -48,7 +48,7 @@ class ReleaseMessageHandler extends WechatMp implements EventHandlerInterface
                     //使用授权码换取公众号的授权信息
                     $this->openPlatform->handleAuthorize($query_auth_code);
                     $text = new Text($response);
-                    $this->app->customer_service->message($text)->to($message['FromUserName'])->send();
+                    $this->mpApp->customer_service->message($text)->to($message['FromUserName'])->send();
                 }
                 break;
         }

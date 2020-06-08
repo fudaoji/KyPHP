@@ -16,11 +16,13 @@
 
 namespace app\mp\controller;
 
+use ky\ErrorCode;
+
 class Base extends \app\admin\controller\Base
 {
     protected $mpId;
     protected $mpInfo;
-    protected $app;
+    protected $mpApp;
     protected $openPlatform;
     protected $needMpId = true;
 
@@ -36,9 +38,9 @@ class Base extends \app\admin\controller\Base
      */
     protected function setApp() {
         if($this->mpInfo) {
-            $this->app = controller('mp', 'event')->getApp($this->mpInfo);
+            $this->mpApp = controller('mp/mp', 'event')->getApp($this->mpInfo);
         }
-        $this->openPlatform = controller('mp', 'event')->getOpenPlatform();
+        $this->openPlatform = controller('mp/mp', 'event')->getOpenPlatform();
     }
 
     /**
@@ -88,5 +90,52 @@ class Base extends \app\admin\controller\Base
         $list = model('addons')->getAll(['menu_show'=>1, 'status'=>1]);
         $this->assign['menu_app'] = $list;
         $this->assign['menu_app_title'] = '应用扩展';
+    }
+
+    /**
+     * 将素材传至微信
+     * @param string $media_type
+     * @param int $id
+     * @return bool
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    protected function uploadMedia2Wx($media_type = 'image', $id = 0){
+        if(!in_array($media_type, ['image', 'voice', 'video', 'news'])){
+            return  true;
+        }
+        $media = model('media_' . $media_type)->getOne(['id' => $id, 'uid' => $this->adminId]);
+        if(empty($media) || $media['media_id'] != ''){
+            return true;
+        }
+        $media_id = '';
+        if(strtolower($media['location']) === 'local'){
+            $path = $media['path'];
+        }else{
+            $path = download_file($media['url'], $media_type);
+        }
+        switch ($media_type){
+            case 'image':
+                $res = $this->mpApp->material->uploadImage($path);
+                break;
+            case 'voice':
+                $res = $this->mpApp->material->uploadVoice($path);
+                break;
+            case 'video':
+                $res = $this->mpApp->material->uploadVideo($path, $media['title'], $media['desc']);
+                break;
+        }
+        if(isset($res['errcode'])){
+            $this->error('上传素材至公众号失败,错误码:'.$res['errcode'].'，错误说明：' . ErrorCode::mpError($res['errcode']));
+        }else{
+            $media_id = $res['media_id'];
+            strtolower($media['location']) !== 'local' && @unlink($path);
+        }
+        if($media_id){
+            return model('media_' . $media_type)->updateOne([
+                'id' => $id,
+                'uid' => $this->adminId,
+                'media_id' => $media_id
+            ]);
+        }
     }
 }

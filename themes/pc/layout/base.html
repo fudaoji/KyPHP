@@ -111,7 +111,9 @@
                 <?php if($current_menu['type'] == 2 && $side_menu):?>
                 <h2>
                     <span class="layui-breadcrumb" lay-separator="/">
-                        <a href="{:url($side_menu['url'])}">{$side_menu['title']}</a>
+                        <a href="{:url($side_menu['url'])}">
+                            <i class="fa fa-chevron-circle-left"></i>&nbsp;&nbsp;{$side_menu['title']}
+                        </a>
                         <a><cite>{$current_menu['title']}</cite></a>
                     </span>
                 </h2>
@@ -136,13 +138,18 @@
 </body>
 
 <script>
-    var element = layui.element,
-        layer = layui.layer;
+    var element
+            ,layer
+            ,flow;
 
-    layui.use(['element', 'layer', 'util'], function(){
+    layui.use(['element', 'layer', 'util', 'flow'], function(){
         element = layui.element;
         layer = layui.layer;
         layui.util.fixbar();
+
+        flow = layui.flow;
+        //当你执行这样一个方法时，即对页面中的全部带有lay-src的img元素开启了懒加载（当然你也可以指定相关img）
+        flow.lazyimg();
     });
 
     $(function () {

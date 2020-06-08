@@ -169,7 +169,8 @@ class Admin extends Base
                 'username' => $post_data['username'],
                 'email' => $post_data['email'],
                 'mobile' => $post_data['mobile'],
-                'realname' => $post_data['realname']
+                'realname' => $post_data['realname'],
+                'status' => $post_data['status']
             ];
             if (model('admin')->updateOne($data)) {
                 $this->success('操作成功', url('index'));
@@ -184,6 +185,7 @@ class Admin extends Base
             ->addFormItem('email', 'email', '邮箱', '邮箱')
             ->addFormItem('mobile', 'tel', '手机', '手机', [], 'data-rule-phone=true')
             ->addFormItem('realname', 'text', '姓名', '姓名', [], 'minlength="2" maxlength="10"')
+            ->addFormItem('status', 'radio', '状态', '状态', [0 => '禁用', 1 => '启用'])
             ->setFormData($admin);
         return $builder->show();
     }

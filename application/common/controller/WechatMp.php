@@ -11,7 +11,7 @@ namespace app\common\controller;
 class WechatMp extends BaseCtl
 {
     protected $openPlatform;
-    protected $app;
+    protected $mpApp;
     protected $mpInfo;
     /**
      * @var \think\Model
@@ -45,7 +45,7 @@ class WechatMp extends BaseCtl
      */
     protected function setApp() {
         if($this->mpInfo) {
-            $this->app = controller('mp', 'event')->getApp($this->mpInfo);
+            $this->mpApp = controller('mp', 'event')->getApp($this->mpInfo);
         }
         $this->openPlatform = controller('mp', 'event')->getOpenPlatform();
     }

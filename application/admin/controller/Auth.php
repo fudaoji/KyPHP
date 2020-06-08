@@ -70,7 +70,7 @@ class Auth extends Controller
                     if(!empty($post_data['keeplogin'])){
                         cookie('record_username', $post_data['username']);
                     }
-                    $this->success('登录成功!', cookie('redirect_url') ? cookie('redirect_url') : url('mp/mp/index'));
+                    $this->success('登录成功!', cookie('redirect_url') ? cookie('redirect_url') : url('system/mp/index'));
                 }else{
                     $this->error('账号或密码错误', '', ['token' => request()->token()]);
                 }
@@ -78,10 +78,10 @@ class Auth extends Controller
                 $this->error('用户不存在或已被禁用', '', ['token' => request()->token()]);
             }
 
-        }else{
-            if(session('adminId')){
-                $this->redirect('mp/mp/index');
-            }
+        }
+
+        if(session('adminId')){
+            $this->redirect('system/index/index');
         }
         return view('', ['username' => cookie('record_username')]);
     }
