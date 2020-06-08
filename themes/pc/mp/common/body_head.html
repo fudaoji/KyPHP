@@ -1,0 +1,27 @@
+<style>
+    .body-head{
+        border-bottom: 1px solid #d9dadc;
+        height: 58px;
+        line-height: 58px;
+        background-color: #f8f8f8;
+        padding: 8px 30px;
+        border-radius: 0;
+    }
+    .body-head img{width: 40px;height: 40px;border-radius: 50%;margin-right: 15px;}
+    .body-head .layui-badge{margin-left: 15px;}
+    .body-head .fa{font-size: 21px;color: #949494;margin-right: 10px;}
+    .body-head .simulate{margin-right: 15px;}
+</style>
+<div class="body-head">
+    <div class="layui-row">
+        <div class="layui-col-sm6 layui-col-xs6">
+            <img src="{$mp_info.head_img}" alt="{$mp_info.nick_name}">
+            <span>{$mp_info.nick_name}</span>
+            <span class="layui-badge layui-bg-blue">{:controller('common/mp', 'event')->getTypeDesc($mp_info)}</span>
+        </div>
+        <div class="layui-col-sm6 layui-col-xs6">
+            <a href="http://mp.weixin.qq.com/debug/" target="_blank" class="simulate"><i class="fa fa-mobile-phone"></i>模拟调试</a>
+            <a href="{:url('system/mp/info', ['mid' => $mp_info['id']])}" class="set"><i class="fa fa-cog"></i>公众号设置</a>
+        </div>
+    </div>
+</div>

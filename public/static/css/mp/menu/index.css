@@ -1,0 +1,360 @@
+/* 右侧区域样式 */
+#wx-customenu{
+    margin-bottom: 20px;
+}
+
+/*左侧手机样式*/
+.wx-custommenu-phone {
+    float: left;
+    position: relative;
+    width: 316px;
+    height: 580px;
+    border: 1px solid rgb(231, 231, 235);
+}
+/*手机上部显示区域*/
+.wx-cp-single {
+    position: relative;
+    color: white;
+    padding: 5px;
+    background: rgb(35, 36, 38);
+}
+.wx-cp-single span {
+    font-size: 10px;
+}
+.wx-single-icon {
+    /*position: relative;
+    top: 0px;
+    left: -18px;*/
+    margin-left: -18px;
+    display: inline-block;
+    transform: scale(0.4, 0.4);
+}
+.wx-single-icon i {
+    color: #fff;
+}
+.wx-cp-title {
+    margin-left: -18px;
+}
+.wx-cp-time {
+    margin-left: 32px;
+}
+.wx-cp-power {
+    position: absolute;
+    top: 6px;
+    right: 20px;
+}
+.wx-cp-battery {
+    position: absolute;
+    top: 3px;
+    right: 5px;
+}
+/*右侧显示区域样式*/
+.wx-customenu-edit {
+    float: left;
+    width: 608px;
+    min-height: 580px;
+    margin-left: 15px;
+    border: 1px solid #e7e7eb;
+    background: #f4f5f9;
+    font-size: 14px;
+    padding-right: 25px;
+}
+.wx-cdnm-notify li {
+    margin-bottom: 10px;
+    color: #616161;
+    list-style: disc inside;
+    line-height: 20px;
+}
+/*发布菜单按钮区域*/
+.wx-customenu-button {
+    position: relative;
+    top: 20px;
+    padding: 20px 0;
+    border-top: 1px solid #e7e7eb;
+    clear: both;
+    text-align: center;
+}
+/*手机中间用户信息区域*/
+.wx-cp-weixin {
+    height: 30px;
+    line-height: 30px;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    background: rgb(57, 58, 61);
+}
+.wx-weixin-return {
+    float: left;
+    height: 100%;
+    font-size: 16px;
+    cursor: pointer;
+}
+.wx-weixin-open {
+    position: relative;
+    font-size: 16px;
+    left: -12px;
+}
+.wx-weixin-user {
+    float: right;
+    font-size: 20px;
+}
+/*手机底部菜单显示区域*/
+.wx-customenu-menu {
+    position: absolute;
+    width: 100%;
+    height: 46px;
+    bottom: 0px;
+    white-space: normal;
+    border-top: 1px solid rgb(231, 231, 235);
+    background: rgb(250, 250, 250);
+}
+.wx-customenu-menu div {
+    float: left;
+    text-align: center;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.wx-customenu-menu .wx-menu-emoji {
+    position: relative;
+    top: -12px;
+    float: none;
+    display: inline-block;
+    vertical-align: bottom;
+}
+.wx-customenu-menu .wx-cm-decorate {
+    width: 46px;
+    border-right: 1px solid rgb(231, 231, 235);
+}
+.wx-customenu-menu .wx-cm-decorate i {
+    line-height: 46px;
+    font-size: 32px;
+}
+.wx-customenu-menu .wx-cm-add-0:hover, .wx-customenu-menu .wx-cm-add-1:hover, .wx-customenu-menu .wx-cm-add-2:hover {
+    cursor: pointer;
+}
+.wx-customenu-menu .wx-cm-add-0 i, .wx-customenu-menu .wx-cm-add-1 i, .wx-customenu-menu .wx-cm-add-2 i {
+    line-height: 46px;
+}
+/*自定义菜单显示样式*/
+.wx-customenu-menu .wx-cm-master {
+    position: relative;
+    z-index: 1;
+}
+.wx-customenu-menu .wx-cm-master:hover {
+    cursor: pointer;
+}
+.wx-customenu-menu .wx-cm-master span {
+    display: inline-block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 46px;
+    vertical-align: super;
+}
+.wx-customenu-menu .wx-cm-master .wx-master-menu {
+    position: relative;
+    width: 89px;
+    height: 48px;
+}
+.wx-customenu-menu .wx-cm-master .wx-master-menu:hover::after {
+    position: absolute;
+    left: 2px;
+    bottom: 5px;
+    content: "";
+    width: 90px;
+    height: 36px;
+    background: url("http://weixiao.qq.com/img/home/menu_movable.png") 0 center no-repeat;
+}
+.wx-customenu-menu .wx-cm-master-active {
+    z-index: 10;
+}
+.wx-customenu-menu .wx-master-childs-0 {
+    top: -48px;
+}
+.wx-customenu-menu .wx-master-childs-1 {
+    top: -94px;
+}
+.wx-customenu-menu .wx-master-childs-2 {
+    top: -140px;
+}
+.wx-customenu-menu .wx-master-childs-3 {
+    top: -186px;
+}
+.wx-customenu-menu .wx-master-childs-4 {
+    top: -232px;
+}
+.wx-customenu-menu .wx-master-childs-5 {
+    top: -232px;
+}
+.wx-customenu-menu .wx-cm-add-0 {
+    width: 270px;
+    height: 46px;
+}
+.wx-customenu-menu .wx-cm-add-1 {
+    width: 180px;
+    height: 46px;
+}
+.wx-customenu-menu .wx-cm-add-2, .wx-customenu-menu .wx-cm-master {
+    width: 90px;
+    border-right: 1px solid #e7e7eb;
+    hieght: 46px;
+}
+.wx-customenu-menu .wx-cm-add-3 {
+    display: none;
+}
+.wx-customenu-menu .wx-cm-menu-edit-box {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    color: var(--main-color);
+}
+.wx-customenu-menu .wx-cm-menu-edit-box i {
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    z-index: 10;
+    font-size: 18px;
+    background-color: #fff;
+}
+.wx-customenu-menu .wx-cm-menu-edit {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 1px solid;
+}
+.wx-customenu-menu .wx-cm-minor {
+    width: 88px;
+}
+.wx-customenu-menu .wx-cm-minor-add {
+    width: 88px;
+    height: 46px;
+    background: white;
+}
+.wx-customenu-menu .wx-cm-minor .wx-cm-minor-add {
+    position: relative;
+    border: 1px solid #e7e7eb;
+    border-bottom: 0;
+}
+.wx-customenu-menu .wx-cm-minor-menu:hover::after {
+    position: absolute;
+    left: 2px;
+    top: 5px;
+    content: "";
+    width: 88px;
+    height: 36px;
+    background: url("http://weixiao.qq.com/img/home/menu_movable.png") 0 center no-repeat;
+}
+.wx-customenu-menu .wx-cm-minor-1, .wx-customenu-menu .wx-cm-minor-1 .wx-cm-minor-add, .wx-customenu-menu .wx-cm-minor-1 .wx-cm-minor-menu, .wx-customenu-menu .wx-cm-minor-2 .wx-cm-minor-add, .wx-customenu-menu .wx-cm-minor-2 .wx-cm-minor-menu {
+    width: 90px;
+}
+.wx-customenu-menu .wx-cm-minor-2 {
+    border-right: 0;
+}
+.wx-customenu-menu .wx-cm-minor-add {
+    width: 90px;
+    height: 46px;
+    background: white;
+}
+.wx-customenu-menu .wx-cm-minor-add i {
+    line-height: 46px;
+}
+.wx-customenu-menu .wx-cm-minor-menu {
+    position: relative;
+    top: -1px;
+    width: 90px;
+    height: 46px;
+    border: 1px solid #e7e7eb;
+    border-bottom: 0;
+    background: white;
+}
+.wx-customenu-menu .wx-cm-minor-menu-activity {
+    z-index: 100;
+}
+/*增加按钮样式*/
+.wx-add-icon {
+    position: relative;
+    top: 10px;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+}
+.wx-add-icon::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    width: 20px;
+    height: 3px;
+    background: #333;
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+.wx-add-icon::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    width: 20px;
+    height: 3px;
+    background: #333;
+}
+.wx-customenu-menu .wx-cm-minor-add i {
+    line-height: 46px;
+}
+/*点击后设置动作*/
+.wx-cd-title {
+    margin: 20px;
+    font-size: 14px;
+}
+.wx-cd-input-title span {
+    font-size: 12px;
+    color: #777;
+}
+.wx-form-group .wx-form-input {
+    line-height: 30px;
+    height: 30px;
+    border: 1px solid #ddd;
+    padding: 0 5px;
+    color: #333;
+    width: 520px !important;
+    float: left;
+}
+.wx-form-group .wx-form-input-count {
+    padding-right: 55px;
+}
+.menuFun select {
+    height: 34px;
+    line-height: 34px;
+    width: 98px;
+    float: left;
+    border: 1px solid #ddd;
+}
+.menuFun input {
+    height: 32px;
+    line-height: 32px;
+    width: 467px;
+    padding: 0 7px;
+    float: left;
+    border: 1px solid #ddd;
+}
+.icon-iconset0252, .fa-user, .fa-angle-left {
+    font-size: 20px;
+    color: #fff;
+}
+.wx-single-icon i:hover  {
+    color: #fff;
+}
+.fa-times-circle-o {
+    color: #FF5722;
+}

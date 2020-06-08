@@ -1,0 +1,281 @@
+{extend name="../layout/base" /}
+
+{block name="body"}
+<form class="layui-form" action="">
+    <input type="hidden" id="__token__" name="__token__" value="{:request()->token()}" />
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"><span class="text-danger">*</span>回复关键词</label>
+        <div class="layui-input-inline">
+            <input type="text"
+                   name="keyword"
+                   placeholder="请输入关键词"
+                   autocomplete="off"
+                   class="layui-input"
+                   required
+                   maxlength="40"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"><span class="text-danger">*</span>是否开启</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="status" value="1" checked="checked" lay-skin="switch">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"><span class="text-danger">*</span>回复类型</label>
+        <div class="layui-input-block">
+            <select name="type" required lay-filter="replyType">
+                <option value="text">回复文本</option>
+                <option value="image">回复图片</option>
+                <option value="news">回复图文</option>
+                <option value="voice">回复语音</option>
+                <option value="music">回复语音</option>
+                <option value="video">回复视频</option>
+                <option value="addon">触发应用</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="tapNode">
+        <div class="layui-tab-content">
+            <div class="reply_text layui-tab-item layui-show"><div class="layui-form-item layui-form-text">
+                <label class="layui-form-label"><span class="text-danger">*</span>回复内容</label>
+                    <div class="layui-input-block">
+                        <a href="javascript:;" id="picker-text" class="layui-btn layui-btn-primary">选择文本</a>
+                        <div id="text_content" style="display: none;border: #e7e7e7 1px solid;padding: 10px;margin-top: 5px;"></div>
+                        <input type="hidden" id="text_id">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="reply_news layui-tab-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">封面图</label>
+                    <div class="layui-input-block">
+                        {:hook('Upload',['type'=>'image','name'=>'picurl','material'=>true])}
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">图文描述</label>
+                    <div class="layui-input-block">
+                        <textarea name="news_content" placeholder="请输入图文描述" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">连接地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="link"  placeholder="请输入连接地址如：http://xxxx.com/……" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+            </div>
+            <div class="reply_addon layui-tab-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">选择应用</label>
+                    <div class="layui-input-block">
+                        <select name="addons">
+                            <option value="">请选择应用</option>
+                            {volist name="addons" id="v"}
+                            <option value="{$v.addon}">{$v.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="reply_voice layui-tab-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">语音名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="voice_title"  placeholder="请输入标题" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+
+                    <label class="layui-form-label">语音</label>
+                    <div class="layui-input-block">
+                        {:hook('Upload',['type'=>'voice','name'=>'voice','bt_title'=>'上传语音','material'=>true])}
+                        <p class="tip_for_p">临时语音只支持amr/mp3格式,大小不超过为2M,长度不超过60秒,永久语音只支持mp3/wma/wav/amr格式,大小不超过为5M,长度不超过60秒</p>
+                    </div>
+
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类型</label>
+                    <div  class="layui-input-block">
+                        <input type="radio"  checked  name="voice_staus_type" value="0" title="临时">
+                        <input type="radio" name="voice_staus_type" value="1" title="永久" >
+                    </div>
+                </div>
+            </div>
+            <div class="reply_image layui-tab-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">上传图片</label>
+                    <div class="layui-input-block">
+                        {:hook('Upload',['type'=>'image','name'=>'reply_image','material'=>true])}
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类型</label>
+                    <div  class="layui-input-block">
+                        <input type="radio"  checked  name="image_staus_type" value="0" title="临时">
+                        <input type="radio" name="image_staus_type" value="1" title="永久" >
+                    </div>
+                </div>
+            </div>
+            <div class="reply_video layui-tab-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">视频标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="video_title"  placeholder="请输入标题" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">视频</label>
+                    <div class="layui-input-block">
+                        {:hook('Upload',['type'=>'video','name'=>'reply_video','bt_title'=>'上传视频','material'=>true])}
+                        <p class="tip_for_p">临时视频只支持mp4格式,大小不超过为10M,永久视频只支持rm/rmvb/wmv/avi/mpg/mpeg/mp4格式,大小不超过为20M</p>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">描述内容</label>
+                    <div class="layui-input-block">
+                        <textarea name="video_content" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类型</label>
+                    <div  class="layui-input-block">
+                        <input type="radio"  checked  name="video_staus_type" value="0" title="临时">
+                        <input type="radio" name="video_staus_type" value="1" title="永久" >
+                    </div>
+                </div>
+            </div>
+            <div class="reply_music layui-tab-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">音乐标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="music_title"  placeholder="请输入标题" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">资源文件</label>
+                    <div class="layui-input-block">
+
+
+                    </div>
+
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">高品质链接</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="music_link"  placeholder="请输入链接" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">描述内容</label>
+                    <div class="layui-input-block">
+                        <textarea name="music_content" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" type="submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+{/block}
+
+{block name="js"}
+<script src="__STATIC__/libs/jq-module/jquery-validation/jquery.validate.js"></script>
+<script src="__STATIC__/libs/jq-module/jquery-validation/localization/messages_zh.js"></script>
+<script>
+    //回调设置文本
+    var setTextValue = function(res, field){
+        $("#"+field+"_id").val(res.id);
+        $("#"+field+"_content").show().html(res.content);
+    };
+
+    $(function () {
+        //点击选择文本
+        $("#picker-text").on('click', function () {
+            layer.open({
+                type: 2,
+                title: '文本',
+                shadeClose: false,
+                shade: 0.8,
+                area: ['900px', '576px'],
+                content: ['{:url("system/material/index", ["type" => "text", "field" => "text"])}', 'no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+            });
+        });
+    });
+
+    layui.use('form', function(){
+        var form = layui.form;
+
+        form.on('select(replyType)', function(data){
+            var class_a='reply_'+ data.value;
+            $('.layui-tab-content div').removeClass('layui-show');
+            $('.'+class_a).addClass('layui-show');
+        });
+
+        var loading_index;
+
+        $('#ajax-form').validate({
+            errorClass: 'error-msg',
+            submitHandler: function(form) {  //通过之后回调
+                var param = $(form).serialize();
+                $.ajax({
+                    url : $(form).attr('action'),
+                    method: 'post',
+                    data: param,
+                    beforeSend: function(){
+                        loading_index = layer.load(1);
+                    },
+                    success : function(res) {
+                        if(res.code === 1 ) {
+                            layer.msg(res.msg, {time: 1000}, function(){
+                                if(typeof res.url !== 'undefined' && res.url){
+                                    window.location.href = res.url;
+                                }else{
+                                    window.history.go(-1);
+                                }
+                            });
+                        } else{
+                            $('#__token__').val(res.data.token);
+                            layer.alert(res.msg);
+                        }
+                    },
+                    error: function(request, textStatus){
+                        layer.msg('500 Internal Server Error');
+                    },
+                    complete: function(){
+                        layer.close(loading_index);
+                    }
+                });
+            },
+            invalidHandler: function(form, validator) {  //不通过回调
+                return false;
+            }
+        });
+
+    });
+</script>
+{/block}

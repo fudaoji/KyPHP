@@ -1,0 +1,299 @@
+{extend name="common/base" /}
+
+{block name="body"}
+<div id="app">
+    <section id="wx-customenu">
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <blockquote class="layui-elem-quote">
+                    编辑好菜单后,只有点击"保存并发布"才能同步到微信公众号！
+                </blockquote>
+            </div>
+            <!--<div class="layui-col-xs3 tr" style="line-height: 52px;">
+                <a href="javascript:;" class="layui-btn js-pull">下拉公众号菜单</a>
+            </div>-->
+        </div>
+
+        <section class="wx-custommenu-phone">
+            <section class="wx-cp-single">
+                <span class="wx-single-icon">
+                    <i class="fa fa-circle"></i>
+                    <i class="fa fa-circle"></i>
+                    <i class="fa fa-circle"></i>
+                    <i class="fa fa-circle"></i>
+                    <i class="fa fa-circle"></i>
+                </span>
+                <span class="wx-cp-title">WeChat</span>
+                <i class="fa fa-wifi"></i>
+                <span class="wx-cp-time">08:21 AM</span>
+                <span class="wx-cp-power">88%</span>
+                <i class="wx-cp-battery iconfont icon-iconset0252"></i>
+            </section>
+
+            <section class="wx-cp-weixin">
+                <span class="wx-weixin-return"><i class="fa fa-angle-left"></i>&nbsp;<span>返回</span></span>
+                <span class="wx-weixin-open">{$mp_info.nick_name}</span>
+                <span class="wx-weixin-user"><i class="fa fa-user"></i></span>
+            </section>
+
+            <section class="wx-customenu-menu">
+                <section class="wx-cm-menu clr">
+                    <div class="wx-cm-decorate">
+                        <i class="fa fa-keyboard-o"></i>
+                    </div>
+
+                    <!--自定义菜单项-->
+
+                    <div class="wx-cm-master"
+                         :class="{'wx-master-childs-0': topMenu._child.length==0,'wx-master-childs-1': topMenu._child.length==1,'wx-master-childs-2': topMenu._child.length==2,'wx-master-childs-3': topMenu._child.length==3,'wx-master-childs-4': topMenu._child.length==4,'wx-master-childs-5': topMenu._child.length==5}"
+                         v-for="(topMenu, i) in list" :key="'top-'+i">
+                        <div class="wx-cm-minor wx-cm-minor-1">
+                            <section>
+                                <template v-if="topMenu._child.length > 0">
+                                    <!-- 子菜单数组 -->
+                                    <div
+                                            v-for="(menu, j) in topMenu._child"
+                                            class="wx-cm-minor-menu"
+                                            @click="onClickMenu(menu, 'child', j)"
+                                            :key="'menu-'+j"
+                                    >
+                                        <div class="wx-cm-menu-edit-box"
+                                             v-show="menu.selected"
+                                        >
+                                            <div class="wx-cm-menu-edit"></div>
+                                            <i class="fa fa-times-circle-o"
+                                               @click="onClickRemoveMenu('child', i, j)"
+                                            ></i>
+                                        </div>
+                                        <span>{{menu.name}}</span>
+                                    </div>
+                                </template>
+
+                                <!-- 新增菜单按钮，当等于5个时，不显示 -->
+                                <div class="wx-cm-minor-add"
+                                     @click="onClickAddMenu('child', i)"
+                                     v-if="topMenu._child.length < 5"
+                                >
+                                    <i class="wx-add-icon"></i>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="wx-master-menu"
+                             @click="onClickMenu(topMenu, 'top', i)"
+                        >
+                            <div class="wx-cm-menu-edit-box" v-show="topMenu.selected">
+                                <div class="wx-cm-menu-edit"></div>
+                                <i class="fa fa-times-circle-o"
+                                   @click="onClickRemoveMenu('top', i)"
+                                ></i>
+                            </div>
+                            <span>{{topMenu.name}}</span>
+                        </div>
+                    </div>
+
+
+                    <!--增加顶级菜单-->
+                    <div v-if="list.length<3"
+                         @click="onClickAddMenu('top')"
+                         :class="{'wx-cm-add-0': list.length==0,'wx-cm-add-1': list.length==1, 'wx-cm-add-2': list.length==2}">
+                        <i class="wx-add-icon"></i>
+                    </div>
+                </section>
+            </section>
+        </section>
+
+        <!--渲染主菜单项-->
+        <section class="wx-customenu-edit">
+            <form action="" class="layui-form">
+                <p class="wx-cd-title">菜单配置</p>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="text-danger">*</span>菜单名称</label>
+                    <div class="layui-input-block">
+                        <input  v-model="selectedMenu.name"
+                                type="text" class="layui-input" placeholder="不能超过4个汉字">
+                    </div>
+                </div>
+
+                <!-- 如果已经有子菜单，则显示此提示 -->
+                <p class="wx-cd-title" v-show="selectedMenu._child.length">已有子菜单，无法设置动作</p>
+
+                <!-- 子菜单才需要显示这段 -->
+                <div id="fun-div" v-show="!selectedMenu._child.length">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><span class="text-danger">*</span>菜单功能</label>
+                        <div class="layui-input-block">
+                            {volist name="types" id="type"}
+                            <input lay-filter="type" type="radio" title="{$type}" value="{$key}" v-model="selectedMenu.type">
+                            {/volist}
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item"
+                         v-if="selectedMenu.type == 'click'">
+                        <label class="layui-form-label"><span class="text-danger">*</span>关键词</label>
+                        <div class="layui-input-block">
+                            <input  v-model="selectedMenu.key"
+                                    type="text" class="layui-input" placeholder="请填写要触发的关键词">
+                        </div>
+                    </div>
+                    <div class="layui-form-item"
+                         v-if="selectedMenu.type == 'miniprogram'">
+                        <label class="layui-form-label"><span class="text-danger">*</span>APPID</label>
+                        <div class="layui-input-block">
+                            <input  v-model="selectedMenu.appid"
+                                    type="text" class="layui-input" placeholder="请填写小程序appid">
+                        </div>
+                    </div>
+                    <div class="layui-form-item"
+                         v-if="selectedMenu.type == 'miniprogram'">
+                        <label class="layui-form-label"><span class="text-danger">*</span>页面路径</label>
+                        <div class="layui-input-block">
+                            <input  v-model="selectedMenu.pagepath"
+                                    type="text" class="layui-input" placeholder="请填写小程序页面路径">
+                        </div>
+                    </div>
+                    <div class="layui-form-item"
+                         v-if="selectedMenu.type == 'view'|| selectedMenu.type == 'miniprogram'">
+                        <label class="layui-form-label">
+                            <span class="text-danger">*</span>
+                            <span>{{selectedMenu.type == 'view' ? '跳转链接' : '备用网页'}}</span>
+                        </label>
+                        <div class="layui-input-block">
+                            <input  v-model="selectedMenu.url"
+                                    type="text" class="layui-input" :placeholder="'请填写'+(selectedMenu.type == 'view' ? '跳转链接' : '备用网页')">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <div class="wx-customenu-button">
+            <input type="button" class="layui-btn" value="保存并发布"
+            @click="onClickSubmit">
+        </div>
+    </section>
+</div>
+{/block}
+
+{block name="js"}
+<script src="https://cdn.bootcss.com/vue/2.6.11/vue.min.js"></script>
+<script>
+    let form, menuList = <?=$menu_list;?>
+    , menuTemplate = {pid:0, name: '', type: '', key:'', url:'',appid:'',pagepath:'', _child: [], selected:1};
+
+    const app = new Vue({
+        el: '#app',
+        data:{
+            list: menuList,
+            menuName: '',
+            hasSubMenu: true,
+            selectedMenu: menuTemplate
+        },
+        methods:{
+            /**
+             * 点击保存并发布
+             */
+            onClickSubmit(){
+                let loading_index = layer.load(1);
+                $.post("{:url('savePost')}", {menu_list: this.list}, function (res) {
+                    layer.close(loading_index);
+                    if(res.code === 1){
+                        layer.msg(res.msg);
+                    }else{
+                        layer.alert(res.msg);
+                    }
+                });
+            },
+            /**
+             * 点击新增菜单
+             * @param level 父菜单或子菜单
+             * @param i  父级索引
+             * @param j  子菜单索引
+             */
+            onClickRemoveMenu(level, i, j){
+                if(level == 'top'){
+                    this.list.splice(i, 1);
+                }else{
+                    this.list[i]['_child'].splice(j, 1);
+                }
+                this.selectedMenu = Object.assign(this.selectedMenu, menuTemplate);
+            },
+            /**
+             * 点击新增菜单
+             * @param level 父菜单或子菜单
+             * @param index 菜单索引
+             */
+            onClickAddMenu(level, index){
+                if(level == 'top'){
+                    this.list.push(menuTemplate);
+                    this.selectedMenu = this.list[this.list.length-1];
+                }else{
+                    this.list[index]['_child'].push(menuTemplate);
+                    this.selectedMenu = this.list[index]['_child'][this.list[index]['_child'].length-1];
+                }
+                console.log(this.list);
+            },
+            /**
+             * 点击选中某个菜单
+             * @param menu 选中的菜单
+             * @param level 父菜单或子菜单
+             * @param index 菜单索引
+             */
+            onClickMenu(menu, level, index){
+                this.list.map(item => item.selected = 0);
+                for(let i = 0; i < this.list.length; i++){
+                    if(this.list[i]['_child'].length){
+                        this.list[i]['_child'].map(item => item.selected = 0);
+                    }
+                }
+                menu.selected = 1;
+                this.selectedMenu = menu;
+                $('#fun-div input[type=radio]').prop('checked', false);
+                $('input[value='+menu.type+']').prop('checked', true);
+                form.render();
+            }
+        }
+    });
+
+    $(function () {
+        /*$('.js-pull').on('click', function () {
+            layer.confirm('此操作将会使用公众号菜单覆盖本地保存的菜单，你确定吗？', {
+                title: '提示',
+                btn: ['是','不'] //按钮
+            }, function(){
+                var loading_index = layer.load(1);
+                $.post("{:url('pullPost')}", {}, function (res) {
+                    layer.close(loading_index);
+                    if(res.code === 1){
+                        layer.msg(res.msg, {time: 1000}, function () {
+                            location.reload();
+                        });
+                    }else{
+                        layer.alert(res.msg);
+                    }
+                })
+            });
+        });*/
+
+        layui.use(['form'], function () {
+            form = layui.form;
+            form.render();
+
+            //监听选中菜单功能
+            form.on('radio(type)', function(data){
+                $('#fun-div input[type=radio]').prop('checked', false);
+                $(this).prop("checked", true);
+                app.selectedMenu.type = data.value;
+                form.render();
+            });
+        });
+    });
+
+</script>
+
+{/block}
+
+{block name="css"}
+<link rel="stylesheet" href="__STATIC__/css/mp/menu/index.css">
+{/block}
