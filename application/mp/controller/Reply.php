@@ -25,9 +25,19 @@ class Reply extends Base
      * @var \think\Model
      */
     private $ruleM;
+    /**
+     * @var \think\Model
+     */
+    private $specialM;
+    /**
+     * @var \think\Model
+     */
+    private $addonsM;
     public function initialize(){
         parent::initialize();
         $this->ruleM = model('mpRule');
+        $this->specialM = model('mpSpecial');
+        $this->addonsM = model('addons');
     }
 
     /**
@@ -185,7 +195,60 @@ class Reply extends Base
 
         }
 
-        $assign = ['type' => $type, 'data' => $data];
+        $assign = ['type' => $type, 'data' => $data, 'types' => $this->ruleM->types()];
+        return $this->show($assign);
+    }
+
+    /**
+     * 特殊回复
+     * @return mixed
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function special(){
+        $events = $this->specialM->events();
+        if(request()->isPost()){
+            $post_data = input('post.');
+            foreach ($events as $k => $event){
+                $special = $this->specialM->getOneByMap(['event' => $k]);
+                $update_data = [
+                    'id' => $special['id'],
+                    'ignore' => 0,
+                    'keyword' => '',
+                    'addon' => ''
+                ];
+                $dict = [
+                    'ignore' => 1,
+                    'keyword' => $post_data[$k . '_keyword'],
+                    'addon' => $post_data[$k . '_addons']
+                ];
+                $update_data[$post_data[$k]] = $dict[$post_data[$k]];
+                $this->specialM->updateOne($update_data);
+            }
+            $this->success('保存成功');
+        }
+        $replies = $this->specialM->getAll([
+            'where' => ['spe_mpid' => $this->mpId],
+            'refresh' => 1
+        ]);
+        if(!count($replies)){
+            $insert_data = [];
+            foreach ($events as $k => $event){
+                $insert_data[] = [
+                    'event' => $k,
+                    'spe_mpid' => $this->mpId
+                ];
+            }
+            $this->specialM->addBatch($insert_data);
+            $replies = $this->specialM->getAll([
+                'where' => ['spe_mpid' => $this->mpId]
+            ]);
+        }
+
+        $assign = [
+            'replies' => $replies,
+            'events' => $events,
+            'addons' => $this->addonsM->getField('addon,name', ['status' => 1])
+        ];
         return $this->show($assign);
     }
 }

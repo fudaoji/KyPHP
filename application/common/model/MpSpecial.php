@@ -20,6 +20,9 @@ use ky\BaseModel;
 
 class MpSpecial extends BaseModel
 {
+    protected $autoWriteTimestamp = false;
+    const SUBSCRIBE = 'subscribe';
+    const UNSUBSCRIBE = 'unsubscribe';
     /**
      * 事件类型
      * @param null $id
@@ -28,6 +31,8 @@ class MpSpecial extends BaseModel
      */
     public static function events($id = null){
         $list = [
+            self::SUBSCRIBE => '关注事件',
+            self::UNSUBSCRIBE => '取关事件',
             'image' => '图片消息',
             'voice' => '语音消息',
             'video' => '视频消息',
@@ -36,8 +41,6 @@ class MpSpecial extends BaseModel
             'link' => "链接消息",
             'event_location' => '上报地理位置事件',
             'view' => "点击自定义菜单的链接事件",
-            'subscribe' => '关注事件',
-            'unsubscribe' => '取关事件',
             'card' => '卡券事件',
             'default' => '默认回复'
         ];

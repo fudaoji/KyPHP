@@ -25,33 +25,17 @@
 
 
 {block name="body"}
-{include file="/common/replay_nav" /}
+{include file="/common/reply_nav" /}
 <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
     <ul class="layui-tab-title">
         <li class="<?=$type == 'all' ? 'layui-this' : '';?>">
             <a href="{:url('index',['type'=>'all'])}">全部</a>
         </li>
-        <li class="<?=$type == 'text' ? 'layui-this' : '';?>">
-            <a href="{:url('index',['type'=>'text'])}">回复文字</a>
+        {volist name="types" id="t"}
+        <li class="<?=$type == $t ? 'layui-this' : '';?>">
+            <a href="{:url('index',['type'=>$key])}">回复{$t}</a>
         </li>
-        <li class="<?=$type == 'image' ? 'layui-this' : '';?>">
-            <a href="{:url('index',['type'=>'image'])}">回复图片</a>
-        </li>
-        <li class="<?=$type == 'news' ? 'layui-this' : '';?>">
-            <a href="{:url('index',['type'=>'news'])}">回复图文</a>
-        </li>
-        <li class="<?=$type == 'voice' ? 'layui-this' : '';?>">
-            <a href="{:url('index',['type'=>'voice'])}">回复语音</a>
-        </li>
-        <li class="<?=$type == 'music' ? 'layui-this' : '';?>">
-            <a href="{:url('index',['type'=>'music'])}">回复音乐</a>
-        </li>
-        <li class="<?=$type == 'video' ? 'layui-this' : '';?>">
-            <a href="{:url('index',['type'=>'video'])}">回复视频</a>
-        </li>
-        <li class="<?=$type == 'addon' ? 'layui-this' : '';?>">
-            <a href="{:url('index',['type'=>'addon'])}">回复应用</a>
-        </li>
+        {/volist}
     </ul>
 
     <div class="layui-tab-content">
@@ -372,7 +356,7 @@
             <thead>
             <tr>
                 <th>关键词</th>
-                <th>类型</th>
+                <th>回复类型</th>
                 <th>状态</th>
                 <th>操作</th>
             </tr>
@@ -381,7 +365,7 @@
             {volist name="data" id="vo"}
             <tr>
                 <td>{$vo.keyword}</td>
-                <td>{$vo.media_type}</td>
+                <td>{$types[$vo.media_type]}</td>
                 <td>{if condition="$vo.status=='1'"}使用中{else/}已停用{/if}</td>
                 <td>
                     <div class="">

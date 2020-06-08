@@ -47,7 +47,7 @@ class TextMessageHandler extends WechatMp implements EventHandlerInterface
         $message = $payload;
         $rule = $this->ruleM->getOneByMap(['keyword' => $message['Content'], 'rule_mpid' => $this->mpInfo['id']]);
         if(empty($rule)){ //不存在关键词则寻找默认回复
-            $special = $this->specialM->getOneByMap(['mpid' => $this->mpInfo['id'], 'event' => 'default']);
+            $special = $this->specialM->getOneByMap(['spe_mpid' => $this->mpInfo['id'], 'event' => 'default']);
             if($special){
                 if($special['keyword']){
                     $rule = $this->ruleM->getOneByMap(['keyword' => $special['keyword'], 'rule_mpid' => $this->mpInfo['id']]);

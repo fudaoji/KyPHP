@@ -39,7 +39,7 @@ class MpRule extends BaseModel
         $list = [
             'text' => '文本',
             'image' => '图片',
-            'news' => '图文',
+            //'news' => '图文',
             'voice' => '语音',
             'music' => '音乐',
             'video' => '视频',

@@ -1,0 +1,150 @@
+{extend name="common/base" /}
+
+{block name="body"}
+{include file="/common/reply_nav" /}
+<form class="layui-form" action="" method="post">
+    {volist name="replies" id="reply"}
+    <div class="layui-form-item">
+        <label class="layui-form-label">{$events[$reply.event]}</label>
+        <div class="layui-input-block js-choose-type" data-event="{$reply.event}">
+            <input type="radio" {eq name="$reply['ignore']" value="1"} checked {/eq}  name="{$reply.event}" value="ignore" title="不处理">
+            <input type="radio" {notempty name="$reply['keyword']"} checked {/notempty} name="{$reply.event}" value="keyword" title="触发关键词" >
+            <input type="radio" {notempty name="$reply['addon']"} checked {/notempty} name="{$reply.event}" value="addon" title="触发应用">
+        </div>
+    </div>
+
+    <div id="tapNode{$reply.event}">
+        <div class="layui-tab-content {$reply.event}">
+            <!--不回答-->
+            <div class=" image_text layui-tab-item  {eq name="$reply['ignore']" value="1"} layui-show {/eq}">
+                <div class="layui-form-item layui-form-text"></div>
+            </div>
+            <!--关键词-->
+            <div class="{$reply.event}_keyword layui-tab-item {notempty name="$reply['keyword']"} layui-show {/notempty}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <input type="text" name="{$reply.event}_keyword" value="{$reply['keyword']}" placeholder="请输入关键词" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <!--触发应用-->
+            <div class="{$reply.event}_addon layui-tab-item {notempty name="$reply['addon']"} layui-show  {/notempty}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <select name="{$reply.event}_addons">
+                            <option value="">请选择应用</option>
+                            {volist name="addons" id="v"}
+                            <option {eq name="$reply['addon']" value="$v.addon"} selected {/eq}  value="{$v.addon}">{$v.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {/volist}
+
+
+
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="special">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+{/block}
+
+{block name="js"}
+<script>
+    $(function () {
+        $(".js-choose-type").click(function(){
+            let event = $(this).data('event');
+            let class_a = event + '_'+ $("input[name='"+event+"']:checked").val();
+            $('.'+event+' div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+
+        $("#replyType_subscribe").click(function(){
+            var class_a='subscribe_'+ $("input[name='subscribe']:checked").val();
+            $('.subscribe div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_unsubscribe").click(function(){
+            var class_a='unsubscribe_'+ $("input[name='unsubscribe']:checked").val();
+            $('.unsubscribe div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_card").click(function(){
+            var class_a='card_'+ $("input[name='card']:checked").val();
+            $('.card div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_image").click(function(){
+            var class_a='image_'+ $("input[name='image']:checked").val();
+            $('.image div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_voice").click(function(){
+            var class_a='voice_'+ $("input[name='voice']:checked").val();
+            $('.voice div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_video").click(function(){
+            var class_a='video_'+ $("input[name='video']:checked").val();
+            $('.video div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_shortvideo").click(function(){
+            var class_a='shortvideo_'+ $("input[name='shortvideo']:checked").val();
+            $('.shortvideo div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_location").click(function(){
+            var class_a='location_'+ $("input[name='location']:checked").val();
+            $('.location div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_event_location").click(function(){
+            var class_a='event_location_'+ $("input[name='event_location']:checked").val();
+            $('.event_location div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_link").click(function(){
+            var class_a='link_'+ $("input[name='link']:checked").val();
+            $('.link div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_view").click(function(){
+            var class_a='view_'+ $("input[name='view']:checked").val();
+            $('.view div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_unidentified").click(function(){
+            var class_a='unidentified_'+ $("input[name='unidentified']:checked").val();
+            $('.link div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+    });
+
+
+    layui.use('form', function(){
+        let form = layui.form;
+        //监听提交
+        form.on('submit(special)', function(data){
+            $.post('', data.field, function (res) {
+                if(res.code === 1){
+                    layer.msg(res.msg);
+                }else{
+                    layer.alert(res.msg);
+                }
+            });
+            return false;
+        });
+    });
+</script>
+{/block}

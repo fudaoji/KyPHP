@@ -4,12 +4,15 @@
  * Script Name: EventMessageHandler.php
  * Create: 2020/4/15 10:48
  * Description: 公众号事件消息处理器
- * Author: Jason<dcq@kuryun.cn>
+ * @link https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_event_pushes.html  微信官方文档
+ * Author: fudaoji<fdj@kuryun.cn>
  */
 namespace app\mp\controller\handler\mp;
 
 use app\common\controller\WechatMp;
+use app\common\model\MpSpecial;
 use EasyWeChat\Kernel\Contracts\EventHandlerInterface;
+use EasyWeChat\Kernel\Messages\Text;
 use think\facade\Log;
 
 class EventMessageHandler extends WechatMp implements EventHandlerInterface
@@ -18,22 +21,31 @@ class EventMessageHandler extends WechatMp implements EventHandlerInterface
      * @var \think\Model
      */
     private $mpFollowM;
-    private $redis;
+    /**
+     * @var \think\Model
+     */
+    private $specialM;
+    /**
+     * @var \think\Model
+     */
+    private $ruleM;
 
     /**
      * 初始化
-     * @author Jason<dcq@kuryun.cn>
+     * @author fudaoji<fdj@kuryun.cn>
      */
     public function __construct() {
         parent::__construct();
         $this->mpFollowM = model('mpFollow');
+        $this->specialM = model('mpSpecial');
+        $this->ruleM = model('mpRule');
     }
 
     /**
      * 处理器
      * @param null $payload
      * @return mixed
-     * @author Jason<dcq@kuryun.cn>
+     * @author fudaoji<fdj@kuryun.cn>
      */
     public function handle($payload = null) {
         $method = camel_case('event_' . $payload['Event']);
@@ -50,6 +62,7 @@ class EventMessageHandler extends WechatMp implements EventHandlerInterface
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function eventSubscribe($event) {
+        $res = '';
         //消息订阅
         if($this->mpInfo['verify_type_info'] == -1){
             $data = [
@@ -91,24 +104,48 @@ class EventMessageHandler extends WechatMp implements EventHandlerInterface
         }
         //扫描带参数二维码事件
         if(strpos($event['EventKey'], 'qrscene_') !== false) {
-            $event_key = str_replace('qrscene_', '', $event['EventKey']);
-            $key_arr = explode('@', $event_key);
-            if(!empty($key_arr) && count($key_arr) < 2) {
-                Log::write('约定二维码场景值应由处理方法名@场景值构成');
-                return false;
+            //todo 根据生成二维码创建的规则处理对应事件
+        }
+
+        //执行关注时回复
+        $special = $this->specialM->getOneByMap(['event' => MpSpecial::SUBSCRIBE, 'spe_mpid' => $this->mpInfo['id']]);
+        if($special && $special['ignore'] == 0){
+            if(!empty($special['keyword'])){
+                //关键词回复
+                $rule = $this->ruleM->getOneByMap(['keyword' => $special['keyword'], 'rule_mpid' => $this->mpInfo['id']]);
+                if($rule){
+                    $media_type = $rule['media_type'];
+                    if($rule['media_type'] != 'addon'){
+                        $media = model('Media'.ucfirst($rule['media_type']))->getOneByMap(['id' => $rule['media_id'], 'uid' => $this->mpInfo['uid']]);
+                    }else{
+                        $media = model('addons')->getOne($rule['media_id']);
+                    }
+                }
+            }else{
+                //应用回复
+                $media_type = 'addon';
+                $media = model('addons')->getOne($special['addon']);
             }
-            $method = camel_case($key_arr[0]);
-            if(method_exists($this, $method)) {
-                return call_user_func_array([$this, $method], [$event]);
+        }
+
+        if(!empty($media_type) && !empty($media)){
+            $method = camel_case('reply' . $media_type);
+            try {
+                $res = controller('mp/mp', 'event')->$method($media); //切记在app\mp\event\mp 创建对应的方法
+            }catch (\Exception $e){
+                Log::write($e->getMessage());
             }
-            Log::write('无此事件处理方法:' . $method);
+        }
+
+        if($res !== ''){
+            return $res;
         }
     }
 
     /**
      * 取消订阅
      * @param $event
-     * @author Jason<dcq@kuryun.cn>
+     * @author fudaoji<fdj@kuryun.cn>
      */
     public function eventUnsubscribe($event) {
         $follow = $this->mpFollowM->getOneByMap(['openid' => $event['FromUserName'], 'mpid' => $this->mpInfo['id']], true, 1);
@@ -119,6 +156,15 @@ class EventMessageHandler extends WechatMp implements EventHandlerInterface
                 'subscribe' => 0,
                 'unsubscribe_time' => time()
             ]);
+        }
+        $special = $this->specialM->getOneByMap(['event' => MpSpecial::UNSUBSCRIBE, 'spe_mpid' => $this->mpInfo['id']]);
+        if($special && $special['ignore'] == 0){
+            if(!empty($special['addon'])){
+                $media = model('addon')->getOneByMap(['name' => $special['addon']]);
+                if($media){
+                    controller('mp/mp', 'event')->replyAddon($media); //应用中有可能需要处理用户取关的行为
+                }
+            }
         }
     }
 
@@ -139,6 +185,16 @@ class EventMessageHandler extends WechatMp implements EventHandlerInterface
             return call_user_func_array([$this, $method], [$event]);
         }
         Log::write('无此事件处理方法:' . $method);
+    }
+
+    /**
+     * 上报位置消息
+     * @param $event
+     * @return bool|mixed
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function eventLocation($event) {
+        return  new Text(json_encode($event));
     }
 
 }
