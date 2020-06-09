@@ -1,0 +1,62 @@
+{extend name="common/base"}
+
+{block name="tool_bar"}
+<div class="layui-row">
+    <div class="layui-col-md10">
+        <form class="layui-form" action="">
+            <div class="layui-col-md5" style="margin-left: 5px; line-height: 38px;">
+                <div class="layui-form-item">
+                    <input name="search_key" placeholder="请输入昵称搜索" value="{$search_key}" class="layui-input"
+                           type="text">
+                </div>
+            </div>
+            <div class="layui-col-md4" style="margin-left: 5px; line-height: 38px;">
+                <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="formDemo">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+
+{block name="body"}
+<table class="layui-table" lay-skin="line">
+    <colgroup>
+        <col width="250">
+        <col >
+        <col width="70">
+        <col width="100">
+        <col width="150">
+    </colgroup>
+    <thead>
+    <tr>
+        <th>openid</th>
+        <th>昵称</th>
+        <th>头像</th>
+        <th>关注状态</th>
+        <th>地区</th>
+    </tr>
+    </thead>
+    <tbody>
+    {volist name="data" id="vo"}
+    <tr>
+        <td>{$vo.openid}</td>
+        <td>{$vo.nickname}</td>
+        <td><img src="{$vo.headimgurl}" alt="{$vo.headimgurl}" style="width: 60px;"></td>
+        <td>{if condition="$vo.subscribe=='1'"}已关注{else/}未关注{/if}</td>
+        <td>
+            {$vo.province}{$vo.city}
+        </td>
+    </tr>
+    {/volist}
+    </tbody>
+</table>
+<div id="page">
+    {$page|raw}
+</div>
+{/block}
+
+{block name="js"}
+
+{/block}

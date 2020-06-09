@@ -19,7 +19,7 @@ namespace app\mp\controller\handler\mp;
 
 use app\common\model\MpSpecial;
 
-class ImageMessageHandler extends MessageHandler
+class SpecialMessageHandler extends MessageHandler
 {
     /**
      * @var \think\Model
@@ -48,7 +48,8 @@ class ImageMessageHandler extends MessageHandler
      */
     public function handle($payload = null) {
         parent::handle($payload);
-        $res = $this->replySpecial(MpSpecial::IMAGE);
+
+        $res = $this->replySpecial($payload['MsgType']);
         if($res){
             return $res;
         }

@@ -9,7 +9,7 @@
 namespace app\mp\controller;
 
 use app\common\controller\WechatMp;
-use app\mp\controller\handler\mp\ImageMessageHandler;
+use app\mp\controller\handler\mp\SpecialMessageHandler;
 use app\mp\controller\handler\platform\EventAuthorizedHandler;
 use app\mp\controller\handler\platform\EventUnAuthorizedHandler;
 use app\mp\controller\handler\platform\EventUpdateAuthorizedHandler;
@@ -47,7 +47,7 @@ class Api extends WechatMp
         }
         $this->mpApp->server->push(TextMessageHandler::class, Message::TEXT);
         $this->mpApp->server->push(EventMessageHandler::class, Message::EVENT);
-        $this->mpApp->server->push(ImageMessageHandler::class, Message::IMAGE);
+        $this->mpApp->server->push(SpecialMessageHandler::class, Message::IMAGE|Message::LOCATION|Message::VOICE|Message::VIDEO);
         //其他事件可按此依次注册事件处理器...
         $this->mpApp->server->serve()->send();
     }

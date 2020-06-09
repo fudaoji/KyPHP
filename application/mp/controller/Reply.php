@@ -195,7 +195,13 @@ class Reply extends Base
 
         }
 
-        $assign = ['type' => $type, 'data' => $data, 'types' => $this->ruleM->types()];
+        $assign = [
+            'type' => $type,
+            'data' => $data,
+            'types' => $this->ruleM->types(),
+            'page' => $data->appends(['keyword' => $search_key])->render(),
+            'keyword' => $search_key
+        ];
         return $this->show($assign);
     }
 

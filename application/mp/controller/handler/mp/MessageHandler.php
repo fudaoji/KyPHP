@@ -142,7 +142,7 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
      * Author: fudaoji<fdj@kuryun.cn>
      */
     public function replyText($media = []){
-        $text = new Text($media['content']);
+        $text = MessageObj::text($media);
         $this->recordMpReply($text);
         return $text;
     }
@@ -154,7 +154,7 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
      * Author: fudaoji<fdj@kuryun.cn>
      */
     public function replyImage($media = []){
-        $image = new Image($media['media_id']);
+        $image = MessageObj::image($media);
         $this->recordMpReply($image);
         return $image;
     }
@@ -166,7 +166,7 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
      * Author: fudaoji<fdj@kuryun.cn>
      */
     public function replyVoice($media = []){
-        $voice = new Voice($media['media_id']);
+        $voice = MessageObj::voice($media);
         $this->recordMpReply($voice);
         return $voice;
     }
@@ -178,10 +178,7 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
      * Author: fudaoji<fdj@kuryun.cn>
      */
     public function replyVideo($media = []){
-        $video = new Video($media['media_id'], [
-            'title' => $media['title'],
-            'description' => $media['desc'],
-        ]);
+        $video = MessageObj::video($media);
         $this->recordMpReply($video);
         return $video;
     }
@@ -193,13 +190,7 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
      * Author: fudaoji<fdj@kuryun.cn>
      */
     public function replyMusic($media = []){
-        $music = new Music([
-            'title' => $media['title'],
-            'description' => $media['desc'],
-            'url' => $media['url'],
-            'hq_url' => $media['hq_url'],
-            'thumb_media_id' => $media['thumb_media_id']
-        ]);
+        $music = MessageObj::music($media);
         $this->recordMpReply($music);
         return $music;
     }
@@ -211,28 +202,7 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
      * Author: fudaoji<fdj@kuryun.cn>
      */
     public function replyNews($media = []){
-        $items = [
-            new NewsItem([
-                'title'       => $media['title'],
-                'description' => $media['digest'],
-                'url'         => $media['content_source_url'] != '' ? $media['content_source_url'] : '',
-                'image'       => $media['cover_url'],
-            ]),
-        ];
-        if($list = model('MediaNews')->getAll([
-            'where' => ['mpid' => $this->mpInfo['id'], 'pid' => $media['id']],
-            'order' => ['sort' => 'asc']
-        ])) {
-            foreach ($list as $vo) {
-                array_push($items, new NewsItem([
-                    'title'         => $vo['title'],
-                    'description'   => $vo['digest'],
-                    'url'           => $vo['content_source_url'] != '' ? $vo['content_source_url'] : '',
-                    'image'         => $vo['cover_url'],
-                ]));
-            }
-        }
-        $news = new News($items);
+        $news = MessageObj::news($media);
         $this->recordMpReply($news);
         return $news;
     }
@@ -251,7 +221,6 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
                 'content' => json_encode($message, JSON_UNESCAPED_UNICODE)
             ]);
         }catch (\Exception $e){
-            Log::write("记录粉丝消息出错:\n");
             Log::write($e->getMessage());
         }
     }
@@ -266,7 +235,6 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
                 $type = $media->getType();
                 $media_array = $media->toXmlArray();
                 $content = $type == 'text' ? $media_array : $media_array[ucfirst($type)];
-                Log::write($content);
                 $this->mpMsgM->addOne([
                     'pid' => $this->mpMsg['id'],
                     'openid' => $this->mpMsg['openid'],
@@ -275,8 +243,12 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
                     'is_reply' => 1,
                     'content' => json_encode($content, JSON_UNESCAPED_UNICODE)
                 ]);
+                $this->mpMsg = $this->mpMsgM->updateOne([
+                    'id' => $this->mpMsg['id'],
+                    'mpid' => $this->mpInfo['id'],
+                    'status' => 1
+                ]);
             }catch (\Exception $e){
-                Log::write("回复粉丝消息记录出错:\n");
                 Log::write($e->getMessage());
             }
         }

@@ -6,7 +6,7 @@
         <form class="layui-form" action="">
             <div class="layui-col-md5" style="margin-left: 5px; line-height: 38px;">
                 <div class="layui-form-item">
-                    <input name="keyword" placeholder="请输入关键词" value="{:input('keyword')}" class="layui-input"
+                    <input name="keyword" placeholder="请输入关键词" value="{$keyword}" class="layui-input"
                            type="text">
                 </div>
             </div>
@@ -385,7 +385,7 @@
         {/case}
         {/switch}
         <div id="page">
-            {$data->render()|raw}
+            {$page|raw}
         </div>
     </div>
 </div>
