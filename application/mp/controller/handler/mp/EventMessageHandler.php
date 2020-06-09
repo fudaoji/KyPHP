@@ -9,13 +9,11 @@
  */
 namespace app\mp\controller\handler\mp;
 
-use app\common\controller\WechatMp;
 use app\common\model\MpSpecial;
-use EasyWeChat\Kernel\Contracts\EventHandlerInterface;
 use EasyWeChat\Kernel\Messages\Text;
 use think\facade\Log;
 
-class EventMessageHandler extends WechatMp implements EventHandlerInterface
+class EventMessageHandler extends MessageHandler
 {
     /**
      * @var \think\Model
@@ -48,6 +46,7 @@ class EventMessageHandler extends WechatMp implements EventHandlerInterface
      * @author fudaoji<fdj@kuryun.cn>
      */
     public function handle($payload = null) {
+        parent::handle($payload);
         $method = camel_case('event_' . $payload['Event']);
         if(method_exists($this, $method)) {
             return call_user_func_array([$this, $method], [$payload]);
@@ -107,8 +106,7 @@ class EventMessageHandler extends WechatMp implements EventHandlerInterface
             //todo 根据生成二维码创建的规则处理对应事件
         }
 
-        //执行关注时回复
-        $special = $this->specialM->getOneByMap(['event' => MpSpecial::SUBSCRIBE, 'spe_mpid' => $this->mpInfo['id']]);
+        /*$special = $this->specialM->getOneByMap(['event' => MpSpecial::SUBSCRIBE, 'spe_mpid' => $this->mpInfo['id']]);
         if($special && $special['ignore'] == 0){
             if(!empty($special['keyword'])){
                 //关键词回复
@@ -131,11 +129,13 @@ class EventMessageHandler extends WechatMp implements EventHandlerInterface
         if(!empty($media_type) && !empty($media)){
             $method = camel_case('reply' . $media_type);
             try {
-                $res = controller('mp/mp', 'event')->$method($media); //切记在app\mp\event\mp 创建对应的方法
+                $res = $this->$method($media);
             }catch (\Exception $e){
                 Log::write($e->getMessage());
             }
-        }
+        }*/
+        //执行关注时回复
+        $res = $this->replySpecial(MpSpecial::SUBSCRIBE);
 
         if($res !== ''){
             return $res;
@@ -162,7 +162,7 @@ class EventMessageHandler extends WechatMp implements EventHandlerInterface
             if(!empty($special['addon'])){
                 $media = model('addon')->getOneByMap(['name' => $special['addon']]);
                 if($media){
-                    controller('mp/mp', 'event')->replyAddon($media); //应用中有可能需要处理用户取关的行为
+                    $this->replyAddon($media); //应用中有可能需要处理用户取关的行为
                 }
             }
         }

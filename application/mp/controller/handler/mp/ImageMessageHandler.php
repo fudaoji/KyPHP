@@ -17,11 +17,9 @@
 
 namespace app\mp\controller\handler\mp;
 
-use app\common\controller\WechatMp;
-use EasyWeChat\Kernel\Contracts\EventHandlerInterface;
-use EasyWeChat\Kernel\Messages\Text;
+use app\common\model\MpSpecial;
 
-class ImageMessageHandler extends WechatMp implements EventHandlerInterface
+class ImageMessageHandler extends MessageHandler
 {
     /**
      * @var \think\Model
@@ -49,7 +47,10 @@ class ImageMessageHandler extends WechatMp implements EventHandlerInterface
      * @author fudaoji<fdj@kuryun.cn>
      */
     public function handle($payload = null) {
-        return new Text($payload['PicUrl']);
+        parent::handle($payload);
+        $res = $this->replySpecial(MpSpecial::IMAGE);
+        if($res){
+            return $res;
+        }
     }
-
 }

@@ -69,81 +69,19 @@
             $('.'+class_a).addClass('layui-show')
         });
 
-        $("#replyType_subscribe").click(function(){
-            var class_a='subscribe_'+ $("input[name='subscribe']:checked").val();
-            $('.subscribe div').removeClass('layui-show')
-            $('.'+class_a).addClass('layui-show')
-        });
-        $("#replyType_unsubscribe").click(function(){
-            var class_a='unsubscribe_'+ $("input[name='unsubscribe']:checked").val();
-            $('.unsubscribe div').removeClass('layui-show')
-            $('.'+class_a).addClass('layui-show')
-        });
-        $("#replyType_card").click(function(){
-            var class_a='card_'+ $("input[name='card']:checked").val();
-            $('.card div').removeClass('layui-show')
-            $('.'+class_a).addClass('layui-show')
-        });
-        $("#replyType_image").click(function(){
-            var class_a='image_'+ $("input[name='image']:checked").val();
-            $('.image div').removeClass('layui-show')
-            $('.'+class_a).addClass('layui-show')
-        });
-        $("#replyType_voice").click(function(){
-            var class_a='voice_'+ $("input[name='voice']:checked").val();
-            $('.voice div').removeClass('layui-show')
-            $('.'+class_a).addClass('layui-show')
-        });
-        $("#replyType_video").click(function(){
-            var class_a='video_'+ $("input[name='video']:checked").val();
-            $('.video div').removeClass('layui-show')
-            $('.'+class_a).addClass('layui-show')
-        });
-        $("#replyType_shortvideo").click(function(){
-            var class_a='shortvideo_'+ $("input[name='shortvideo']:checked").val();
-            $('.shortvideo div').removeClass('layui-show')
-            $('.'+class_a).addClass('layui-show')
-        });
-        $("#replyType_location").click(function(){
-            var class_a='location_'+ $("input[name='location']:checked").val();
-            $('.location div').removeClass('layui-show')
-            $('.'+class_a).addClass('layui-show')
-        });
-        $("#replyType_event_location").click(function(){
-            var class_a='event_location_'+ $("input[name='event_location']:checked").val();
-            $('.event_location div').removeClass('layui-show')
-            $('.'+class_a).addClass('layui-show')
-        });
-        $("#replyType_link").click(function(){
-            var class_a='link_'+ $("input[name='link']:checked").val();
-            $('.link div').removeClass('layui-show')
-            $('.'+class_a).addClass('layui-show')
-        });
-        $("#replyType_view").click(function(){
-            var class_a='view_'+ $("input[name='view']:checked").val();
-            $('.view div').removeClass('layui-show')
-            $('.'+class_a).addClass('layui-show')
-        });
-        $("#replyType_unidentified").click(function(){
-            var class_a='unidentified_'+ $("input[name='unidentified']:checked").val();
-            $('.link div').removeClass('layui-show')
-            $('.'+class_a).addClass('layui-show')
-        });
-    });
-
-
-    layui.use('form', function(){
-        let form = layui.form;
-        //监听提交
-        form.on('submit(special)', function(data){
-            $.post('', data.field, function (res) {
-                if(res.code === 1){
-                    layer.msg(res.msg);
-                }else{
-                    layer.alert(res.msg);
-                }
+        layui.use('form', function(){
+            let form = layui.form;
+            //监听提交
+            form.on('submit(special)', function(data){
+                $.post('', data.field, function (res) {
+                    if(res.code === 1){
+                        layer.msg(res.msg);
+                    }else{
+                        layer.alert(res.msg);
+                    }
+                });
+                return false;
             });
-            return false;
         });
     });
 </script>

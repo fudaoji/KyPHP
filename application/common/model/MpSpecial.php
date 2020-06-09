@@ -23,6 +23,7 @@ class MpSpecial extends BaseModel
     protected $autoWriteTimestamp = false;
     const SUBSCRIBE = 'subscribe';
     const UNSUBSCRIBE = 'unsubscribe';
+    const IMAGE = 'image';
     /**
      * 事件类型
      * @param null $id
@@ -33,7 +34,7 @@ class MpSpecial extends BaseModel
         $list = [
             self::SUBSCRIBE => '关注事件',
             self::UNSUBSCRIBE => '取关事件',
-            'image' => '图片消息',
+            self::IMAGE => '图片消息',
             'voice' => '语音消息',
             'video' => '视频消息',
             'shortvideo' => '短视频消息',
