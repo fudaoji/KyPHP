@@ -10,6 +10,49 @@
 // +----------------------------------------------------------------------
 
 /**
+ * 获取远程素材存到七牛
+ * @param string $url
+ * @param string $key
+ * @return bool|string
+ * @author: Doogie<461960962@qq.com>
+ */
+function fetch_to_qiniu($url = '', $key = ''){
+    $qiniu = controller('mp/mp', 'event')->getQiniu();
+    $key = $key ? $key : md5($url);
+    $res = $qiniu->fetch($url, $key);
+    if($res){
+        return $qiniu->downLink($key);
+    }
+    return false;
+}
+
+/**
+ * 人性化时间间隔函数
+ * @param $time
+ * @param string $str
+ * @return bool|string
+ * @author: Doogie<461960962@qq.com>
+ */
+function ky_publish_time($time, $str=''){
+    isset($str) ? $str : $str = 'm-d';
+    $way = time() - $time;
+    if($way < 60){
+        $r = '刚刚';
+    }elseif($way >= 60 && $way <3600){
+        $r = floor($way/60).'分钟前';
+    }elseif($way >=3600 && $way <86400){
+        $r = floor($way/3600).'小时前';
+    }elseif($way >=86400 && $way <2592000){
+        $r = floor($way/86400).'天前';
+    }elseif($way >=2592000 && $way <15552000){
+        $r = floor($way/2592000).'个月前';
+    }else{
+        $r = date("$str",$time);
+    }
+    return $r;
+}
+
+/**
  * 下载远程文件到本地
  * @param $url
  * @param string $type

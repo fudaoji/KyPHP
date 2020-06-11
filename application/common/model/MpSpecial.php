@@ -24,6 +24,16 @@ class MpSpecial extends BaseModel
     const SUBSCRIBE = 'subscribe';
     const UNSUBSCRIBE = 'unsubscribe';
     const IMAGE = 'image';
+    const VOICE = 'voice';
+    const VIDEO = 'video';
+    const SHORTVIDEO = 'shortvideo';
+    const LOCATION= 'location';
+    const LINK = 'link';
+    const EVENT_LOCATION = 'event_location';
+    const VIEW = 'view';
+    const CARD = 'card';
+    const DEFAULT_ANS = 'default';
+
     /**
      * 事件类型
      * @param null $id
@@ -35,15 +45,15 @@ class MpSpecial extends BaseModel
             self::SUBSCRIBE => '关注事件',
             self::UNSUBSCRIBE => '取关事件',
             self::IMAGE => '图片消息',
-            'voice' => '语音消息',
-            'video' => '视频消息',
-            'shortvideo' => '短视频消息',
-            'location' => '地理位置消息',
-            'link' => "链接消息",
-            'event_location' => '上报地理位置事件',
-            'view' => "点击自定义菜单的链接事件",
-            'card' => '卡券事件',
-            'default' => '默认回复'
+            self::VOICE => '语音消息',
+            self::VIDEO => '视频消息',
+            self::SHORTVIDEO => '短视频消息',
+            self::LOCATION => '地理位置消息',
+            self::LINK => "链接消息",
+            self::EVENT_LOCATION => '上报地理位置事件',
+            self::VIEW => "点击自定义菜单的链接事件",
+            self::CARD => '卡券事件',
+            self::DEFAULT_ANS => '默认回复'
         ];
         return isset($list[$id]) ? $list[$id] : $list;
     }

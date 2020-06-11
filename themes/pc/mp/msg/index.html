@@ -1,0 +1,151 @@
+{extend name="common/base" /}
+
+{block name="tool_bar"}
+<div class="layui-row">
+    <div class="layui-col-xs10">
+        <form class="layui-form" action="">
+            <div class="layui-col-xs5" style="margin-left: 5px; line-height: 38px;">
+                <div class="layui-form-item">
+                    <input name="search_key" placeholder="请输入关键词搜索" value="{$search_key}" class="layui-input"
+                           type="text">
+                </div>
+            </div>
+            <div class="layui-col-xs4" style="margin-left: 5px; line-height: 38px;">
+                <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="formDemo">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+
+{block name="body"}
+<table class="layui-table" lay-skin="line">
+    <colgroup>
+        <col width="70">
+        <col >
+        <col width="200">
+        <col width="100">
+        <col width="100">
+    </colgroup>
+    <thead>
+
+    </thead>
+    <tbody>
+    {volist name="data_list" id="vo"}
+    <tr>
+        <td>
+            {if condition="!empty($vo.headimgurl)"}
+            <img src="{$vo.headimgurl}" alt="{$vo.headimgurl}" style="width: 60px;">
+            {/if}
+        </td>
+        <td>
+            <p>
+                <a href="{:url('detail', ['openid' => $vo.openid])}" class="bt-a">
+                    {if condition="!empty($vo.nickname)"}
+                    {$vo.nickname}
+                    {else/}
+                    {$vo.openid}
+                    {/if}
+                </a>
+            </p>
+            <p class="msg-type">
+                {switch name="vo.type"}
+                {case value="text"}
+                {$vo.content.Content}
+                {/case}
+                {case value="image"}
+                <a href="javascript:;"
+                   class="js-view"
+                   data-mediaid="{$vo.content.MediaId}"
+                   data-type="{$vo.type}"
+                   data-id="{$vo.id}"
+                ><i class="fa fa-picture-o"></i></a>
+                {/case}
+                {case value="video"}
+                <a href="javascript:;"
+                   class="js-view"
+                   data-mediaid="{$vo.content.MediaId}"
+                   data-type="{$vo.type}"
+                   data-id="{$vo.id}"
+                ><i class="fa fa-file-movie-o"></i></a>
+                {/case}
+                {case value="voice"}
+                <a href="javascript:;"
+                   class="js-view"
+                   data-mediaid="{$vo.content.MediaId}"
+                   data-type="{$vo.type}"
+                   data-id="{$vo.id}"
+                ><i class="fa fa-file-audio-o"></i></a>
+                {/case}
+                {/switch}
+            </p>
+        </td>
+        <td>{:ky_publish_time($vo['create_time'])}&nbsp;&nbsp;{:date("H:i", $vo['create_time'])}</td>
+        <td>{if condition="$vo.status=='1'"}<span style="color: #FF5722">已回复</span>{/if}</td>
+        <td>
+            <a href="{:url('detail', ['openid' => $vo['openid']])}" class="layui-btn layui-btn-primary layui-btn-sm"><i class="fa fa-mail-reply"></i></a>
+        </td>
+    </tr>
+    {/volist}
+    </tbody>
+</table>
+<div id="page">
+    {$page|raw}
+</div>
+{/block}
+
+{block name="js"}
+<script>
+    $(function () {
+        layui.use(['layer'], function () {
+            $('.js-view').on('click', function () {
+                let loading_index = layer.load(1)
+                ,type = $(this).data('type');
+                $.post("{:url('getTempMediaUrlPost')}", {
+                    media_id: $(this).data('mediaid'),
+                    id: $(this).data('id'),
+                }, function (res) {
+                    layer.close(loading_index);
+                    if(res.code === 1){
+                        let content = '';
+                        switch (type) {
+                            case 'image':
+                                content = '<img src="url" style="width: 400px;" alt="url">';
+                                break;
+                            case 'video':
+                                content = '<video controls style="width: 360px;height: 200px;"><source src="url"  type="video/mp4">\
+                                        您的浏览器不支持 HTML5 video 标签。\
+                                        </video>';
+                                break;
+                            case 'voice':
+                                content = '<audio controls><source src="url" type="audio/mpeg">\
+                                        您的浏览器不支持 HTML5 audio 标签。\
+                                        </audio>';
+                                break;
+                        }
+                        layer.open({
+                            title:'查看',
+                            type: 1,
+                            area: ['450px', 'auto'],
+                            content: '<div class="media-view">'+content.replace('url', res.data.url)+'</div>'
+                        });
+                    }else{
+                        layer.alert(res.msg);
+                    }
+                });
+            });
+
+        });
+    });
+</script>
+{/block}
+
+{block name="css"}
+<style>
+    .media-view{padding: 10px;text-align: center;min-height: 300px;}
+    .msg-type{color: #9a9a9a;margin-top: 10px;}
+    .msg-type .fa{font-size: 24px;color: #9a9a9a;}
+</style>
+{/block}

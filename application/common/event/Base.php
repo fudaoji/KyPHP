@@ -17,7 +17,33 @@
 
 namespace app\common\event;
 
+use ky\Upload\Driver\Qiniu;
+
 class Base
 {
+    /**
+     * 获取七牛对象
+     * @return Qiniu
+     * Author: Doogie<fdj@kuryun.cn>
+     */
+    public function getQiniu(){
+        $config = config('system.upload');
+        return new Qiniu([
+            'secrectKey' => $config['qiniu_sk'], //七牛服务器
+            'accessKey' => $config['qiniu_ak'], //七牛用户
+            'domain' => $config['qiniu_domain'], //七牛密码
+            'bucket' => $config['qiniu_bucket'], //空间名称
+        ]);
+    }
+
+    /**
+     * redis对象
+     * @return mixed
+     * Author: Doogie<fdj@kuryun.cn>
+     */
+    public function getRedis(){
+        $redis = new \think\cache\driver\Redis(config('cache.redis'));
+        return $redis->handler();
+    }
 
 }

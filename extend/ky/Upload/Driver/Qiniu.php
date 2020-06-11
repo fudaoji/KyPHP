@@ -15,8 +15,8 @@ use Qiniu\Storage\BucketManager;
 use Qiniu\Storage\UploadManager;
 use Qiniu\Cdn\CdnManager;
 use Qiniu\Config;
-use think\Log;
 use Qiniu\Processing\PersistentFop;
+use think\facade\Log;
 
 class Qiniu
 {

@@ -35,7 +35,7 @@ class Follow extends Base
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function index(){
-        $where = [];
+        $where = ['mpid' => $this->mpId];
         $search_key = input('search_key', '');
         $search_key && $where['nickname'] = ['like', '%'.$search_key.'%'];
         $data = $this->followM->page($this->pageSize, $where, ['update_time' => 'desc'], true, 1);

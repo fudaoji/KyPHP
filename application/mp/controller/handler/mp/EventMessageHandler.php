@@ -157,15 +157,8 @@ class EventMessageHandler extends MessageHandler
                 'unsubscribe_time' => time()
             ]);
         }
-        $special = $this->specialM->getOneByMap(['event' => MpSpecial::UNSUBSCRIBE, 'spe_mpid' => $this->mpInfo['id']]);
-        if($special && $special['ignore'] == 0){
-            if(!empty($special['addon'])){
-                $media = model('addon')->getOneByMap(['name' => $special['addon']]);
-                if($media){
-                    $this->replyAddon($media); //应用中有可能需要处理用户取关的行为
-                }
-            }
-        }
+
+        $this->replySpecial(MpSpecial::UNSUBSCRIBE);
     }
 
     /**

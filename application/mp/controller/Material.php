@@ -139,7 +139,7 @@ class Material extends Base
     public function index(){
         $types = [
             'image' => '图片',
-            'news' => '图文',
+            //'news' => '图文',
             'voice' => '音频',
             'video' => '视频'
         ];

@@ -17,6 +17,7 @@
 namespace app\mp\controller\handler\mp;
 
 use app\common\controller\WechatMp;
+use app\common\model\MpSpecial;
 use EasyWeChat\Kernel\Contracts\EventHandlerInterface;
 use EasyWeChat\Kernel\Messages\Image;
 use EasyWeChat\Kernel\Messages\Music;
@@ -29,6 +30,9 @@ use think\facade\Log;
 
 class MessageHandler extends WechatMp implements EventHandlerInterface
 {
+    /**
+     * @var \app\common\model\MpMsg
+     */
     protected $mpMsg;
     /**
      * @var \think\Model
@@ -43,6 +47,11 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
      */
     private $ruleM;
     /**
+     * @var \think\Model
+     */
+    private $followM;
+    private $follow;
+    /**
      * @inheritDoc
      */
     public function __construct()
@@ -51,12 +60,26 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
         $this->mpMsgM = model('mpMsg');
         $this->specialM = model('mpSpecial');
         $this->ruleM = model('mpRule');
+        $this->followM = model('mpFollow');
     }
+
+    /**
+     * 设置粉丝信息
+     * @param null $message
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    private function setFollow($message = null){
+        if(!empty($message['FromUserName']) && $this->mpInfo){
+            $this->follow = $this->followM->getOneByMap(['mpid' => $this->mpInfo['id'], 'openid' => $message['FromUserName']]);
+        }
+    }
+
     /**
      * @inheritDoc
      */
     public function handle($payload = null)
     {
+        $this->setFollow($payload);
         $this->recordFollowMsg($payload);
     }
 
@@ -70,34 +93,24 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
         $res = '';
         $rule = $this->ruleM->getOneByMap(['keyword' => $keyword, 'rule_mpid' => $this->mpInfo['id']]);
         if(empty($rule)){ //不存在关键词则寻找默认回复
-            $special = $this->specialM->getOneByMap(['spe_mpid' => $this->mpInfo['id'], 'event' => 'default']);
-            if($special){
-                if($special['keyword']){
-                    $rule = $this->ruleM->getOneByMap(['keyword' => $special['keyword'], 'rule_mpid' => $this->mpInfo['id']]);
-                }elseif ($special['addon']){
-                    $media = model('addons')->getOneByMap(['name' => $special['addon']]);
-                    $media_type = 'addon';
-                }
-            }
-        }
-
-        if($rule){ //关键词精确回复
+            $res = $this->replySpecial(MpSpecial::DEFAULT_ANS);
+        } else { //关键词精确回复
             $media_type = $rule['media_type'];
             if($rule['media_type'] != 'addon'){
                 $media = model('Media'.ucfirst($rule['media_type']))->getOneByMap(['id' => $rule['media_id'], 'uid' => $this->mpInfo['uid']]);
             }else{
                 $media = model('addons')->getOne($rule['media_id']);
             }
-        }
-
-        if(!empty($media_type) && !empty($media)){
-            $method = camel_case('reply' . $media_type);
-            try {
-                $res = $this->$method($media);
-            }catch (\Exception $e){
-                Log::write($e->getMessage());
+            if(!empty($media)){
+                $method = camel_case('reply' . $media_type);
+                try {
+                    $res = $this->$method($media);
+                }catch (\Exception $e){
+                    Log::write($e->getMessage());
+                }
             }
         }
+
         return $res;
     }
 
@@ -214,12 +227,16 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
      */
     public function recordFollowMsg($message){
         try{
-            $this->mpMsg = $this->mpMsgM->addOne([
-                'mpid' => $this->mpInfo['id'],
-                'type' => $message['MsgType'],
-                'openid' => $message['FromUserName'],
-                'content' => json_encode($message, JSON_UNESCAPED_UNICODE)
-            ]);
+            if(! in_array($message['MsgType'], ['event'])){
+                $this->mpMsg = $this->mpMsgM->addOne([
+                    'mpid' => $this->mpInfo['id'],
+                    'type' => $message['MsgType'],
+                    'openid' => $message['FromUserName'],
+                    'content' => json_encode($message, JSON_UNESCAPED_UNICODE),
+                    'nickname' => $this->follow['nickname'],
+                    'headimgurl' => $this->follow['headimgurl']
+                ]);
+            }
         }catch (\Exception $e){
             Log::write($e->getMessage());
         }
@@ -241,7 +258,9 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
                     'mpid' => $this->mpInfo['id'],
                     'type' => $type,
                     'is_reply' => 1,
-                    'content' => json_encode($content, JSON_UNESCAPED_UNICODE)
+                    'content' => json_encode($content, JSON_UNESCAPED_UNICODE),
+                    'nickname' => $this->mpInfo['nick_name'],
+                    'headimgurl' => $this->mpInfo['head_img']
                 ]);
                 $this->mpMsg = $this->mpMsgM->updateOne([
                     'id' => $this->mpMsg['id'],
