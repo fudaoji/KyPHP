@@ -63,6 +63,7 @@ class ErrorCode
         $list = [
             40001 => '获取 access_token 时 AppSecret 错误，或者 access_token 无效。请比对 AppSecret 的正确性，或查看是否正在为恰当的公众号调用接口',
             40113 => '素材文件格式不合法',
+            48001 => 'api功能未授权，请确认公众号已获得该接口'
         ];
         return isset($list[$code]) ? $list[$code] : $msg;
     }

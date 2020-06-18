@@ -102,38 +102,11 @@ class EventMessageHandler extends MessageHandler
             $this->mpFollowM->addOne($data);
         }
         //扫描带参数二维码事件
-        if(strpos($event['EventKey'], 'qrscene_') !== false) {
+        if(!empty($event['EventKey']) && strpos($event['EventKey'], 'qrscene_') !== false) {
             //todo 根据生成二维码创建的规则处理对应事件
+            return $this->eventSCAN($event);
         }
 
-        /*$special = $this->specialM->getOneByMap(['event' => MpSpecial::SUBSCRIBE, 'spe_mpid' => $this->mpInfo['id']]);
-        if($special && $special['ignore'] == 0){
-            if(!empty($special['keyword'])){
-                //关键词回复
-                $rule = $this->ruleM->getOneByMap(['keyword' => $special['keyword'], 'rule_mpid' => $this->mpInfo['id']]);
-                if($rule){
-                    $media_type = $rule['media_type'];
-                    if($rule['media_type'] != 'addon'){
-                        $media = model('Media'.ucfirst($rule['media_type']))->getOneByMap(['id' => $rule['media_id'], 'uid' => $this->mpInfo['uid']]);
-                    }else{
-                        $media = model('addons')->getOne($rule['media_id']);
-                    }
-                }
-            }else{
-                //应用回复
-                $media_type = 'addon';
-                $media = model('addons')->getOne($special['addon']);
-            }
-        }
-
-        if(!empty($media_type) && !empty($media)){
-            $method = camel_case('reply' . $media_type);
-            try {
-                $res = $this->$method($media);
-            }catch (\Exception $e){
-                Log::write($e->getMessage());
-            }
-        }*/
         //执行关注时回复
         $res = $this->replySpecial(MpSpecial::SUBSCRIBE);
 
@@ -168,16 +141,47 @@ class EventMessageHandler extends MessageHandler
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function eventSCAN($event) {
-        $key_arr = explode('@', $event['EventKey']);
-        if(!empty($key_arr) && count($key_arr) < 2) {
-            Log::write('约定二维码场景值应由处理方法名@场景值构成');
+        $qr = model('mpQrcode')->getOneByMap(['ticket' => $event['Ticket'], 'mpid' => $this->mpInfo['id']]);
+        if(empty($qr)){
             return false;
         }
-        $method = camel_case($key_arr[0]);
-        if(method_exists($this, $method)) {
-            return call_user_func_array([$this, $method], [$event]);
+        if($qr['type'] == 1 && $qr['create_time'] + $qr['expire'] < time()){
+            return new Text('二维码已失效');
         }
-        Log::write('无此事件处理方法:' . $method);
+        //统计二维码
+        try {
+            $qr_update = [
+                'id' => $qr['id'],
+                'scan_num' => $qr['scan_num'] + 1
+            ];
+            $event['Event'] == 'subscribe' && $qr_update['gz_num'] = $qr['gz_num'] + 1;
+            model('mpQrcode')->updateOne($qr_update);
+
+            if($log = model('mpQrcodeLog')->getOneByMap(['qrcode_id' => $qr['id'], 'log_mpid' => $this->mpInfo['id'], 'openid' => $event['FromUserName']])){
+                model('mpQrcodeLog')->updateOne(['id' => $log['id'], 'log_mpid' => $this->mpInfo['id'], 'scan_num' => $log['scan_num'] + 1]);
+            }else{
+                model('mpQrcodeLog')->addOne([
+                    'qrcode_id' => $qr['id'],
+                    'log_mpid' => $this->mpInfo['id'],
+                    'openid' => $event['FromUserName'],
+                    'ticket' => $qr['ticket'],
+                    'type' => $event['Event'] == 'SCAN' ? 0 : 1
+                ]);
+            }
+            //refresh data
+            model('mpQrcode')->getOneByMap(['ticket' => $event['Ticket'], 'mpid' => $this->mpInfo['id']], true, 1);
+            model('mpQrcodeLog')->getOneByMap(
+                [
+                    'qrcode_id' => $qr['id'],
+                    'log_mpid' => $this->mpInfo['id'],
+                    'openid' => $event['FromUserName']
+                ], true, 1
+            );
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+        }
+
+        return $this->replyKeyword($qr['keyword']);
     }
 
     /**
@@ -187,7 +191,10 @@ class EventMessageHandler extends MessageHandler
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function eventLocation($event) {
-        return  new Text(json_encode($event));
+        $res = $this->replySpecial(MpSpecial::EVENT_LOCATION);
+        if($res){
+            return $res;
+        }
     }
 
 }

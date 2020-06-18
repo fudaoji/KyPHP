@@ -22,7 +22,7 @@ use ky\BaseModel;
 class MpRule extends BaseModel
 {
     protected $autoWriteTimestamp = false;
-    //protected $isCache = true;
+    protected $isCache = true;
     protected $key = 'rule_mpid';
     protected $rule = [
         'type' => 'mod', // 分表方式

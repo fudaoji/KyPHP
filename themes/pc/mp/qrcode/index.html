@@ -1,0 +1,174 @@
+{extend name="common/base" /}
+
+{block name="tool_bar"}
+<div class="layui-row">
+    <div class="layui-col-md10">
+        <form class="layui-form" action="">
+            <div class="layui-col-md5" style="margin-left: 5px; line-height: 38px;">
+                <div class="layui-form-item">
+                    <input name="search_key" placeholder="请输入场景名称或关键词" value="{$search_key}" class="layui-input"
+                           type="text">
+                </div>
+            </div>
+            <div class="layui-col-md4" style="margin-left: 5px; line-height: 38px;">
+                <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="formDemo">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="layui-col-md2 tr">
+        <a href="{:url('add')}" id="addkw" class="layui-btn layui-btn-sm">增加二维码</a>
+    </div>
+</div>
+{/block}
+
+{block name="body"}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+        {volist name="tab_list" id="tab"}
+        <li {eq name="type" value="$key"}class="layui-this"{/eq} ><a href="{$tab.href}">{$tab.title}</a></li>
+        {/volist}
+    </ul>
+
+    <div class="layui-tab-content">
+        {switch name="type"}
+        {case value="index"}
+        <table class="layui-table" lay-skin="line">
+            <thead>
+            <tr>
+                <th>二维码</th>
+                <th>场景名称</th>
+                <th>对应关键字</th>
+                <th>类型</th>
+                <th>到期时间</th>
+                <th>短链接</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="data_list" id="vo"}
+            <tr>
+                <td>
+                    <div  style="padding: 1px; border: #e6e6e6 solid 1px; width:50px; float: left; ">
+                        <img  class="form_logo" src="{$vo.qrcode_url}" width="50" height="50" onclick="clickViewImg('{$vo.qrcode_url}')">
+                    </div>
+                </td>
+                <td>{$vo.title}</td>
+                <td>{$vo.keyword}</td>
+                <td>
+                    {if condition="$vo.type gt '0'"}临时
+                    {else /} 永久
+                    {/if}
+                </td>
+                <td>
+                    {if condition="$vo.type gt '0'"}
+                    {:date('Y-m-d H:i', $vo.create_time)}
+                    {else /} 长期有效
+                    {/if}
+                </td>
+                <td>
+                    {$vo.short_url}
+                </td>
+                <td>
+                    <a class="bt-a" href="javascript:;" onclick="clickDel('{$vo.id}')">删除</a>
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+        {/case}
+        {case value="log"}
+        <table class="layui-table" lay-skin="line">
+            <thead>
+            <tr>
+                <th>二维码</th>
+                <th>场景名称</th>
+                <th>触发关键字</th>
+                <th>类型</th>
+                <th>被扫总数</th>
+                <th>粉丝增加</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="data_list" id="vo"}
+            <tr>
+                <td>
+                    <div  style="padding: 1px; border: #e6e6e6 solid 1px; width:50px; float: left; ">
+                        <img class="form_logo" src="{$vo.qrcode_url}" width="50" height="50" onclick="clickViewImg('{$vo.qrcode_url}')">
+                    </div>
+                </td>
+                <td>{$vo.title}</td>
+                <td>{$vo.keyword}</td>
+                <td>
+                    {if condition="$vo.expire gt '0'"}临时
+                    {else /} 永久
+                    {/if}
+                </td>
+                <td>{$vo.scan_num}</td>
+                <td>{$vo.gz_num}</td>
+                <td>
+                    <a href="{:url('log',['qrcode_id'=>$vo.id])}" class="bt-a">查看增加粉丝</a>
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+        {/case}
+        {/switch}
+        {$page|raw}
+    </div>
+</div>
+<script>
+    /**
+     * 预览二维码
+     * @param src
+     */
+    function clickViewImg(src = ''){
+        layui.use('layer', function() {
+            let layer = layui.layer;
+
+            layer.photos({
+                photos: {
+                    "data": [   //相册包含的图片，数组格式
+                        {
+                            "alt": src,
+                            "pid": src, //图片id
+                            "src": src, //原图地址
+                            "thumb": src //缩略图地址
+                        }
+                    ]
+                }
+                ,anim: 0 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+            });
+        });
+    }
+
+    /**
+     * 点击删除
+     * @param id
+     */
+    function clickDel(id) {
+        layui.use('layer', function(){
+            let layer = layui.layer;
+            layer.confirm('删除后无法恢复，你确定吗？', {
+                title:'提示',
+                btn: ['是','不'] //按钮
+            }, function(){
+                let loading_index = layer.load(1);
+                $.post("{:url('delPost')}", {'id':id}, function (res) {
+                    layer.close(loading_index);
+                    if(res.code === 1){
+                        layer.alert(res.msg, function (index) {
+                            window.location.reload();
+                        });
+                    }else{
+                        layer.alert(res.msg)
+                    }
+                })
+            }, function(){});
+        });
+    }
+</script>
+{/block}

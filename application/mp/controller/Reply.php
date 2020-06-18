@@ -173,7 +173,8 @@ class Reply extends Base
                     'page_size' => $this->pageSize,
                     'where' => $where,
                     'field' => array_merge($field, $fields[$type]),
-                    'order' => ['ru.id' => 'desc']
+                    'order' => ['ru.id' => 'desc'],
+                    'refresh' => 1
                 ]);
                 break;
             case 'addon':

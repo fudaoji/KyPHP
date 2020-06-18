@@ -21,6 +21,7 @@
             <input type="hidden" id="__token__" name="__token__" value="{:request()->token()}" />
             {foreach $form_items as $k => $form}
             {switch name="form.type"}
+            {case value="toggle_radio"}{include file="../admin/builder/formtype/toggle_radio" /}{/case}
             {case value="legend"}{include file="../admin/builder/formtype/legend" /}{/case}
             {case value="media_text"}{include file="../admin/builder/formtype/media_text" /}{/case}
             {case value="choose_media"}{include file="../admin/builder/formtype/choose_media" /}{/case}

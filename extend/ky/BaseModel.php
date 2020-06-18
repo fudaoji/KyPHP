@@ -683,18 +683,20 @@ class BaseModel extends Model
         unset($params['refresh']);
         $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) .__FUNCTION__. serialize($params));
         $refresh && cache($cache_key, null);
-        $selector = $this->getBuilder($where)->field($field);
-        if($this->isCache){
-            $selector->cache($cache_key, $this->expire, $this->getTrueTable($where));
+
+        $data = cache($cache_key);
+        if(empty($data)){
+            $selector = $this->getBuilder($where)->field($field);
+            if(!empty($params['alias'])){
+                $selector->alias($params['alias']);
+            }
+            if(!empty($params['join'])){
+                $selector->join($params['join']);
+            }
+            $this->_where($selector, $where);
+            $data = $selector->order($order)->paginate($page_size);
         }
-        if(!empty($params['alias'])){
-            $selector->alias($params['alias']);
-        }
-        if(!empty($params['join'])){
-            $selector->join($params['join']);
-        }
-        $this->_where($selector, $where);
-        $data = $selector->order($order)->paginate($page_size);
+
         return $data;
     }
 

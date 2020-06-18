@@ -1,0 +1,83 @@
+{extend name="common/base" /}
+
+{block name="tool_bar"}
+<div class="layui-row">
+    <div class="layui-col-md10">
+        <form class="layui-form" action="" id="form">
+            <div class="layui-col-xs4">
+                <div class="layui-form-item">
+                    <select name="type" lay-filter="types" lay-verify="required">
+                        <option {if $type==-1} selected {/if} value="-1">扫码类型</option>
+                        <option {if $type==0} selected {/if} value="0">普通扫码</option>
+                        <option {if $type==1} selected {/if} value="1">扫码关注</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-col-xs5" style="margin-left: 5px; line-height: 38px;">
+                <div class="layui-form-item">
+                    <input name="search_key" placeholder="请输入场景名称或昵称" value="{$search_key}" class="layui-input"
+                           type="text">
+                </div>
+            </div>
+            <div class="layui-col-xs2" style="margin-left: 5px; line-height: 38px;">
+                <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="formDemo">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+
+{block name="body"}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <div class="layui-tab-content">
+        <table class="layui-table" lay-skin="line">
+            <thead>
+            <tr>
+                <!--<th>场景名称</th>-->
+                <th>粉丝昵称</th>
+                <th>粉丝头像</th>
+                <th>扫码类型</th>
+                <th>扫码次数</th>
+                <th>首次扫码时间</th>
+                <th>最后扫码时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="data_list" id="vo"}
+            <tr>
+
+                <td>{$vo.nickname}</td>
+                <td><img src="{$vo.headimgurl}" alt="{$vo.headimgurl}" style="width: 60px;"></td>
+                <td>
+                    {if condition="$vo.type eq '0'"}普通扫码
+                    {else /} 扫码关注
+                    {/if}
+                </td>
+                <td>{$vo.scan_num}</td>
+                <td>{:date('Y-m-d H:i', $vo.create_time)}</td>
+                <td>{:date('Y-m-d H:i', $vo.update_time)}</td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+        {$page|raw}
+    </div>
+</div>
+<script>
+</script>
+{/block}
+
+{block name="js"}
+<script>
+    layui.use(['form'], function () {
+        let form = layui.form;
+        form.render();
+
+        form.on('select(types)', function(data){
+            $('#form').submit();
+        });
+    });
+</script>
+{/block}

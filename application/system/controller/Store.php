@@ -36,6 +36,15 @@ class Store extends Base
     }
 
     /**
+     * 切换平台
+     * @return mixed
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function index(){
+        return $this->show();
+    }
+
+    /**
      * 中转
      * @author: fudaoji<fdj@kuryun.cn>
      */
