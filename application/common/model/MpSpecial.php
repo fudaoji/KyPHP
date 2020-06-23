@@ -51,7 +51,7 @@ class MpSpecial extends BaseModel
             self::LOCATION => '地理位置消息',
             self::LINK => "链接消息",
             self::EVENT_LOCATION => '上报地理位置事件',
-            self::VIEW => "点击自定义菜单的链接事件",
+            //self::VIEW => "点击自定义菜单的链接事件",
             self::CARD => '卡券事件',
             self::DEFAULT_ANS => '默认回复'
         ];

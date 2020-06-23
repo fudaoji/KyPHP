@@ -57,8 +57,8 @@ a { text-decoration: none; }
 .header .nav { float: left; position: relative; bottom: -1px; }
 .header .nav li { float: left; }
 .header .nav li a { display: block; padding: 15px; color: #222; font-size: 16px; }
-.header .nav li:hover { color: rgb(34, 34, 34); text-decoration: none; border-bottom: 4px solid var(--green); }
-.header .nav .selected, .header .nav .selected:hover { border-bottom: 4px solid var(--green); }
+.header .nav li a:hover { color: rgb(34, 34, 34); text-decoration: none; border-bottom: 4px solid var(--green); }
+.header .nav .selected a, .header .nav .selected:hover a { border-bottom: 4px solid var(--green); }
 .header .layui-nav {position: absolute; right: 0;background-color: #fff;}
 .header .layui-nav-item{line-height: 55px;}
 .header .layui-nav-item a{color: #222;}
@@ -127,9 +127,10 @@ a { text-decoration: none; }
 .layui-tab-brief > .layui-tab-title .layui-this a{color:var(--green);text-decoration: none; }
 .layui-tab-brief > .layui-tab-title  a{text-decoration: none; }
 .msg_image{border-radius: 3px;cursor: pointer}
+
+.addon-admin-logo{width: 31px;height: 31px;border-radius: 3px; margin-right: 10px; margin-left: -6px;}
 /*.rhaphp-upload >input{margin-bottom: 10px;}
 .rha-mp-menu-title{text-align: center;}
-.rhaphp-addon-admin-logo{width: 31px;height: 31px;border-radius: 3px; margin-right: 10px; margin-left: -6px;}
 .rha-10{padding: 0px 10px 0px 10px;}
 .rhaphp-addon-menu{display: inline-block;}
 #rhaphp-page{margin-left: 10px;}

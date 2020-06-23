@@ -47,7 +47,7 @@ class Api extends WechatMp
         }
         $this->mpApp->server->push(TextMessageHandler::class, Message::TEXT);
         $this->mpApp->server->push(EventMessageHandler::class, Message::EVENT);
-        $this->mpApp->server->push(SpecialMessageHandler::class, Message::IMAGE|Message::LOCATION|Message::VOICE|Message::VIDEO);
+        $this->mpApp->server->push(SpecialMessageHandler::class, Message::IMAGE|Message::LOCATION|Message::VOICE|Message::VIDEO|Message::LINK);
         //其他事件可按此依次注册事件处理器...
         $this->mpApp->server->serve()->send();
     }

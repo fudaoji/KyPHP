@@ -1,6 +1,6 @@
-<div class="layui-form-item {$form['extra_class']}">
+<div class="layui-form-item {$form['extra_class']??''}">
     <label class="layui-form-label " for="{$form['name']}">
-        {if condition="is_int(strpos($form['extra_attr'], 'required'))"}
+        {if condition="isset($form['extra_attr']) and is_int(strpos($form['extra_attr'], 'required'))"}
         <span class="text-danger">*</span>
         {/if}
         {$form['title']}
@@ -13,7 +13,7 @@
                 name="{$form['name']}"
                 placeholder="{$form['tip'] ?? ('请输入'.$form['title'])}"
                 class="layui-input"
-                {$form['extra_attr']}
+                {$form['extra_attr']??''}
         ／>
     </div>
 </div>

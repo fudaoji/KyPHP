@@ -12,7 +12,7 @@
         .media-content img{width: 180px;border: #e7e7eb 1px solid;}
         .media-box video{width: 210px;height: 169px;}
     </style>
-    <label class="layui-form-label {$form['extra_class']}">
+    <label class="layui-form-label {$form['extra_class']??''}">
         {if condition="is_int(strpos($form['extra_attr'], 'required'))"}
         <span class="text-danger">*</span>
         {/if}

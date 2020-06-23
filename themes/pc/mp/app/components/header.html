@@ -1,0 +1,9 @@
+{if condition="isset($addonInfo['name'])"}
+<div class="content-hd">
+    <h2><img class="addon-admin-logo" src="{$addonInfo.logo}">{$addonInfo.name}</h2>
+</div>
+{/if}
+
+{if condition="isset($tips) && $tips neq ''"}
+<blockquote  class="layui-elem-quote layui-text">{$tips}</blockquote>
+{/if}

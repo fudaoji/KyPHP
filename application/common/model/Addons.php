@@ -51,7 +51,7 @@ class Addons extends BaseModel
         }
         $where = ['addon' => $name];
         $mpid && $where['mpid'] = $mpid;
-        $result = model('addonInfo')->getOneByMap($where);
+        $result = model('mpAddon')->getOneByMap($where);
         if (!empty($result)) {
             return json_decode($result['infos'], true);
         }

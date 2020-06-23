@@ -90,18 +90,7 @@
                 {/volist}
             </dl>
             {/volist}
-            {block name="leftMenu"}<!--预留菜单位置-->{/block}
-            <dl>
-                {php} if(!isset($menu_app)) $menu_app=null; {/php}
-                {if condition="$menu_app neq '' "}
-                <dt><i class="type-ico ico-trade rha-icon">&#xe6f0;</i>{$menu_app_title}</dt>
-                {/if}
-                {volist name="menu_app" id="v"}
-                <dd class="">
-                    <a href="{:url('mp/app/index',['name'=>$v.addon,'type'=>'news','mid'=>$mp_id])}">{$v.name}</a>
-                </dd>
-                {/volist}
-            </dl>
+            {block name="left_menu"}<!--预留菜单位置-->{/block}
         </div>
     </div>
     <div class="content">

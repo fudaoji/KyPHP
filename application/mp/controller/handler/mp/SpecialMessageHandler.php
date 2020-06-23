@@ -11,13 +11,11 @@
  * Created by PhpStorm.
  * Script Name: ImageMessageHandler.php
  * Create: 2020/6/8 下午11:12
- * Description: 图片消息类型处理器
+ * Description: 特殊消息类型处理器
  * Author: fudaoji<fdj@kuryun.cn>
  */
 
 namespace app\mp\controller\handler\mp;
-
-use app\common\model\MpSpecial;
 
 class SpecialMessageHandler extends MessageHandler
 {

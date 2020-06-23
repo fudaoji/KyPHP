@@ -197,4 +197,17 @@ class EventMessageHandler extends MessageHandler
         }
     }
 
+    /**
+     * 自定义菜单拉取消息事件
+     * @param $event
+     * @return bool|mixed
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function eventClick($event) {
+        $res = $this->replyKeyword($event['EventKey']);
+        if($res){
+            return $res;
+        }
+    }
+
 }

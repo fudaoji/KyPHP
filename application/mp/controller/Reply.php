@@ -254,7 +254,7 @@ class Reply extends Base
         $assign = [
             'replies' => $replies,
             'events' => $events,
-            'addons' => $this->addonsM->getField('addon,name', ['status' => 1])
+            'addons' => $this->addonsM->getField('id,addon,name', ['status' => 1])
         ];
         return $this->show($assign);
     }

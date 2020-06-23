@@ -76,10 +76,9 @@ class Base extends \app\admin\controller\Base
         session("storeId", $this->mpId);
         $this->mpInfo = $mp_info;
         cookie('mpInfo', $mp_info);
-        // $this->mpListByMenu();
         $this->assign('mp_info', $this->mpInfo);
         $this->assign('mp_id',$this->mpId);
-        //$this->getAddonForMenu();
+        $this->getAddonForMenu();
     }
 
     /**
@@ -87,7 +86,16 @@ class Base extends \app\admin\controller\Base
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function getAddonForMenu(){
-        $list = model('addons')->getAll(['menu_show'=>1, 'status'=>1]);
+        $list = model('mpAddon')->getAllJoin([
+            'alias' => 'ma',
+            'join' => [
+                ['addons a', 'ma.addon=a.addon']
+            ],
+            'field' => 'a.*',
+            'where' => ['a.menu_show'=>1, 'a.status' => 1],
+            'order' => ['ma.update_time' => 'desc'],
+            'refresh' => 1
+        ]);
         $this->assign['menu_app'] = $list;
         $this->assign['menu_app_title'] = '应用扩展';
     }

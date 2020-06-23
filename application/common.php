@@ -249,30 +249,33 @@ function http_post($url, $data, $curlFile = false)
 
 /**
  * 扩展应用 URL 生成
- * @author geeson myrhzq@qq.com
- * @param $url  string 应用url/应用名称/控制器/方法
- * @param $arr array 参数
+ * @param $url  string 应用url 应用名称/控制器/方法
+ * @param $vars array 参数
+ * @param $suffix bool
+ * @param $domain bool
+ * @return string|string[]
+ * @author fudaoji<fdj@kuryun.cn>
  */
 function addon_url($url = '', $vars = '', $suffix = true, $domain = false)
 {
-    if (!empty($addonRule = session('addonRule')) || $url != '') {
-        $addonName = isset($addonRule['addon']) ? $addonRule['addon'] : '';
-        $addonController = isset($addonRule['col']) ? $addonRule['col'] : '';
-        $addonAction = isset($addonRule['act']) ? $addonRule['act'] : '';
+    if (!empty($addon_rule = session('addonRule')) || $url != '') {
+        $addon_name = isset($addon_rule['addon']) ? $addon_rule['addon'] : '';
+        $addon_controller = isset($addon_rule['col']) ? $addon_rule['col'] : '';
+        $addon_action = isset($addon_rule['act']) ? $addon_rule['act'] : '';
         $node = '';
         if ($url == '') {
-            $node = $addonName . '/' . $addonController . '/' . $addonAction;
+            $node = $addon_name . '/' . $addon_controller . '/' . $addon_action;
         } else {
-            $nodeArr = array_values(array_filter(explode('/', $url)));
-            switch (count($nodeArr)) {
+            $node_arr = array_values(array_filter(explode('/', $url)));
+            switch (count($node_arr)) {
                 case 1:
-                    $node = $addonName . '/' . $addonController . '/' . $nodeArr[0];
+                    $node = $addon_name . '/' . $addon_controller . '/' . $node_arr[0];
                     break;
                 case 2:
-                    $node = $addonName . '/' . $nodeArr[0] . '/' . $nodeArr[1];
+                    $node = $addon_name . '/' . $node_arr[0] . '/' . $node_arr[1];
                     break;
                 case 3:
-                    $node = $nodeArr[0] . '/' . $nodeArr[1] . '/' . $nodeArr[2];
+                    $node = $node_arr[0] . '/' . $node_arr[1] . '/' . $node_arr[2];
                     break;
             }
         }

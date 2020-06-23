@@ -24,6 +24,7 @@ return array(
             'value' => '',
             'placeholder' => '不超过10个字',
             'tip' => '',
+            'extra_attr' => 'required'
         ],
     ),
 

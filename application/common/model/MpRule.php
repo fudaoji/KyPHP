@@ -21,6 +21,13 @@ use ky\BaseModel;
 
 class MpRule extends BaseModel
 {
+    const TEXT = 'text';
+    const IMAGE = 'image';
+    const NEWS = 'news';
+    const VOICE = 'voice';
+    const MUSIC = 'music';
+    const VIDEO = 'video';
+    const ADDON = 'addon';
     protected $autoWriteTimestamp = false;
     protected $isCache = true;
     protected $key = 'rule_mpid';
@@ -37,13 +44,13 @@ class MpRule extends BaseModel
      */
     public static function types($id = null){
         $list = [
-            'text' => '文本',
-            'image' => '图片',
-            //'news' => '图文',
-            'voice' => '语音',
-            'music' => '音乐',
-            'video' => '视频',
-            'addon' => '应用'
+            self::TEXT => '文本',
+            self::IMAGE => '图片',
+            //self::NEWS => '图文',
+            self::VOICE => '语音',
+            self::MUSIC => '音乐',
+            self::VIDEO => '视频',
+            self::ADDON => '应用'
         ];
         return isset($list[$id]) ? $list[$id] : $list;
     }
