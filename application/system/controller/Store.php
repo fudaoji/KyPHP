@@ -11,7 +11,7 @@
  * Created by PhpStorm.
  * Script Name: Store.php
  * Create: 2020/5/28 下午10:57
- * Description:
+ * Description: 平台、市场
  * Author: fudaoji<fdj@kuryun.cn>
  */
 
@@ -54,5 +54,14 @@ class Store extends Base
         }else{
             $this->redirect(url($this->storeInfo['type'].'/index/index'));
         }
+    }
+
+    /**
+     * 应用中心
+     * @return mixed
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function apps(){
+        return $this->show();
     }
 }

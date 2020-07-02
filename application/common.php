@@ -10,11 +10,21 @@
 // +----------------------------------------------------------------------
 
 /**
+ * 生成唯一订单号
+ * @param string $prefix
+ * @return string
+ * Author: fudaoji<fdj@kuryun.cn>
+ */
+function build_order_no($prefix = ''){
+    return $prefix . time().substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+}
+
+/**
  * 获取远程素材存到七牛
  * @param string $url
  * @param string $key
  * @return bool|string
- * @author: Doogie<461960962@qq.com>
+ * @author: fudaoji<fdj@kuryun.cn>
  */
 function fetch_to_qiniu($url = '', $key = ''){
     $qiniu = controller('mp/mp', 'event')->getQiniu();
@@ -31,7 +41,7 @@ function fetch_to_qiniu($url = '', $key = ''){
  * @param $time
  * @param string $str
  * @return bool|string
- * @author: Doogie<461960962@qq.com>
+ * @author: fudaoji<fdj@kuryun.cn>
  */
 function ky_publish_time($time, $str=''){
     isset($str) ? $str : $str = 'm-d';
@@ -58,7 +68,7 @@ function ky_publish_time($time, $str=''){
  * @param string $type
  * @param string $filename
  * @return string
- * Author: Doogie<fdj@kuryun.cn>
+ * Author: fudaoji<fdj@kuryun.cn>
  */
 function download_file($url, $type = 'image', $filename = '')
 {
@@ -248,7 +258,7 @@ function http_post($url, $data, $curlFile = false)
 }
 
 /**
- * 扩展应用 URL 生成
+ * 微信公众号扩展应用 URL 生成
  * @param $url  string 应用url 应用名称/控制器/方法
  * @param $vars array 参数
  * @param $suffix bool

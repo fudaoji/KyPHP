@@ -88,22 +88,21 @@
                 lineColor:'#5cbdaa'
             });
         });
+        //自定义验证
+        form.verify({
+            username: function (value) {
+                if (value.length < 3) {
+                    return '账号错误';
+                }
+            }
+            , password: [
+                /^[\S]{6,20}$/
+                , '密码必须6到20位，且不能出现空格'
+            ]
+        });
 
         // 进行登录操作
         form.on('submit(login)', function (data) {
-
-            form.verify({
-                username: function (value) {
-                    if (value.length < 3) {
-                        return '账号错误';
-                    }
-                }
-                , password: [
-                    /^[\S]{6,20}$/
-                    , '密码必须6到20位，且不能出现空格'
-                ]
-            });
-
             $.post(data.form.action, data.field, function(res){
                 layer.msg(res.msg, {time:1500}, function(){
                     if(res.code === 1){

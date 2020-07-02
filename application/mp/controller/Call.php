@@ -4,15 +4,13 @@
 // +----------------------------------------------------------------------
 // | [KyPHP] 并不是自由软件,你可免费使用,未经许可不能去掉KyPHP相关版权
 // +----------------------------------------------------------------------
-// | Author: fudaoji <461960962@qq.com>
+// | Author: fudaoji <fdj@kuryun.cn>
 // +----------------------------------------------------------------------
-
 
 namespace app\mp\controller;
 
-use app\common\model\Addons;
 use think\Controller;
-use think\facade\Request;
+use think\facade\Log;
 use think\facade\View;
 
 class Call extends Controller
@@ -23,35 +21,34 @@ class Call extends Controller
     private $adParam;
     private $addonsM;
 
-    public function __construct()
+    public function initialize()
     {
         $param = request()->param();
         $this->adParam = $param;
-        session('addonRule', $param);
+        session('addonRule', $param); //记录应用路由
         $this->addon = $param['addon'];
         $this->col = $param['col'];
         $this->act = $param['act'];
-        $this->addonsM = new Addons();
+        $this->addonsM = model('common/addons');
     }
 
     /**
-     * 应用调起
-     * @author geeson myrhzq@qq.com
+     * 应用调起，应用路由的起点
+     * @return mixed
+     * @throws \think\exception\DbException
+     * Author: fudaoji<fdj@kuryun.cn>
      */
     public function run()
     {
         if ($this->addon && $this->col && $this->act) {
 
-            $_addon = $this->addonsM->setCache(true)->getOneByMap(['addon' => $this->addon]);
+            $_addon = $this->addonsM->getOneByMap(['addon' => $this->addon, 'status' => 1]);
             if (empty($_addon)) {
-                $this->error('此应用不存在，可能已经撤消或者没有被安装');
-            };
-            if ($_addon['status'] != 1) {
-                $this->error('此应用停用状态或者没有被安装');
+                $this->error('此应用不存在，或已下架');
             }
             session('addonName', $this->addon);
 
-            if (file_exists($common_file = ADDON_PATH . $this->addon . '/Common.php')) {
+            if (file_exists($common_file = ADDON_PATH . $this->addon . '/common.php')) {
                 include $common_file; //加载公共文件
             }
 

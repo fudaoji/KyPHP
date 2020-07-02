@@ -18,15 +18,7 @@ namespace app\mp\event;
 use app\common\event\Base;
 use app\common\model\AdminStore;
 use EasyWeChat\Factory;
-use EasyWeChat\Kernel\Messages\Image;
-use EasyWeChat\Kernel\Messages\Music;
-use EasyWeChat\Kernel\Messages\News;
-use EasyWeChat\Kernel\Messages\NewsItem;
-use EasyWeChat\Kernel\Messages\Text;
-use EasyWeChat\Kernel\Messages\Video;
-use EasyWeChat\Kernel\Messages\Voice;
 use ky\ErrorCode;
-use think\facade\Log;
 
 class Mp extends Base
 {
@@ -158,5 +150,40 @@ class Mp extends Base
         }
 
         return $result;
+    }
+
+    /**
+     * 获取公众号支付配置
+     * @param int $mpid
+     * @return array
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function getPayConfig($mpid = 0){
+        $setting = model('common/mpSetting')->getOneByMap(['mpid' => $mpid, 'name' => 'wxpay']);
+        $config = json_decode($setting['value'], true);
+        if(empty($config)){
+            abort(ErrorCode::WxpayException, '请先配置公众号支付参数');
+        }
+        $base_path = ROOT_PATH . 'data/mp/';
+        if(! is_dir($base_path)){
+            mkdir($base_path, 0755, true);
+        }
+        $cert_path = $base_path . md5($mpid . '_apiclient_cert.pem');
+        $key_path = $base_path . md5($mpid . '_apiclient_key.pem');
+        $rsa_path = $base_path . md5($mpid . '_public_rsa.pem');
+        if(!file_exists($key_path) || !file_exists($cert_path) || !file_exists($rsa_path)){
+            file_put_contents($cert_path, empty($config['cert_path']) ? '' : $config['cert_path']);
+            file_put_contents($key_path, empty($config['key_path']) ? '' : $config['key_path']);
+            file_put_contents($rsa_path, empty($config['rsa_path']) ? '' : $config['rsa_path']);
+        }
+        return [
+            'appid'     => $config['appid'],
+            'appsecret' => $config['secret'],
+            'mchid'     => $config['merchant_id'], //商户号
+            'key'       => $config['key'], //API秘钥
+            'sslcert_path' => $cert_path,
+            'sslkey_path' => $key_path,
+            'rsa_path'  => $rsa_path
+        ];
     }
 }

@@ -38,5 +38,4 @@ class Index extends Base
         $assign = ['statics' => $this->mpFollowM->getReport($this->mpId)];
         return $this->show($assign);
     }
-
 }

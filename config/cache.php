@@ -19,7 +19,7 @@ return [
     // 缓存保存目录
     'path'   => env('runtime_path').'cache/',
     // 缓存前缀
-    'prefix' => 'kysaas_',
+    'prefix' => 'kyphp_',
     // 缓存有效期 0表示永久缓存
     'expire' => 0,
 ];

@@ -1,0 +1,102 @@
+{extend name="../layout/base" /}
+
+{block name="meta_title"}微信支付{/block}
+
+{block name="body"}
+
+<div class="wrap">
+    <van-cell-group>
+        <van-cell
+                title="支付金额"
+                value="￥{$order_info.amount/100}"
+                label="{$order_info.body}"
+                size="large">
+        </van-cell>
+    </van-cell-group>
+
+    <div class="btn-div">
+        <van-button type="primary" block @click="callpay">立即支付</van-button>
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+<script>
+    let jsApiParameters = <?php echo $js_api;?>;
+    let returnUrl = "<?php echo $order_info['return_url'];?>";
+
+    new Vue({
+        el: '#app',
+        data:{
+
+        },
+        methods:{
+            //调用微信JS api支付
+            jsApiCall() {
+                WeixinJSBridge.invoke(
+                    'getBrandWCPayRequest',
+                    jsApiParameters,
+                    function(res){
+                        //根据不同的操作结果进行不同的响应
+                        switch (res.err_msg){
+                            case 'get_brand_wcpay_request:cancel':
+                                Utils.toast({
+                                    driver: vant.Toast,
+                                    msg: '您已取消微信支付',
+                                    type: 'fail'
+                                });
+                                break;
+                            case "get_brand_wcpay_request:ok":
+                                Utils.toast({
+                                    driver: vant.Toast,
+                                    msg: '支付成功',
+                                    callback: function () {
+                                        location.href = returnUrl;
+                                    }
+                                });
+                                break;
+                            default:
+                                Utils.toast({
+                                    driver: vant.Toast,
+                                    msg: res.err_msg,
+                                    type: 'fail'
+                                });
+                                break;
+                        }
+                    }
+                );
+            },
+            callpay() {
+                if(typeof WeixinJSBridge == "undefined"){
+                    if( document.addEventListener ){
+                        document.addEventListener('WeixinJSBridgeReady', this.jsApiCall, false);
+                    }else if(document.attachEvent){
+                        document.attachEvent('WeixinJSBridgeReady', this.jsApiCall);
+                        document.attachEvent('onWeixinJSBridgeReady', this.jsApiCall);
+                    }
+                }else{
+                    this.jsApiCall();
+                }
+            }
+        },
+        mounted() {
+
+        }
+    });
+</script>
+{/block}
+
+{block name="css"}
+<style type="text/css">
+    .wrap {
+        padding: 30px 10px;
+    }
+
+    .van-button--primary {
+        color: #fff;
+        background-color: #07c160;
+        border: 1px solid #07c160;
+        margin-top: 30px;
+    }
+</style>
+{/block}

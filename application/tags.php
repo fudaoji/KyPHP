@@ -11,7 +11,6 @@
 
 // 应用行为扩展定义文件
 return [
-    'Upload'       => ['app\\behavior\\Upload'],
     // 应用初始化
     'app_init'     => [],
     // 应用开始

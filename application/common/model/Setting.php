@@ -32,7 +32,7 @@ class Setting extends BaseModel
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function settings($refresh = 0){
-        $list = $this->getAll(['where' => ['mpid' => 0], 'refresh' => $refresh]);
+        $list = $this->getAll(['refresh' => $refresh]);
         $data = [];
         foreach ($list as $v){
             $data[$v['name']] = json_decode($v['value'], true);

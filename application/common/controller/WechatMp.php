@@ -23,7 +23,7 @@ class WechatMp extends BaseCtl
      * 构造函数
      * @author fudaoji<fdj@kuryun.cn>
      */
-    public function __construct() {
+    public function initialize() {
         parent::initialize();
         $this->appId = input('appid', '');
         $this->mpM = model('mp');

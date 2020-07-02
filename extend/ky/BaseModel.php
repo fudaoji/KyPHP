@@ -207,20 +207,13 @@ class BaseModel extends Model
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function updateByMap($where = [], $data = []){
-        if(!isset($data[$this->pk])){
-            return false;
-        }
         if($this->autoWriteTimestamp){
             $this->updateTime && empty($data[$this->updateTime]) && $data[$this->updateTime] = time();
         }
+        unset($data['__token__']);
         $selector = $this->getBuilder($where);
-        $selector->_where($selector, $where);
-        $res = $selector->update($data);
-        if($res){
-            $pk = $this->key ? [$this->key=>$where[$this->key], $this->pk => $where[$this->pk]] : $where[$this->pk];
-            return $this->getOne($pk, 1);
-        }
-        return false;
+        $this->_where($selector, $where);
+        return $selector->update($data);
     }
 
     /**
@@ -683,20 +676,18 @@ class BaseModel extends Model
         unset($params['refresh']);
         $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) .__FUNCTION__. serialize($params));
         $refresh && cache($cache_key, null);
-
-        $data = cache($cache_key);
-        if(empty($data)){
-            $selector = $this->getBuilder($where)->field($field);
-            if(!empty($params['alias'])){
-                $selector->alias($params['alias']);
-            }
-            if(!empty($params['join'])){
-                $selector->join($params['join']);
-            }
-            $this->_where($selector, $where);
-            $data = $selector->order($order)->paginate($page_size);
+        $selector = $this->getBuilder($where)->field($field);
+        if($this->isCache){
+            $selector->cache($cache_key, $this->expire, $this->getTrueTable($where));
         }
-
+        if(!empty($params['alias'])){
+            $selector->alias($params['alias']);
+        }
+        if(!empty($params['join'])){
+            $selector->join($params['join']);
+        }
+        $this->_where($selector, $where);
+        $data = $selector->order($order)->paginate($page_size);
         return $data;
     }
 

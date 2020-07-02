@@ -121,6 +121,8 @@ class Upload extends BaseModel
     /**
      * 清除数据库存在但本地不存在的数据
      * @param $data
+     * @throws \think\Exception
+     * @throws \think\exception\PDOException
      */
     public function removeTrash($data){
         $this->delOne($data['id']);
@@ -179,6 +181,9 @@ class Upload extends BaseModel
      * @param string $action
      * @param array $extra
      * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
      * @Author: Doogie <461960962@qq.com>
      */
     public function ueList($action='', $extra = []){
