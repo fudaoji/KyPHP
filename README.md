@@ -1,7 +1,29 @@
-# 酷云微信营销系统（KyPHP）
+# 酷在云端（KyPHP）
 
 #### 介绍
-基于thinkphp5.1的微信营销系统
+基于微信开放平台打造的微信营销SaaS平台，应用载体主要是微信公众号和微信小程序。
+主要功能：
+- 用户角色控制
+- 微信公众号：
+    - 接入：支持手动接入和授权接入
+    - 自定义菜单
+    - 回复设置
+    - 微信支付
+    - 素材管理
+    - 粉丝管理
+    - 数据分析
+    - 消息管理
+- 微信小程序接入：
+    - 接入：授权接入
+    - 消息管理
+    - 功能设置
+    - 用户管理
+- 应用市场
+    - 分类：从两个纬度区分，分别是行业分类和操作载体（小程序和公众号）
+    - 开发者可以通过开发者官方市场采购应用
+    - 从官方市场采购而来的应用可以在自己的平台搭建应用市场，服务B端客户
+    - 开发者也可以将自己的应用上架到官方应用市场进行售卖，从而实现技术变现
+- 灵活的应用套餐以及会员套餐设置，借此可以搭建各行业的SaaS平台
 
 #### 软件架构
 - thinkPHP5.1
@@ -9,19 +31,18 @@
 - Mysql
 - Memcached & Redis
 - Layui
+- VUE
 
 #### 安装教程
 
 1.  拉取项目
-2.  将项目根目录下的env文件改为.env
+2.  在项目根目录下`cp env .env`
 3.  修改runtime 和 public/uploads的读写权限为777
-4.  composer update
+4.  根目录下执行 `composer update`
 
-#### 使用说明
+#### 使用文档
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+时间不够，慢慢会推出使用文档
 
 #### 参与贡献
 
@@ -30,12 +51,6 @@
 3.  提交代码
 4.  新建 Pull Request
 
-
-#### 码云特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5.  码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+#### 交流
+加微信再拉入群：
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0707/225138_10ed737a_15303.png "屏幕截图.png")
