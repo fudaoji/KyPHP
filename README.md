@@ -32,12 +32,12 @@
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0707/231504_9cfdce11_15303.png "屏幕截图.png")
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0707/231524_c897b425_15303.png "屏幕截图.png")
 #### 软件架构
-- thinkPHP5.1
-- EasyWeChat
+- [ThinkPHP5.1](https://www.kancloud.cn/manual/thinkphp5_1/)
+- [EasyWeChat](https://www.easywechat.com/)
 - Mysql
 - Memcached & Redis
-- Layui
-- VUE
+- [Layui](https://www.layui.com/)
+- [Vue.js](https://cn.vuejs.org/)
 
 #### 安装教程
 
