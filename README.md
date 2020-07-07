@@ -24,7 +24,13 @@
     - 从官方市场采购而来的应用可以在自己的平台搭建应用市场，服务B端客户
     - 开发者也可以将自己的应用上架到官方应用市场进行售卖，从而实现技术变现
 - 灵活的应用套餐以及会员套餐设置，借此可以搭建各行业的SaaS平台
-
+- 界面截图：
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0707/231336_93a195b5_15303.png "屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0707/231356_b5a2dfba_15303.png "屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0707/231423_e421b332_15303.png "屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0707/231446_603dbf0b_15303.png "屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0707/231504_9cfdce11_15303.png "屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0707/231524_c897b425_15303.png "屏幕截图.png")
 #### 软件架构
 - thinkPHP5.1
 - EasyWeChat
