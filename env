@@ -1,12 +1,12 @@
 ;安装时把这个文件改成.env，并根据自身情况修改配置值，配置键不许更改
 app_debug=true
-app_title=酷云微信营销平台
+app_title=酷在云端
 app_name=KyPHP
 app_prefix=ky_
 
 [db]
-hostname=10.105.19.27
-database=rhaphp
-username=fdj
-password=fdj@oudewa
+hostname=127.0.0.1
+database=kyphp
+username=root
+password=123456
 port=3306
