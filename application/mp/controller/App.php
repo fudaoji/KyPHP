@@ -86,8 +86,7 @@ class App extends Base
         }
 
         $is_show_config_menu = false;
-        if ((isset($addon_local['config']) && !empty($addon_local['config']))
-            || (isset($addon_local['is_theme']) && $addon_local['is_theme'] == true)
+        if (!empty($addon_local['config']) || (isset($addon_local['is_theme']) && $addon_local['is_theme'] == true)
         ) {
             $is_show_config_menu = true;
         }
@@ -99,7 +98,7 @@ class App extends Base
             'addonInfo' =>  $addon_db,
             'name' =>  $name,
             'menu_app' =>  '',
-            'Mkey' => '-1'
+            //'Mkey' => '-1'
         ];
         $this->assign = array_merge($this->assign, $assign);
     }
@@ -132,7 +131,7 @@ class App extends Base
             ];
             $rule = model('mpRule')->getOneByMap([
                 'rule_mpid' => $post_data['rule_mpid'],
-                'keyword' => $post_data['keyword']
+                'media_id' => $post_data['media_id']
             ], true, 1);
             
             if($rule){
@@ -154,7 +153,7 @@ class App extends Base
                 'rule_mpid' => $this->mpId,
                 'media_type' => 'addon',
                 'media_id' => $addon['id']
-            ]);
+            ], true, true);
 
             $api_file = ADDON_PATH . $this->addonName . '/controller/Api.php';
             $assign = [
@@ -189,53 +188,17 @@ class App extends Base
             } else {
                 $this->mpAddonM->updateOne(['id' => $mp_addon['id'], 'infos' => $data['infos']]);
             }
+
             $this->success('配置成功');
-
         } else {
-
             $addon_config_mp = json_decode($mp_addon['infos'], true);
             $config = json_decode($this->addonCfByDb['config'], true);
-            if (!empty($addon_config_mp)) {
-                if (!empty($config)) {
-                    foreach ($config as $key1 => $val1) {
-                        foreach ($addon_config_mp as $name => $val2) {
-                            if ($val1['name'] == $name) {
-                                $config[$key1] = $val1;
-                                if ($val1['type'] == 'radio') {
-                                    foreach ($val1['value'] as $key3 => $val3) {
-                                        if ($val3['value'] == $val2) {
-                                            $config[$key1]['value'][$key3]['checked'] = 1;
-                                        } else {
-                                            $config[$key1]['value'][$key3]['checked'] = 0;
-                                        }
-                                    }
-                                } elseif ($val1['type'] == 'checkbox') {
-                                    foreach ($val1['value'] as $key3 => $val3) {
-                                        foreach ($val2 as $key4 => $val4) {
-                                            if ($val3['name'] == $key4) {
-                                                $config[$key1]['value'][$key3]['checked'] = 1;
-                                                break;
-                                            } else {
-                                                $config[$key1]['value'][$key3]['checked'] = 0;
-                                            }
-                                        }
-                                    }
-                                } elseif ($val1['type'] == 'select') {
-                                    foreach ($val1['value'] as $key3 => $val3) {
-                                        if ($val3['value'] == $val2) {
-                                            $config[$key1]['value'][$key3]['selected'] = 1;
-                                        } else {
-                                            $config[$key1]['value'][$key3]['selected'] = 0;
-                                        }
-                                    }
-                                } else {
-                                    $config[$key1]['value'] = $val2;
-                                }
-                            }
-                        }
-                    }
-                }
+
+            foreach ($config as $key1 => $val1) {
+                $val1['value'] = (!empty($addon_config_mp) && isset($addon_config_mp[$val1['name']])) ? $addon_config_mp[$val1['name']] : '';
+                $config[$key1] = $val1;
             }
+
             $themes = [];
             $selected = '';
 

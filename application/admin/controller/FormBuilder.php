@@ -179,7 +179,7 @@ class FormBuilder extends Base {
             }
         }
 
-        $assign =array_merge([
+        $assign = array_merge([
             'meta_title' => $this->_meta_title,          // 页面标题
             'tab_nav' => $this->_tab_nav,             // 页面Tab导航
             'post_url' => $this->_post_url,         //提交的url
@@ -187,7 +187,7 @@ class FormBuilder extends Base {
             'ajax_submit' => $this->_ajax_submit,  //是否ajax提交
             'extra_html' => $this->_extra_html,    // 额外HTML代码
             'tip'   => $this->_tip
-        ], $assign);
+        ], $assign, $this->assign);
         unset($this->_meta_title, $this->_tab_nav,$this->_post_url,$this->_form_items,$this->_ajax_submit,$this->_extra_html, $this->_tip);
         return parent::show($assign, $this->_template);
     }

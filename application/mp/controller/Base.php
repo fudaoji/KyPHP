@@ -96,8 +96,8 @@ class Base extends \app\admin\controller\Base
             'order' => ['ma.update_time' => 'desc'],
             'refresh' => 1
         ]);
-        $this->assign['menu_app'] = $list;
-        $this->assign['menu_app_title'] = '应用扩展';
+        $this->assign('menu_app', $list);
+        $this->assign('menu_app_title', '应用扩展');
     }
 
     /**

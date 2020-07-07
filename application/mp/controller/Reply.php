@@ -22,22 +22,27 @@ use think\Validate;
 class Reply extends Base
 {
     /**
-     * @var \think\Model
+     * @var \app\common\model\MpRule
      */
     private $ruleM;
     /**
-     * @var \think\Model
+     * @var \app\common\model\MpSpecial
      */
     private $specialM;
     /**
-     * @var \think\Model
+     * @var \app\common\model\Addons
      */
     private $addonsM;
+    /**
+     * @var \app\common\model\MpAddon
+     */
+    private $mpAddonM;
     public function initialize(){
         parent::initialize();
         $this->ruleM = model('mpRule');
         $this->specialM = model('mpSpecial');
         $this->addonsM = model('addons');
+        $this->mpAddonM = model('mpAddon');
     }
 
     /**
@@ -60,6 +65,7 @@ class Reply extends Base
     /**
      * 增加关键词
      * @return mixed
+     * @throws \think\Exception
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function add(){
@@ -96,6 +102,11 @@ class Reply extends Base
     /**
      * 编辑关键词回复
      * @return mixed
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function edit(){
@@ -115,6 +126,7 @@ class Reply extends Base
                 'media_type' => $post_data['media_type'],
                 'media_id' => $post_data['media_id']
             ];
+
             $this->uploadMedia2Wx($data['media_type'], $data['media_id']);
             if($this->ruleM->updateOne($data)){
                 $this->success('保存成功');
@@ -127,7 +139,13 @@ class Reply extends Base
         if(empty($data)){
             $this->error('数据不存在');
         }
-        $material = model('media_' . $data['media_type'])->getOne(['uid' => $this->adminId, 'id' => $data['media_id']]);
+
+        if($data['media_type'] == 'addon'){
+            $material = model('addons')->getOne($data['media_id']);
+        }else{
+            $material = model('media_' . $data['media_type'])->getOne(['uid' => $this->adminId, 'id' => $data['media_id']]);
+        }
+
         $builder = new FormBuilder();
         $builder->addFormItem('id', 'hidden', 'ID', 'ID', [], 'required')
             ->addFormItem('keyword', 'text', '关键词', '不超过40字', [], 'required maxlength=40')
@@ -141,6 +159,7 @@ class Reply extends Base
      * 自动回复
      * @param string $type
      * @return mixed
+     * @throws \think\exception\DbException
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function index($type = 'all')
@@ -151,7 +170,7 @@ class Reply extends Base
             $where['ru.keyword'] = ['like', '%'.$search_key.'%'];
             $type = 'all';
         }
-
+        $field = ['ru.id','ru.keyword','ru.status'];
         switch ($type) {
             case 'text':
             case 'news':
@@ -159,7 +178,7 @@ class Reply extends Base
             case 'image':
             case 'video':
             case 'music':
-                $field = ['ru.id','ru.keyword','ru.status'];
+
                 $fields = [
                     'text' => ['content'],
                     'image' => ['url'],
@@ -178,13 +197,14 @@ class Reply extends Base
                 ]);
                 break;
             case 'addon':
-                $data = model('mpRule')->pageJoin([
+                $data = $this->ruleM->pageJoin([
                     'alias' => 'ru',
-                    'join' => [['addons a', 'a.addon=ru.addon']],
+                    'join' => [['addons a', 'a.id=ru.media_id']],
                     'page_size' => $this->pageSize,
                     'where' => $where,
-                    'field' => 'ru.id,ru.keyword,ru.status,ru.addon, ru.type, a.name,a.desc,a.logo',
-                    'order' => ['ru.id' => 'desc']
+                    'field' => array_merge($field, ['a.name', 'a.desc', 'a.logo']),
+                    'order' => ['ru.id' => 'desc'],
+                    'refresh' => 1
                 ]);
                 break;
             default:
@@ -209,6 +229,11 @@ class Reply extends Base
     /**
      * 特殊回复
      * @return mixed
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function special(){
@@ -251,10 +276,20 @@ class Reply extends Base
             ]);
         }
 
+        $addons = $this->mpAddonM->pageJoin([
+            'alias' => 'ma',
+            'join' => [['addons a', 'a.addon=ma.addon']],
+            'page_size' => 7,
+            'where' => ['mpid' => $this->mpId, 'a.status' => 1],
+            'field' => ['a.id','a.name', 'a.addon'],
+            'order' => ['ma.id' => 'desc'],
+            'refresh' => 1
+        ]);
+
         $assign = [
             'replies' => $replies,
             'events' => $events,
-            'addons' => $this->addonsM->getField('id,addon,name', ['status' => 1])
+            'addons' => $addons
         ];
         return $this->show($assign);
     }

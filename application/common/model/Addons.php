@@ -25,7 +25,7 @@ class Addons extends BaseModel
             return false;
         }
 
-        $path = ADDON_PATH . $name . DIRECTORY_SEPARATOR . 'Config.php';
+        $path = ADDON_PATH . $name . DIRECTORY_SEPARATOR . 'config.php';
 
         if (is_file($path)) {
             $config = @include($path);

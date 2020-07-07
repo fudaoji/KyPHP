@@ -10,6 +10,7 @@
         .media-box .box:hover{background-color: #f4f6f9; color: var(--green);}
         .media-box .box:hover i{color: var(--green);}
         .media-content img{width: 180px;border: #e7e7eb 1px solid;}
+        .media-content .addon-logo{width: 30px;margin-right: 15px;}
         .media-box video{width: 210px;height: 169px;}
     </style>
     <label class="layui-form-label {$form['extra_class']??''}">
@@ -29,6 +30,7 @@
                         {if condition="isset($form['options']['id']) && !empty($material)"}
                         {switch $form.options.type}
                         {case text}{$material.content}{/case}
+                        {case addon}<img class="addon-logo" src="{$material.logo}">{$material.name}{/case}
                         {case image}<img src="{$material.url}">{/case}
                         {case voice}
                         <audio controls>
@@ -77,6 +79,15 @@
     </div>
 
     <script>
+        if(typeof setAddonValue === 'undefined'){
+            var setAddonValue = function(res, field){
+                $("input[name={$form.name}_id]").val(res.id);
+                $("input[name={$form.name}_type]").val("addon");
+                $("#media-box-{$form.name} .media-content").html('<img src="'+res.logo+'" class="addon-logo">'+res.name);
+                $("#media-box-{$form.name} hr").show();
+            };
+        }
+
         if(typeof setVideoValue === 'undefined'){
             var setVideoValue = function(res, field){
                 $("input[name={$form.name}_id]").val(res[0].id);

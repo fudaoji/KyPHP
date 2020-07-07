@@ -23,7 +23,7 @@ class Setting extends Base
 {
     private $tabList;
     /**
-     * @var \app\common\model\Setting
+     * @var \app\common\model\MpSetting
      */
     private $settingM;
     public function initialize()

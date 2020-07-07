@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * Script Name: EventMessageHandler.php
+ * Script Name: ReleaseMessageHandler.php
  * Create: 2020/4/15 10:48
- * Description: 公众号事件消息处理器
+ * Description: 全网发布事件消息处理器
  * Author: fudaoji<fdj@kuryun.cn>
  */
 namespace app\mp\controller\handler\platform;
@@ -17,15 +17,17 @@ class ReleaseMessageHandler extends WechatMp implements EventHandlerInterface
 {
     /**
      * 初始化
-     * @author Jason<dcq@kuryun.cn>
+     * @author fudaoji<fdj@kuryun.cn>
      */
     public function __construct() {
         parent::__construct();
     }
 
     /**
-     * 处理器
-     * @author Jason<dcq@kuryun.cn>
+     * 全网发布处理器
+     * @param null $payload
+     * @return Text
+     * @author fudaoji<fdj@kuryun.cn>
      */
     public function handle($payload = null) {
         Log::write('release::' . json_encode($payload));

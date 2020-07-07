@@ -58,17 +58,16 @@
 <script>
     layui.use(['form'], function(){
         let form = layui.form;
+        form.render();
 
         form.on('submit(config)', function(data){
-            var index = layer.load(1);
+            let index = layer.load(1);
             $.post('', data.field, function (res) {
                 layer.close(index);
                 if(res.code === 1){
-                    layer.msg(res.msg, {time:1000}, function () {
-                        // location.href="{:url('System/menuList')}";
-                    });
+                    layer.msg(res.msg, {time:1000}, function () {});
                 }else{
-                    layer.msg(res.msg);
+                    layer.alert(res.msg, {title: '错误提示'});
                 }
             });
             return false;

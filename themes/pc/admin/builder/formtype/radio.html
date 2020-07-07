@@ -1,6 +1,6 @@
 <!--单选框-->
 <div class="layui-form-item">
-    <label class="layui-form-label {$form['extra_class']}">
+    <label class="layui-form-label {$form['extra_class'] ?? ''}">
         {if condition="is_int(strpos($form['extra_attr'], 'required'))"}
         <span class="text-danger">*</span>
         {/if}
@@ -16,7 +16,7 @@
                     name="{$form['name']}"
                     value="{$k}"
                     title="{$v}"
-                    {if condition="isset($form['value']) && $k eq $form['value']"} checked="checked" {/if} {$form['extra_attr']}
+                    {if condition="isset($form['value']) && $k eq $form['value']"} checked="checked" {/if} {$form['extra_attr'] ?? ''}
             />
         </label>
         {/foreach}

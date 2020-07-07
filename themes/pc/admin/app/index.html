@@ -1,12 +1,11 @@
-{extend name="common/base" /}
+{extend name="../layout/base" /}
 
 {block name="body"}
 <div>
     <div class="layui-tab">
         <ul class="layui-tab-title">
-            <!--<li {eq name="type" value="index"}class="layui-this"{/eq}> <a href="{:url('index')}">在使用</a></li>-->
-            <li {eq name="type" value="uninstall"}class="layui-this"{/eq}> <a href="{:url('index',['type'=>'uninstall'])}">禁用|还原</a></li>
-            <li {eq name="type" value="notinstall"}class="layui-this"{/eq}><a href="{:url('index',['type'=>'notinstall'])}">安装|卸载</a></li>
+            <li {eq name="type" value="uninstall"}class="layui-this"{/eq}> <a href="{:url('index',['type'=>'uninstall'])}">下架|还原</a></li>
+            <li {eq name="type" value="notinstall"}class="layui-this"{/eq}><a href="{:url('index',['type'=>'notinstall'])}">上架|卸载</a></li>
         </ul>
     </div>
 
@@ -45,12 +44,12 @@
                 {/case}
 
                 {case value="uninstall"}
-                <button class="layui-btn layui-btn-xs" onclick="closeApp('{$vo.addon}')">禁用</button>
+                <button class="layui-btn layui-btn-xs" onclick="closeApp('{$vo.addon}')">下架</button>
                 <button class="layui-btn layui-btn-xs layui-btn-danger" onclick="wipeDataApp('{$vo.addon}')">还原</button>
                 {/case}
 
                 {case value="notinstall"}
-                <button class="layui-btn layui-btn-xs " onclick="installApp('{$vo.addon}')">安装|启用</button>
+                <button class="layui-btn layui-btn-xs " onclick="installApp('{$vo.addon}')">安装|上架</button>
                 <button class="layui-btn layui-btn-xs layui-btn-danger" onclick="uninstallApp('{$vo.addon}')">卸载</button>
                 {/case}
                 {/switch}
@@ -71,21 +70,21 @@
     });
 
     /**
-     * 安装/启用
+     * 安装/上架
      */
     function installApp(name) {
-        var loadIndex = layer.load(1); //加载图标
-        $.post("{:url('admin/app/install')}",{'name':name}, function (res) {
+        let loadIndex = layer.load(1); //加载图标
+        $.post("{:url('admin/app/install')}", {'name':name}, function (res) {
+            layer.close(loadIndex);
             if(res.code === 1){
                 layer.msg(res.msg, {time:1000}, function () {
                     location.href="{:url('admin/app/index', ['type'=>'notinstall'])}";
                 });
             }else{
-                layer.close(loadIndex);
-                layer.alert(res.msg);
+                layer.alert(res.msg, {title: '错误提示'});
             }
         }).error(function (error) {
-            layer.alert('500 Internal Server Error');
+            layer.alert('500 Internal Server Error', {title: '错误提示'});
             layer.close(loadIndex)
         });
         return false;
@@ -97,26 +96,25 @@
      */
     function upgrade(name) {
         $.post("{:url('admin/app/upgrade')}",{'name':name},function (res) {
-            if(res.status=='0'){
-                layer.alert(res.msg);
-            }
-            if(res.status=='1'){
-                layer.msg(res.msg,{time:1000},function () {
-                    location.href="{:url('admin/app/index')}";
+            if(res.code === 1){
+                layer.msg(res.msg, {time:1000}, function () {
+                    location.href = "{:url('admin/app/index')}";
                 });
+            }else{
+                layer.alert(res.msg);
             }
         })
     }
 
     /**
-     * 退出
+     * 下架
      * @param name
      */
     function closeApp(name) {
         $.post("{:url('admin/app/close')}", {'name':name}, function (res) {
-            if(res.code == 1){
+            if(res.code === 1){
                 layer.msg(res.msg, {time:1000}, function () {
-                    location.href="{:url('admin/app/index',['type'=>'uninstall'])}";
+                    location.href="{:url('admin/app/index', ['type'=>'uninstall'])}";
                 });
             }else{
                 layer.alert(res.msg);
@@ -161,17 +159,15 @@
             btn: ['确定','不的']
         }, function(load_index){
             layer.close(load_index);
-            var index = layer.load(1,{
-                shade: [0.1,'#000']
-            });
+            let index = layer.load(1);
             $.post("{:url('admin/app/wipeData')}", {'name':name}, function (res) {
+                layer.close(index);
                 if(res.code === 1){
                     layer.msg(res.msg, {time:1000}, function () {
                         location.href="{:url('admin/app/index',['type'=>'uninstall'])}";
                     });
                 }else{
-                    layer.close(index);
-                    layer.alert(res.msg);
+                    layer.alert(res.msg, {title: '错误提示'});
                 }
             }).error(function (error) {
                 layer.alert('500 Internal Server Error');

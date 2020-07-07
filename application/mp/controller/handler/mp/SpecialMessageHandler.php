@@ -47,7 +47,7 @@ class SpecialMessageHandler extends MessageHandler
     public function handle($payload = null) {
         parent::handle($payload);
 
-        $res = $this->replySpecial($payload['MsgType']);
+        $res = $this->replySpecial($payload['MsgType'], $payload);
         if($res){
             return $res;
         }

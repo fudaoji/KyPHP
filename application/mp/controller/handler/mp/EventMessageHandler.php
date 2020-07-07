@@ -108,7 +108,7 @@ class EventMessageHandler extends MessageHandler
         }
 
         //执行关注时回复
-        $res = $this->replySpecial(MpSpecial::SUBSCRIBE);
+        $res = $this->replySpecial(MpSpecial::SUBSCRIBE, $event);
 
         if($res !== ''){
             return $res;
@@ -131,7 +131,7 @@ class EventMessageHandler extends MessageHandler
             ]);
         }
 
-        $this->replySpecial(MpSpecial::UNSUBSCRIBE);
+        $this->replySpecial(MpSpecial::UNSUBSCRIBE, $event);
     }
 
     /**
@@ -181,7 +181,7 @@ class EventMessageHandler extends MessageHandler
             Log::error($e->getMessage());
         }
 
-        return $this->replyKeyword($qr['keyword']);
+        return $this->replyKeyword($qr['keyword'], $event);
     }
 
     /**
@@ -191,7 +191,7 @@ class EventMessageHandler extends MessageHandler
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function eventLocation($event) {
-        $res = $this->replySpecial(MpSpecial::EVENT_LOCATION);
+        $res = $this->replySpecial(MpSpecial::EVENT_LOCATION, $event);
         if($res){
             return $res;
         }
@@ -204,7 +204,7 @@ class EventMessageHandler extends MessageHandler
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function eventClick($event) {
-        $res = $this->replyKeyword($event['EventKey']);
+        $res = $this->replyKeyword($event['EventKey'], $event);
         if($res){
             return $res;
         }

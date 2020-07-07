@@ -32,7 +32,7 @@
             <a href="{:url('index',['type'=>'all'])}">全部</a>
         </li>
         {volist name="types" id="t"}
-        <li class="<?=$type == $t ? 'layui-this' : '';?>">
+        <li class="<?=$type == $key ? 'layui-this' : '';?>">
             <a href="{:url('index',['type'=>$key])}">回复{$t}</a>
         </li>
         {/volist}

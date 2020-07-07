@@ -51,8 +51,16 @@ class Material extends Base
      * @var \think\Model
      */
     private $musicM;
+    /**
+     * @var \app\common\model\Addons
+     */
+    private $addonsM;
+    /**
+     * @var \app\common\model\mpAddon
+     */
+    private $mpAddonM;
     private $types = [
-        'text','image', 'video', 'voice', 'music', 'news'
+        'text','image', 'video', 'voice', 'music', 'news', 'addon'
     ];
     public function initialize()
     {
@@ -63,6 +71,8 @@ class Material extends Base
         $this->voiceM = new MediaVoice();
         $this->videoM = new MediaVideo();
         $this->musicM = new MediaMusic();
+        $this->addonsM = model('addons');
+        $this->mpAddonM = model('mpAddon');
         $this->assign('config', config('system.upload'));
         set_time_limit(0);
     }
@@ -299,6 +309,29 @@ class Material extends Base
         $data_list = $this->videoM->page(12, $where, ['id' => 'desc'], 'id,url,title', 1);
         $pager = $data_list->appends(['from' => $from])->render();
         $assign = ['data_list' => $data_list, 'pager' => $pager, 'from' => $from, 'field' => $field];
+        return $this->show($assign, __FUNCTION__);
+    }
+
+    /**
+     * 应用插件
+     * @return mixed
+     * @throws \think\exception\DbException
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function addon(){
+        $field = input('field', ''); //目标input框
+        $where = ['mpid' => $this->mpId, 'a.status' => 1];
+        $data_list = $this->mpAddonM->pageJoin([
+            'alias' => 'ma',
+            'join' => [['addons a', 'a.addon=ma.addon']],
+            'page_size' => 7,
+            'where' => $where,
+            'field' => ['a.id','a.name', 'a.desc', 'a.logo'],
+            'order' => ['ma.id' => 'desc'],
+            'refresh' => 1
+        ]);
+        $pager = $data_list->render();
+        $assign = ['data_list' => $data_list, 'pager' => $pager, 'field' => $field];
         return $this->show($assign, __FUNCTION__);
     }
 }

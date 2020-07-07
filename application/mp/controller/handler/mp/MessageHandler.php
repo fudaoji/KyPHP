@@ -20,6 +20,7 @@ use app\common\controller\WechatMp;
 use app\common\model\MpSpecial;
 use EasyWeChat\Kernel\Contracts\EventHandlerInterface;
 use EasyWeChat\Kernel\Messages\Image;
+use EasyWeChat\Kernel\Messages\Message;
 use EasyWeChat\Kernel\Messages\Music;
 use EasyWeChat\Kernel\Messages\News;
 use EasyWeChat\Kernel\Messages\NewsItem;
@@ -86,14 +87,15 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
     /**
      * 针对关键词的回复
      * @param string $keyword
+     * @param Message $message
      * @return string
      * Author: fudaoji<fdj@kuryun.cn>
      */
-    public function replyKeyword($keyword = ''){
+    public function replyKeyword($keyword = '', $message){
         $res = '';
         $rule = $this->ruleM->getOneByMap(['keyword' => $keyword, 'rule_mpid' => $this->mpInfo['id']]);
         if(empty($rule)){ //不存在关键词则寻找默认回复
-            $res = $this->replySpecial(MpSpecial::DEFAULT_ANS);
+            $res = $this->replySpecial(MpSpecial::DEFAULT_ANS, $message);
         } else { //关键词精确回复
             $media_type = $rule['media_type'];
             if($rule['media_type'] != 'addon'){
@@ -104,34 +106,34 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
             if(!empty($media)){
                 $method = camel_case('reply' . $media_type);
                 try {
-                    $res = $this->$method($media);
+                    $res = $this->$method($media, $message);
                 }catch (\Exception $e){
                     Log::write($e->getMessage());
                 }
             }
         }
-
         return $res;
     }
 
     /**
      * 特殊消息的回复
      * @param string $event
+     * @param Message $message
      * @return bool
      * Author: fudaoji<fdj@kuryun.cn>
      */
-    public function replySpecial($event = ''){
+    public function replySpecial($event = '', $message){
         $res = '';
         //执行关注时回复
         $special = $this->specialM->getOneByMap(['event' => $event, 'spe_mpid' => $this->mpInfo['id']]);
         if($special && $special['ignore'] == 0){
             if(!empty($special['keyword'])){
                 //关键词回复
-                $res = $this->replyKeyword($special['keyword']);
+                $res = $this->replyKeyword($special['keyword'], $message);
             }else{
                 //应用回复
                 $media = model('addons')->getOne($special['addon']);
-                $res = $this->replyAddon($media);
+                $res = $this->replyAddon($media, $message);
             }
         }
         if($res){
@@ -142,10 +144,29 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
     /**
      * 交给应用处理
      * @param array $addon
+     * @param \EasyWeChat\Kernel\Messages\Message $message
+     * @return string
      * Author: fudaoji<fdj@kuryun.cn>
      */
-    public function replyAddon($addon = []){
+    public function replyAddon($addon = [], $message){
+        $res = '';
+        $filename = ADDON_PATH . $addon['addon'] . '/controller/Api.php';
+        $common_file = ADDON_PATH . $addon['addon'] . '/common.php';
+        if (file_exists($common_file)) {
+            include_once $common_file;
+        }
 
+        if (file_exists($filename)) {
+            include_once $filename;
+            $class = '\addons\\' . $addon['addon'] . '\controller\Api';
+            if (class_exists($class)) {
+                $obj = new $class;
+                if (method_exists($obj, 'message')) {
+                    $res = $obj->message($message, ['mpid' => $this->mpInfo['id']]);
+                }
+            }
+        }
+        return $res;
     }
 
     /**
