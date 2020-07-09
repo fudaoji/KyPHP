@@ -46,6 +46,7 @@
 3.  将项目目录下的install.sql导入数据库
 4.  修改runtime 和 public/uploads的读写权限为777
 5.  根目录下执行 `composer update`
+6.  默认超管账号：admin 密码：123456
 
 #### 使用文档
 
