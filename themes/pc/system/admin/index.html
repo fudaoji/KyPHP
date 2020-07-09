@@ -22,6 +22,7 @@
             <th>账号</th>
             <th>手机号</th>
             <th>姓名</th>
+            <th>角色</th>
             <th>上次登录时间</th>
             <th>登录 IP</th>
             <th>状态</th>
@@ -35,6 +36,7 @@
             <td>{$vo.username}</td>
             <td>{$vo.mobile}</td>
             <td>{$vo.realname}</td>
+            <td>{$groups[$vo.group_id]}</td>
             <td>{:date('Y-m-d H:s:i',$vo.last_time)}</td>
             <td>{$vo.ip}</td>
             <td>{if condition="$vo.status eq '1'"}正常{else/}禁用中{/if}</td>

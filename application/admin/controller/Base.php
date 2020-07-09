@@ -23,6 +23,7 @@ class Base extends BaseCtl {
     protected $adminId;
     protected $adminInfo;
     protected $pageSize = 15;
+    protected $adminGroupInfo;
 
     public function initialize()
     {
@@ -40,7 +41,7 @@ class Base extends BaseCtl {
         $top_menu = [];
         $side_menu = [];
         $side_menus = [];
-        $t_menus = model("menu")->getAll(['where' => ['pid' => 0, 'status' => 1], 'order' => 'sort asc']);
+        $t_menus = model("menu")->getTopMenus($this->adminGroupInfo);
         if(!empty($current_menu)){
             if($current_menu['pid'] == 0){ //说明是顶部菜单
                 $top_menu = $current_menu;
@@ -62,16 +63,12 @@ class Base extends BaseCtl {
                 }
 
             }
-            $side_menus = model('menu')->getAll([
-                'where' => ['pid' => $top_menu['id'], 'status' => 1,'type' => 1],
-                'order' => ['sort' => 'asc']
-            ]);
+
+            $side_menus = (array) model('menu')->getSideMenus($top_menu['id'], $this->adminGroupInfo);
             foreach ($side_menus as &$v){
-                $v['child'] = model('menu')->getAll([
-                    'where' => ['pid' => $v['id'], 'status' => 1, 'type' => 1],
-                    'order' => ['sort' => 'asc']
-                ]);;
+                $v['child'] = model('menu')->getSideMenus($v['id'], $this->adminGroupInfo);
             }
+            
         }
 
         $this->assign('t_menus', $t_menus);
@@ -96,6 +93,11 @@ class Base extends BaseCtl {
         $this->adminInfo = model("admin")->getOne($this->adminId);
         if (empty($this->adminInfo)) {
             $this->redirect(url('admin/auth/login'));
+        }
+        $this->adminGroupInfo = model('adminGroup')->getOne($this->adminInfo['group_id']);
+        if($this->adminGroupInfo){
+            $this->adminGroupInfo['menu_config'] = explode(',', $this->adminGroupInfo['menu_config']);
+            $this->adminGroupInfo['store_config'] = json_decode($this->adminGroupInfo['store_config'], true);
         }
     }
 }

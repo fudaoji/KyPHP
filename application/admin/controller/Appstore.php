@@ -23,7 +23,7 @@ class Appstore extends Base
 {
     public $user = [];
     public $token = '';
-    static public $baseUrl = 'https://service.rhaphp.com/';
+    static public $baseUrl = 'https://kyphp.kuryun.com/';
 
     public function initialize()
     {

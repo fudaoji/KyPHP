@@ -21,4 +21,45 @@ use ky\BaseModel;
 class Menu extends BaseModel
 {
     protected $isCache = false;
+
+    /**
+     * 获取顶部菜单
+     * @param array $group_info
+     * @return mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function getTopMenus($group_info = []){
+        $where = ['pid' => 0, 'status' => 1];
+        $aid = (int)session("adminId");
+        if($aid != 1) { //非创始人
+            $where['id'] = ['in', $group_info['menu_config']];
+        }
+
+        return $this->getAll(['where' => $where, 'order' => 'sort asc']);
+    }
+
+    /**
+     * 获取侧边菜单栏
+     * @param int $pid
+     * @param array $group_info
+     * @return mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function getSideMenus($pid = 0, $group_info = []){
+        $where = ['pid' => $pid, 'status' => 1,'type' => 1];
+        $aid = (int)session("adminId");
+        if($aid != 1) { //非创始人
+            $where['id'] = ['in', $group_info['menu_config']];
+        }
+        return $this->getAll([
+            'where' => $where,
+            'order' => ['sort' => 'asc']
+        ]);
+    }
 }

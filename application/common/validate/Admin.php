@@ -23,6 +23,7 @@ class Admin extends Validate
     protected $rule = [
         '__token__' => 'require|token',
         'id'    => 'checkId',
+        'group_id' => 'require',
         'username'  =>  'require|min:3|max:20',
         'password'  => 'require|min:6|max:20',
         'repassword'  => 'confirm:password',
@@ -34,6 +35,7 @@ class Admin extends Validate
     //错误消息
     protected $message  =   [
         'id.checkId' => '数据不存在',
+        'group_id.require' => '请选择角色',
         'username.require' => '账号必须',
         'username.max'     => '账号最多不能超过20个字符',
         'username.min'     => '账号至少3个字符',

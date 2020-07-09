@@ -1,0 +1,159 @@
+{extend name="../layout/base" /}
+
+{block name="body"}
+<form class="layui-form" action="{:url('savePost')}">
+    <div class="layui-tab" lay-filter="add">
+        <ul class="layui-tab-title">
+            <li class="layui-this tab1">基本信息</li>
+            <li class="tab2">菜单权限</li>
+            <li class="tab3">店铺权限</li>
+        </ul>
+
+
+        <input type="hidden" id="id" name="id" value="{$data.id}" />
+        <input type="hidden" id="__token__" name="__token__" value="{:request()->token()}" />
+
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show item1">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="text-danger">*</span>名称</label>
+                    <div class="layui-input-block">
+                        <input type="text"
+                               name="title"
+                               placeholder="长度不超过30"
+                               class="layui-input"
+                               required
+                               maxlength="50"
+                               value="{$data.title}"
+                        />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="text-danger">*</span>排序</label>
+                    <div class="layui-input-block">
+                        <input type="number"
+                               name="sort"
+                               placeholder="数字越小越靠前"
+                               class="layui-input"
+                               required
+                               min="0"
+                               value="{$data.sort}"
+                        />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="text-danger">*</span>状态</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="status" value="1" title="正常" {$data.status == 1 ? 'checked' : ''}>
+                        <input type="radio" name="status" value="0" title="禁用" {$data.status == 0 ? 'checked' : ''}>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item item2">
+                <div id="menu-config"></div>
+            </div>
+
+            <div class="layui-tab-item item3">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="text-danger">*</span>公众号个数</label>
+                    <div class="layui-input-block">
+                        <input type="number"
+                               name="store_config[mp_limit]"
+                               placeholder="允许接入的公众号数量，0表示不限制"
+                               class="layui-input"
+                               required
+                               min="0"
+                               value="{$store_config.mp_limit}"
+                        />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span class="text-danger">*</span>小程序个数</label>
+                    <div class="layui-input-block">
+                        <input type="number"
+                               name="store_config[mini_limit]"
+                               placeholder="允许接入的小程序数量，0表示不限制"
+                               class="layui-input"
+                               required
+                               min="0"
+                               value="{$store_config.mini_limit}"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="form-add">提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+</form>
+{/block}
+
+{block name="js"}
+<script>
+
+    layui.use(['form', 'element', 'tree'], function(){
+        var form = layui.form
+                ,element = layui.element
+                ,tree = layui.tree;
+
+        form.render();
+
+        //渲染菜单权限
+        tree.render({
+            id: 'menu-tree',
+            elem: '#menu-config'  //绑定元素
+            ,showCheckbox: true  //是否显示复选框
+            ,data: {:json_encode($menu_tree)}
+    });
+
+        form.on('submit(form-add)', function (data) {
+            var menus = tree.getChecked('menu-tree');
+            if(menus.length < 1){
+                layer.alert('请选择菜单权限');
+                $('.tab2').trigger('click');
+                return  false;
+            }
+            var menuIds = [];
+            for(var i = 0; i < menus.length; i++){
+                menuIds.push(menus[i].id);
+                if(menus[i].hasOwnProperty('children') && menus[i]['children'].length > 0){
+                    var children = menus[i]['children'];
+                    for(var j = 0; j < children.length; j++){
+                        menuIds.push(children[j].id);
+                        if(children[j].hasOwnProperty('children') && children[j]['children'].length > 0){
+                            var children2 = children[j]['children'];
+                            for(var k = 0; k < children2.length; k++){
+                                menuIds.push(children2[k].id);
+                            }
+                        }
+                    }
+                }
+            }
+
+            var params = data.field;
+            params['menu_config'] = menuIds.join(',');
+            var loadingIndex = layer.load(1);
+            $.post(data.form.action, params, function(res){
+                layer.close(loadingIndex);
+                if(res.code === 1){
+                    layer.msg(res.msg, {time: 1000}, function(){
+                        location.href = res.url;
+                    });
+                }else{
+                    $('input[name=__token__]').val(res.data.token);
+                    layer.alert(res.msg);
+                }
+
+            });
+            return false;
+        });
+
+    });
+</script>
+{/block}

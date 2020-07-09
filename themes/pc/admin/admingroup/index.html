@@ -1,0 +1,55 @@
+{extend name="../layout/base" /}
+
+{block name="tool_bar"}
+<div class="layui-row">
+    <div class="layui-col-md3 layui-col-md-offset9 tr">
+        <a href="{:url('add')}" class="layui-btn layui-btn-sm auth-add">新增用户组</a>
+    </div>
+</div>
+{/block}
+
+{block name="body"}
+<div >
+    <table class="layui-table" lay-even="" lay-skin="line">
+        <colgroup>
+            <col>
+            <col>
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th>名称</th>
+            <th>权限</th>
+            <th>创建时间</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="data_list" id="vo"}
+        <tr>
+            <td>{$vo.title}</td>
+            <td>
+                <p>
+                    公众号个数限制：{$vo.store_config.mp_limit>0 ?? '不限制'}|
+                    小程序个数限制：{$vo.store_config.mini_limit>0??'不限制'}
+                </p>
+            </td>
+            <td>{:date('Y-m-d H:s:i',$vo.create_time)}</td>
+            <td>{if condition="$vo.status eq '1'"}正常{else/}禁用{/if}</td>
+            <td>
+                <a class="bt-a" href="{:url('edit',['id'=>$vo.id])}">编辑</a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    <div id="page">
+        {$page|raw}
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+
+{/block}

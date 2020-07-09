@@ -11,7 +11,7 @@
  Target Server Version : 50620
  File Encoding         : utf-8
 
- Date: 07/07/2020 23:35:15 PM
+ Date: 07/09/2020 23:09:40 PM
 */
 
 SET NAMES utf8mb4;
@@ -65,14 +65,54 @@ CREATE TABLE `ky_admin` (
   `last_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '最后登录时间',
   `ip` varchar(16) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '登录IP',
   `admin_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上级ID',
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 --  Records of `ky_admin`
 -- ----------------------------
 BEGIN;
-INSERT INTO `ky_admin` VALUES ('1', 'admin', '$2y$10$fjDgmWJXFml9Flb3fuygA.EUjVl1hqoMoU8Dwn8J.tn8p1x/X8tXu', '461960962@qq.com', '15659827559', '0', '1594130737', '1', '1', '傅道集', '1594130737', '183.253.53.87', '0'), ('2', 'test1', '$2y$10$lSnmo7isc6Y7X1trZ/YeH.WirmUAC3TG8JpEkloRODCO1nHXYFnFm', '', '15659827559', '1590227330', '1594130222', '1', '1', '张三', '1594130222', '183.253.53.87', '1');
+INSERT INTO `ky_admin` VALUES ('1', 'admin', '$2y$10$fjDgmWJXFml9Flb3fuygA.EUjVl1hqoMoU8Dwn8J.tn8p1x/X8tXu', '461960962@qq.com', '15659827559', '0', '1594306243', '1', '1', '傅道集', '1594306243', '183.253.53.87', '0'), ('2', 'test1', '$2y$10$lSnmo7isc6Y7X1trZ/YeH.WirmUAC3TG8JpEkloRODCO1nHXYFnFm', '', '15659827559', '1590227330', '1594306343', '1', '2', '张三', '1594306343', '183.253.53.87', '1');
+COMMIT;
+
+-- ----------------------------
+--  Table structure for `ky_admin_addon`
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_admin_addon`;
+CREATE TABLE `ky_admin_addon` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
+  `addon` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '应用标识',
+  `deadline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '到期时间',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `update_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '最后修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户-应用关联表';
+
+-- ----------------------------
+--  Table structure for `ky_admin_group`
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_admin_group`;
+CREATE TABLE `ky_admin_group` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '用户组名称',
+  `store_config` text COLLATE utf8mb4_unicode_ci COMMENT '店铺个数设置',
+  `menu_config` text COLLATE utf8mb4_unicode_ci COMMENT '菜单权限',
+  `status` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
+  `sort` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '数字越小越靠前',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `title` (`title`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户权限组';
+
+-- ----------------------------
+--  Records of `ky_admin_group`
+-- ----------------------------
+BEGIN;
+INSERT INTO `ky_admin_group` VALUES ('1', '管理员', '{\"mp_limit\":\"0\",\"mini_limit\":\"0\"}', '1,13,14,15,47,17,18,16,68,19,20,43,80,21,22,72,52,84,53,2,25,83,26,51,45,56,74,73,77,67,69,81,57', '1', '0', '1594302168', '1594302168'), ('2', '青铜会员', '{\"mp_limit\":\"5\",\"mini_limit\":\"5\"}', '1,13,14,15,47,17,18,16,68,19,20,43,80,21,22,72,52,84', '1', '0', '1594303678', '1594306651');
 COMMIT;
 
 -- ----------------------------
@@ -718,9 +758,8 @@ CREATE TABLE `ky_menu` (
   `pid` int(5) NOT NULL COMMENT '上级ID',
   `title` varchar(50) NOT NULL COMMENT '菜单名称',
   `url` varchar(180) NOT NULL COMMENT 'Url函数地址',
-  `sort` int(5) NOT NULL DEFAULT '0' COMMENT '排序',
+  `sort` int(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
   `icon` varchar(180) DEFAULT '' COMMENT '图标',
-  `child` varchar(5) DEFAULT '',
   `shows` varchar(5) DEFAULT '',
   `status` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `create_time` int(10) unsigned NOT NULL DEFAULT '0',
@@ -733,7 +772,7 @@ CREATE TABLE `ky_menu` (
 --  Records of `ky_menu`
 -- ----------------------------
 BEGIN;
-INSERT INTO `ky_menu` VALUES ('1', '0', '平台', 'system/store/manage', '0', '&#xe63a;', '', '', '1', '0', '1592494619', '1'), ('2', '0', '站点', 'admin/setting/index', '10', '&#xe620;', '', '', '1', '0', '1590410842', '1'), ('13', '1', '增强功能', 'null', '0', 'fa fa-briefcase', '', '', '1', '0', '1590721926', '1'), ('14', '13', '自动回复', 'mp/reply/index', '0', '', '', '', '1', '0', '1590897561', '1'), ('15', '13', '自定义菜单', 'mp/menu/index', '1', '', '', '', '1', '0', '1591496895', '1'), ('16', '13', '功能配置', 'mp/setting/index', '10', '', '', '', '1', '0', '1591886116', '1'), ('17', '13', '二维码/转化链接 ', 'mp/qrcode/index', '4', '', '', '', '1', '0', '1592386254', '1'), ('18', '13', '素材管理', 'mp/material/index', '5', '', '', '', '1', '0', '1590410842', '1'), ('19', '1', '粉丝', 'null', '2', 'fa fa-users', '', '', '1', '0', '1591708800', '1'), ('20', '19', '粉丝管理', 'mp/follow/index', '0', '', '', '', '1', '0', '1591709107', '1'), ('21', '80', '公众号', '', '0', 'fa fa-wechat', '', '', '1', '0', '1590410842', '1'), ('22', '21', '微信公众号', 'system/mp/index', '1', '', '', '', '1', '0', '1590410842', '1'), ('23', '22', '手动接入', 'system/mp/add', '3', '', '', '', '1', '0', '1590410842', '2'), ('25', '2', '设置', '', '1', 'fa fa-cogs', '', '', '1', '0', '1590410842', '1'), ('26', '25', '菜单设置', 'admin/menu/index', '1', '', '', '', '1', '0', '1590410842', '1'), ('27', '26', '增加菜单', 'admin/menu/add', '2', '', '', '', '1', '0', '1590410842', '2'), ('28', '22', '编辑公众号', 'system/mp/edit', '5', '', '', '', '1', '0', '1590590496', '2'), ('29', '22', '管理设置', 'system/mp/info', '3', '', '', '', '1', '0', '1590574061', '2'), ('30', '17', '增加二维码', 'mp/qrcode/add', '0', '', '', '', '1', '0', '1592386276', '2'), ('32', '14', '增加关键词', 'mp/reply/add', '0', '', '', '', '1', '0', '1591021351', '2'), ('41', '14', '特殊消息', 'mp/reply/special', '0', '', '', '', '1', '0', '1591622850', '2'), ('43', '0', '应用', 'system/store/apps', '4', '&#xe635;', '', '', '1', '0', '1593479716', '1'), ('45', '2', '应用管理', 'null', '1', 'fa fa-cubes', '', '', '1', '0', '1593480064', '1'), ('46', '19', '授权&注册', 'mp/member/index', '1', '', null, null, '0', '0', '1591751350', '1'), ('47', '13', '消息管理', 'mp/msg/index', '1', '', null, null, '1', '0', '1591782540', '1'), ('48', '47', '回复消息', 'mp/msg/detail', '0', '', null, null, '1', '0', '1591843784', '2'), ('50', '26', '修改菜单', 'admin/menu/edit', '0', '', null, null, '1', '0', '1590410842', '2'), ('51', '25', '微信开放平台', 'system/mp/platform', '3', '', null, null, '1', '0', '1593687568', '1'), ('52', '80', '用户/权限', '', '5', 'fa fa-users', null, null, '1', '0', '1590410842', '1'), ('53', '52', '团队管理', 'system/admin/index', '3', '', null, null, '1', '0', '1590410842', '1'), ('54', '53', '更改密码', 'system/admin/updatepwd', '0', '', null, null, '1', '0', '1590410842', '2'), ('55', '53', '增加成员', 'system/admin/add', '0', '', null, null, '1', '0', '1590410842', '2'), ('56', '45', '微信公众号', 'admin/app/index', '0', '', null, null, '1', '0', '1590410842', '1'), ('57', '81', '系统升级', 'admin/upgrade/index', '1', '', null, null, '1', '0', '1590410842', '1'), ('58', '13', '图文群发', 'mp/mp/newslist', '6', '', null, null, '0', '0', '1594130981', '1'), ('59', '58', '增加图文', 'mp/mp/addnews', '0', '', null, null, '1', '0', '1590410842', '1'), ('60', '58', '修改图文', 'mp/mp/editnews', '0', '', null, null, '1', '0', '1590410842', '1'), ('61', '0', '小程序', 'miniapp/miniapp/topnav', '2', '', null, null, '0', '0', '1592494657', '1'), ('62', '86', '微信小程序', 'system/miniapp/index', '0', '', null, null, '1', '0', '1590593512', '1'), ('63', '62', '增加小程序', 'mp/index/addminiapp', '0', '', null, null, '1', '0', '1590410842', '1'), ('64', '62', '修改小程序', 'mp/index/upminiapp', '0', '', null, null, '1', '0', '1590410842', '1'), ('65', '22', '选择接入方式', 'system/mp/choose', '0', '', null, null, '1', '0', '1590410842', '2'), ('66', '45', '微信小程序', 'admin/miniapp/index', '1', '', null, null, '0', '0', '1593687127', '1'), ('67', '61', 'Mini Program功能', 'NULL', '0', '&#xe670;', null, null, '1', '0', '1590410842', '1'), ('68', '1', '数据统计', 'mp/index/index', '0', '', null, null, '1', '0', '1590676363', '2'), ('69', '67', '会员管理', 'miniapp/miniapp/userlist', '0', '&#xe68b;', null, null, '1', '0', '1590410842', '1'), ('70', '67', '消息管理', 'miniapp/miniapp/getmsglist', '1', '', null, null, '1', '0', '1590410842', '1'), ('71', '17', '二维码统计', 'mp/qrcode/log', '2', '', null, null, '1', '0', '1592474778', '2'), ('72', '80', '欢迎回来', 'system/index/index', '0', '', null, null, '1', '0', '1591321303', '2'), ('73', '74', '应用商店', 'admin/appstore/index', '2', '', null, null, '1', '0', '1590410842', '1'), ('74', '2', '官方市场', 'NULL', '1', 'fa fa-cart-plus', null, null, '1', '0', '1593480092', '1'), ('75', '73', '应用中心-注册', 'admin/appstore/register', '0', '', null, null, '1', '0', '1590410842', '1'), ('76', '73', '用户登录', 'admin/appstore/login', '0', '', null, null, '1', '0', '1590410842', '1'), ('77', '74', '应用升级', 'admin/appstore/upgrade', '3', '', null, null, '1', '0', '1590410842', '1'), ('80', '0', '系统', 'system/index/index', '5', '', '', '', '1', '0', '1592493563', '1'), ('81', '2', '云服务', '', '5', 'fa fa-cloud', '', '', '1', '0', '1590410842', '1'), ('82', '53', '编辑信息', 'system/admin/edit', '3', '', '', '', '1', '0', '1590410842', '2'), ('83', '25', '站点设置', 'admin/setting/index', '0', '', '', '', '1', '1590246581', '1590410842', '1'), ('84', '52', '我的账号', 'system/admin/myinfo', '0', '', '', '', '1', '1590410830', '1590410842', '1'), ('85', '84', '重置密码', 'system/admin/updatemypwd', '1', '', '', '', '1', '1590411654', '1590411898', '2'), ('86', '80', '小程序', '', '3', 'fa fa-weixin', '', '', '0', '1590593322', '1594130722', '1'), ('87', '22', '授权接入', 'mp/auth/index', '5', '', '', '', '1', '1590654308', '1590654308', '2'), ('88', '14', ' 编辑关键词', 'mp/reply/edit', '1', '', '', '', '1', '1591021404', '1591021423', '2');
+INSERT INTO `ky_menu` VALUES ('1', '0', '平台', 'system/store/manage', '0', '&#xe63a;', '', '1', '0', '1594304136', '1'), ('2', '0', '站点', 'admin/setting/index', '10', '&#xe620;', '', '1', '0', '1594304136', '1'), ('13', '1', '增强功能', 'null', '0', 'fa fa-briefcase', '', '1', '0', '1594304136', '1'), ('14', '13', '自动回复', 'mp/reply/index', '0', '', '', '1', '0', '1594304136', '1'), ('15', '13', '自定义菜单', 'mp/menu/index', '1', '', '', '1', '0', '1594304136', '1'), ('16', '13', '功能配置', 'mp/setting/index', '10', '', '', '1', '0', '1594304136', '1'), ('17', '13', '二维码/转化链接 ', 'mp/qrcode/index', '4', '', '', '1', '0', '1594304136', '1'), ('18', '13', '素材管理', 'mp/material/index', '5', '', '', '1', '0', '1594304136', '1'), ('19', '1', '粉丝', 'null', '2', 'fa fa-users', '', '1', '0', '1594304136', '1'), ('20', '19', '粉丝管理', 'mp/follow/index', '0', '', '', '1', '0', '1594304136', '1'), ('21', '80', '公众号', '', '0', 'fa fa-wechat', '', '1', '0', '1594304136', '1'), ('22', '21', '微信公众号', 'system/mp/index', '1', '', '', '1', '0', '1594304136', '1'), ('23', '22', '手动接入', 'system/mp/add', '3', '', '', '1', '0', '1594304136', '2'), ('25', '2', '设置', '', '10', 'fa fa-cogs', '', '1', '0', '1594304136', '1'), ('26', '25', '菜单设置', 'admin/menu/index', '1', '', '', '1', '0', '1594304136', '1'), ('27', '26', '增加菜单', 'admin/menu/add', '2', '', '', '1', '0', '1594304136', '2'), ('28', '22', '编辑公众号', 'system/mp/edit', '5', '', '', '1', '0', '1594304136', '2'), ('29', '22', '管理设置', 'system/mp/info', '3', '', '', '1', '0', '1594304136', '2'), ('30', '17', '增加二维码', 'mp/qrcode/add', '0', '', '', '1', '0', '1594304136', '2'), ('32', '14', '增加关键词', 'mp/reply/add', '0', '', '', '1', '0', '1594304136', '2'), ('41', '14', '特殊消息', 'mp/reply/special', '0', '', '', '1', '0', '1594304136', '2'), ('43', '0', '应用', 'system/store/apps', '4', '&#xe635;', '', '1', '0', '1594304136', '1'), ('45', '2', '应用管理', 'null', '1', 'fa fa-cubes', '', '1', '0', '1594304136', '1'), ('46', '19', '授权&注册', 'mp/member/index', '1', '', null, '0', '0', '1594304136', '1'), ('47', '13', '消息管理', 'mp/msg/index', '1', '', null, '1', '0', '1594304136', '1'), ('48', '47', '回复消息', 'mp/msg/detail', '0', '', null, '1', '0', '1594304136', '2'), ('50', '26', '修改菜单', 'admin/menu/edit', '0', '', null, '1', '0', '1594304136', '2'), ('51', '25', '微信开放平台', 'system/mp/platform', '3', '', null, '1', '0', '1594304136', '1'), ('52', '80', '用户/权限', '', '5', 'fa fa-users', null, '1', '0', '1594304136', '1'), ('53', '67', '用户管理', 'system/admin/index', '0', '', null, '1', '0', '1594304136', '1'), ('54', '53', '更改密码', 'system/admin/updatepwd', '0', '', null, '1', '0', '1594304136', '2'), ('55', '53', '增加成员', 'system/admin/add', '0', '', null, '1', '0', '1594304136', '2'), ('56', '45', '微信公众号', 'admin/app/index', '0', '', null, '1', '0', '1594304136', '1'), ('57', '81', '系统升级', 'admin/upgrade/index', '1', '', null, '1', '0', '1594304136', '1'), ('58', '13', '图文群发', 'mp/mp/newslist', '6', '', null, '0', '0', '1594304136', '1'), ('59', '58', '增加图文', 'mp/mp/addnews', '0', '', null, '1', '0', '1594304136', '1'), ('60', '58', '修改图文', 'mp/mp/editnews', '0', '', null, '1', '0', '1594304136', '1'), ('61', '0', '小程序', 'miniapp/miniapp/topnav', '2', '', null, '0', '0', '1594304136', '1'), ('62', '86', '微信小程序', 'system/miniapp/index', '0', '', null, '1', '0', '1594304136', '1'), ('63', '62', '增加小程序', 'mp/index/addminiapp', '0', '', null, '1', '0', '1594304136', '1'), ('64', '62', '修改小程序', 'mp/index/upminiapp', '0', '', null, '1', '0', '1594304136', '1'), ('65', '22', '选择接入方式', 'system/mp/choose', '0', '', null, '1', '0', '1594304136', '2'), ('66', '69', '编辑用户组', 'admin/admingroup/edit', '2', '', null, '1', '0', '1594304136', '2'), ('67', '2', '用户管理', 'NULL', '5', 'fa fa-bars', null, '1', '0', '1594304136', '1'), ('68', '1', '数据统计', 'mp/index/index', '0', '', null, '1', '0', '1594304136', '2'), ('69', '67', '用户组', 'admin/admingroup/index', '3', '&#xe68b;', null, '1', '0', '1594304136', '1'), ('70', '69', '新增用户组', 'admin/admingroup/add', '1', '', null, '1', '0', '1594304136', '2'), ('71', '17', '二维码统计', 'mp/qrcode/log', '2', '', null, '1', '0', '1594304136', '2'), ('72', '80', '欢迎回来', 'system/index/index', '0', '', null, '1', '0', '1594304136', '2'), ('73', '74', '应用商店', 'admin/appstore/index', '2', '', null, '1', '0', '1594304136', '1'), ('74', '2', '官方市场', 'NULL', '2', 'fa fa-cart-plus', null, '1', '0', '1594304136', '1'), ('75', '73', '应用中心-注册', 'admin/appstore/register', '0', '', null, '1', '0', '1594304136', '1'), ('76', '73', '用户登录', 'admin/appstore/login', '0', '', null, '1', '0', '1594304136', '1'), ('77', '74', '应用升级', 'admin/appstore/upgrade', '3', '', null, '1', '0', '1594304136', '1'), ('80', '0', '系统', 'system/index/index', '5', '', '', '1', '0', '1594304136', '1'), ('81', '2', '云服务', '', '15', 'fa fa-cloud', '', '1', '0', '1594304136', '1'), ('82', '53', '编辑信息', 'system/admin/edit', '3', '', '', '1', '0', '1594304136', '2'), ('83', '25', '站点设置', 'admin/setting/index', '0', '', '', '1', '1590246581', '1594304136', '1'), ('84', '52', '我的账号', 'system/admin/myinfo', '0', '', '', '1', '1590410830', '1594304136', '1'), ('85', '84', '重置密码', 'system/admin/updatemypwd', '1', '', '', '1', '1590411654', '1594304136', '2'), ('86', '80', '小程序', '', '3', 'fa fa-weixin', '', '0', '1590593322', '1594304136', '1'), ('87', '22', '授权接入', 'mp/auth/index', '5', '', '', '1', '1590654308', '1594304136', '2'), ('88', '14', ' 编辑关键词', 'mp/reply/edit', '1', '', '', '1', '1591021404', '1594304136', '2');
 COMMIT;
 
 -- ----------------------------

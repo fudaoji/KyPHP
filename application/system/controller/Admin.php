@@ -170,7 +170,8 @@ class Admin extends Base
                 'email' => $post_data['email'],
                 'mobile' => $post_data['mobile'],
                 'realname' => $post_data['realname'],
-                'status' => $post_data['status']
+                'status' => $post_data['status'],
+                'group_id' => $post_data['group_id']
             ];
             if (model('admin')->updateOne($data)) {
                 $this->success('操作成功', url('index'));
@@ -181,6 +182,7 @@ class Admin extends Base
         $builder = new FormBuilder();
         $builder->addFormItem('id', 'hidden', 'id', 'id')
             ->addFormItem('admin_id', 'hidden', 'admin_id', 'admin_id')
+            ->addFormItem('group_id', 'select', '角色', '角色', model('adminGroup')->getField('id,title', ['status' => 1]),'required')
             ->addFormItem('username', 'text', '账号', '3-20位', [], 'required minlength=3 maxlength=20 ')
             ->addFormItem('email', 'email', '邮箱', '邮箱')
             ->addFormItem('mobile', 'tel', '手机', '手机', [], 'data-rule-phone=true')
@@ -213,7 +215,8 @@ class Admin extends Base
                 'email' => $post_data['email'],
                 'mobile' => $post_data['mobile'],
                 'realname' => $post_data['realname'],
-                'admin_id' => $this->adminId
+                'admin_id' => $this->adminId,
+                'group_id' => $post_data['group_id']
             ];
             if (model('admin')->addOne($data)) {
                 $this->success('操作成功', url('index'));
@@ -222,7 +225,8 @@ class Admin extends Base
             }
         }
         $builder = new FormBuilder();
-        $builder->addFormItem('username', 'text', '账号', '3-20位', [], 'required minlength=3 maxlength=20 ')
+        $builder->addFormItem('group_id', 'select', '角色', '角色', model('adminGroup')->getField('id,title', ['status' => 1]),'required')
+            ->addFormItem('username', 'text', '账号', '3-20位', [], 'required minlength=3 maxlength=20 ')
             ->addFormItem('password', 'password', '密码', '6-20位', [], 'required minlength=6 maxlength=20 ')
             ->addFormItem('email', 'email', '邮箱', '邮箱')
             ->addFormItem('mobile', 'tel', '手机', '手机', [], 'data-rule-phone=true')
@@ -240,7 +244,8 @@ class Admin extends Base
      */
     public function index()
     {
+        $groups = model('adminGroup')->getField('id,title');
         $list = model('admin')->getAll(['where' => ['admin_id' => $this->adminId]]);
-        return $this->show(['admin_list' => $list]);
+        return $this->show(['admin_list' => $list, 'groups' => $groups]);
     }
 }
