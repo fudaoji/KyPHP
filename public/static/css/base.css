@@ -36,6 +36,7 @@ a { text-decoration: none; }
 .bt-a:hover{ color: #28a4c9; text-decoration: none;}
 .error-msg,.text-danger{color: #FF5722;}
 .text-green{color: var(--green);}
+.text-warning{color: #FFB800;}
 .text-ellipsis{text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
 
 /*覆写layui部分*/

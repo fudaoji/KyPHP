@@ -70,7 +70,7 @@ class Auth extends Controller
                     if(!empty($post_data['keeplogin'])){
                         cookie('record_username', $post_data['username']);
                     }
-                    $this->success('登录成功!', cookie('redirect_url') ? cookie('redirect_url') : url('system/mp/index'));
+                    $this->success('登录成功!', cookie('redirect_url') ? cookie('redirect_url') : url('system/index/index'));
                 }else{
                     $this->error('账号或密码错误', '', ['token' => request()->token()]);
                 }

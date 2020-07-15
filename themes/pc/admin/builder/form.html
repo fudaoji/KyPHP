@@ -12,7 +12,7 @@
     </ul>
     {/notempty}
     <div class="layui-tab-content">
-        <form class="layui-form" action="" id="ajax-form" method="post">
+        <form class="layui-form" action="{$post_url ?? ''}" id="ajax-form" method="post">
 
             {if condition="!empty($tip)"}
             <blockquote class="layui-elem-quote">{$tip}</blockquote>
@@ -21,6 +21,12 @@
             <input type="hidden" id="__token__" name="__token__" value="{:request()->token()}" />
             {foreach $form_items as $k => $form}
             {switch name="form.type"}
+            {case value="static"}{include file="../admin/builder/formtype/static" /}{/case}
+            {case value="chosen_multi"}{include file="../admin/builder/formtype/chosen_multi" /}{/case}
+            {case value="chosen"}{include file="../admin/builder/formtype/chosen" /}{/case}
+            {case value="time"}{include file="../admin/builder/formtype/time" /}{/case}
+            {case value="date"}{include file="../admin/builder/formtype/date" /}{/case}
+            {case value="datetime"}{include file="../admin/builder/formtype/datetime" /}{/case}
             {case value="toggle_radio"}{include file="../admin/builder/formtype/toggle_radio" /}{/case}
             {case value="legend"}{include file="../admin/builder/formtype/legend" /}{/case}
             {case value="media_text"}{include file="../admin/builder/formtype/media_text" /}{/case}

@@ -13,7 +13,8 @@ layui.config({
     base: rootPath + "module/",
     version: true
 }).extend({
-    step: 'step-lay/step', // 分步表单扩展
+    formSelects: 'formSelects/formSelects-v4',  //下拉框多选  https://hnzzmsf.github.io/example/example_v4.html
+    step: 'step-lay/step', // 分步表单扩展  http://layuimini.99php.cn/onepage/v2/index.html#/page/form-step.html
     treetable: 'treetable-lay/treetable', //table树形扩展
     tableSelect: 'tableSelect/tableSelect', // table选择扩展
     iconPickerFa: 'iconPicker/iconPickerFa', // fa图标选择扩展

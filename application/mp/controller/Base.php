@@ -86,13 +86,13 @@ class Base extends \app\admin\controller\Base
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function getAddonForMenu(){
-        $list = model('mpAddon')->getAllJoin([
+        $list = model('AdminAddon')->getAllJoin([
             'alias' => 'ma',
             'join' => [
                 ['addons a', 'ma.addon=a.addon']
             ],
             'field' => 'a.*',
-            'where' => ['a.menu_show'=>1, 'a.status' => 1],
+            'where' => ['a.menu_show'=>1, 'a.status' => 1, 'ma.uid' => $this->adminId],
             'order' => ['ma.update_time' => 'desc'],
             'refresh' => 1
         ]);

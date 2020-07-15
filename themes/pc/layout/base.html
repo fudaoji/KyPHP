@@ -145,14 +145,7 @@
     $(function () {
         //  setInterval(getMsgTotal,20000);
         function getMsgTotal() {
-            $.get("{:url('mp/Message/getMsgStatusTotal')}",{},function (res) {
-                if(res.msgTotal==0){
-                    //TODO
-                }else{
-                    $('.rhaphp-msg-user').show();
-                    $('.rhaphp-msg-user').text(res.msgTotal);
-                }
-            })
+
         }
 
         var screenSize = parseInt("{$screen_size}");

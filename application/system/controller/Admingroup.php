@@ -10,18 +10,18 @@
  * Created by PhpStorm.
  * Script Name: admingroup.php
  * Create: 2020/7/9 16:16
- * Description: 用户组
+ * Description: 用户开通应用
  * Author: fudaoji<fdj@kuryun.cn>
  */
 
 namespace app\system\controller;
 
-class Admingroup extends Base
+class Adminaddon extends Base
 {
     private $groupM;
     public function initialize(){
         parent::initialize();
-        $this->groupM = model('adminGroup');
+        $this->groupM = model('adminAddon');
     }
 
     /**

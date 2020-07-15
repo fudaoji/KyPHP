@@ -2,6 +2,101 @@
 
 {block name="body"}
 <div>
-    系统首页，准备放应用统计及新消息
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-xs6">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    微信公众号
+                </div>
+                <div class="layui-card-body">
+                    <div class="welcome-module">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-xs3">
+                                <div class="panel layui-bg-number">
+                                    <div class="panel-body">
+                                        <div class="panel-title">
+                                            <h5>平台数</h5>
+                                        </div>
+                                        <div class="panel-content">
+                                            <h1 class="no-margins">
+                                                <a href="{:url('mp/index')}" class="bt-a today">{$mp_data.mp_num}</a>
+                                            </h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs3">
+                                <div class="panel layui-bg-number">
+                                    <div class="panel-body">
+                                        <div class="panel-title">
+                                            <h5>微信应用</h5>
+                                        </div>
+                                        <div class="panel-content">
+                                            <h1 class="no-margins">
+                                                <a href="{:url('store/index')}" class="bt-a today">{$mp_data.addon_num}</a>
+                                            </h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs3">
+                                <div class="panel layui-bg-number">
+                                    <div class="panel-body">
+                                        <div class="panel-title">
+                                            <h5>告警应用</h5>
+                                        </div>
+                                        <div class="panel-content">
+                                            <h1 class="no-margins">
+                                                <a href="{:url('store/index')}" class="bt-a today text-warning">{$mp_data.will_overtime_num}</a>
+                                            </h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs3">
+                                <div class="panel layui-bg-number">
+                                    <div class="panel-body">
+                                        <div class="panel-title">
+                                            <h5>过期应用</h5>
+                                        </div>
+                                        <div class="panel-content">
+                                            <h1 class="no-margins">
+                                                <a href="{:url('store/index')}" class="bt-a today text-danger">{$mp_data.overtime_num}</a>
+                                            </h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    微信小程序
+                </div>
+                <div class="layui-card-body">
+                    <div class="welcome-module">
+                        <div class="layui-row layui-col-space10">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+{/block}
+
+{block name="css"}
+<style>
+    .layui-card-header{background-color: #f4f6f9;}
+    .layui-card-body{text-align: center;font-size: 16px;color: #98999a;}
+    .layui-card-body .no-margins{font-size: 24px;}
+    .layui-card-body .today{font-size: 30px;}
+    .panel-title{margin-bottom: 15px;}
+</style>
 {/block}
