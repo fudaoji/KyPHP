@@ -82,14 +82,14 @@ class Uploader extends Base
             case 'uploadvideo':
                 /* 上传文件 */
             case 'uploadfile':
-                $return = $this->model->ueUpload($action, ['from' => 2, 'uid' => session('aid')]);
+                $return = $this->model->ueUpload($action, ['from' => 2, 'uid' => $this->adminId]);
                 break;
 
             /* 列出图片 */
             case 'listimage':
                 /* 列出文件 */
             case 'listfile':
-                $return = $this->model->ueList($action, ['uid' => session('aid')]);
+                $return = $this->model->ueList($action, ['uid' => $this->adminId]);
                 break;
 
             /* 抓取远程文件 */

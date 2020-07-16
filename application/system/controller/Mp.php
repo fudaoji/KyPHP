@@ -184,14 +184,17 @@ class Mp extends Base
      * 公众号列表
      * @return mixed
      * Author: fudaoji<fdj@kuryun.cn>
+     * @throws \think\exception\DbException
      */
     public function index()
     {
-        $mp_list = model("mp")->getAll(['where' => ['uid' => $this->adminId], 'refresh' => 1]);
+        $mp_list = $this->mpM->page($this->pageSize, ['uid' => $this->adminId], ['update_time' => 'desc'],true, 1);
+        $page = $mp_list->render();
         foreach ($mp_list as $key => $v) {
-            $mp_list[$key]['type'] = controller('common/mp', 'event')->getTypeDesc($v);
+            $v['type'] = controller('common/mp', 'event')->getTypeDesc($v);
+            $mp_list[$key] = $v;
         }
-        return $this->show(['mp_list' => $mp_list]);
+        return $this->show(['mp_list' => $mp_list, 'page' => $page]);
     }
 
     /**

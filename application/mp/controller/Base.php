@@ -92,7 +92,7 @@ class Base extends \app\admin\controller\Base
                 ['addons a', 'ma.addon=a.addon']
             ],
             'field' => 'a.*',
-            'where' => ['a.menu_show'=>1, 'a.status' => 1, 'ma.uid' => $this->adminId],
+            'where' => ['a.menu_show'=>1, 'a.status' => 1, 'ma.uid' => $this->adminId, 'ma.status' => 1],
             'order' => ['ma.update_time' => 'desc'],
             'refresh' => 1
         ]);

@@ -1,0 +1,48 @@
+{extend name="../layout/base"}
+
+{block name="body"}
+<div class="layui-collapse">
+    {volist name="data_list" id="vo"}
+    <div class="layui-colla-item">
+        <h2 class="layui-colla-title" data-id="{$vo.id}">
+            <div class="layui-row">
+                <div class="layui-col-xs10">
+                    {if !$vo.read}<span class="layui-badge-dot" style="position: relative; top: -2px; left: -5px;"></span>{/if}
+                    {$vo.title}
+                </div>
+                <div class="layui-col-xs2 publish-time">{:date('Y-m-d H:i', $vo.publish_time)}</div>
+            </div>
+
+        </h2>
+        <div class="layui-colla-content">
+            {$vo.content|raw}
+        </div>
+    </div>
+    {/volist}
+</div>
+<div id="page">{$page|raw}</div>
+{/block}
+
+{block name="js"}
+<script>
+    $(function () {
+        layui.use(['element'], function(){
+            var element = layui.element;
+            $('.layui-colla-title').on('click', function () {
+                var $that = $(this);
+                $.post("{:url('setReadPost')}", {id: $(this).data('id')}, function (res) {
+                    if(res.code === 1){
+                        $that.find('.layui-badge-dot').remove();
+                    }
+                });
+            });
+        });
+    });
+</script>
+{/block}
+
+{block name="css"}
+<style>
+    .publish-time{color: rgb(141,141,141)}
+</style>
+{/block}

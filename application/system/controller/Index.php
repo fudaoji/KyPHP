@@ -41,7 +41,7 @@ class Index extends Base
         $mp_data = [
             'mp_num' => $this->mpM->total(['uid' => $this->adminId], 1),
             'addon_num' => $this->adminAddonM->total(['uid' => $this->adminId], 1),
-            'will_overtime_num' => $this->adminAddonM->total(['uid' => $this->adminId, 'deadline' => ['lt', time() + 86400 * 3]], 1),
+            'will_overtime_num' => $this->adminAddonM->total(['uid' => $this->adminId, 'deadline' => ['between', [time(), time() + 86400 * 3]]], 1),
             'overtime_num' => $this->adminAddonM->total(['uid' => $this->adminId, 'deadline' => ['lt', time()]], 1),
         ];
         $assign = [

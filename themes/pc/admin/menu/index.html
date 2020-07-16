@@ -13,7 +13,7 @@
     <table class="layui-table">
         <colgroup>
             <col width="100">
-            <col width="500">
+            <col width="400">
             <col>
         </colgroup>
         <thead>
@@ -21,6 +21,7 @@
             <th>排序</th>
             <th>菜单名称</th>
             <th>url</th>
+            <th>状态</th>
             <th>操作</th>
         </tr>
         </thead>
@@ -30,6 +31,17 @@
             <td><input style="width: 35px; text-align:center" name="{$v.id}_{$v.sort}" value="{$v.sort}"></td>
             <td>{$v.title_show|raw}</td>
             <td>{$v.url}</td>
+            <td>
+                <input
+                        type="checkbox"
+                        name="status{$v.id}"
+                        lay-filter="status"
+                        lay-skin="switch"
+                        lay-text="显示|隐藏"
+                        value="{$v.id}"
+                        {if $v.status}checked{/if}
+                >
+            </td>
             <td>
                 <a class="bt-a" href="{:url('edit',['id'=>$v['id']])}">修改</a>
                 <a href="javascript:;" onclick="delMenu('{$v.id}')" class="bt-a" >删除</a>
@@ -80,6 +92,16 @@
                 }
             });
             return false;
+        });
+
+        form.on('switch(status)', function(data){
+            var loadingIndex = layer.load(1);
+            $.post('', {id: data.value}, function (res) {
+                layer.close(loadingIndex);
+                if(res.code !== 1){
+                    layer.alert(res.msg);
+                }
+            });
         });
     });
 </script>

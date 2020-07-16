@@ -3,6 +3,7 @@
 <head>
     {include file="../common/header" /}
     <style>
+        .main-logo{background-image: url('<?=config("system.site.logo") ? config("system.site.logo") :"/public/static/imgs/admin/logo.png";?>') !important;}
         {if $screen_size == 1}
         .header{min-width: auto;}
         .wrap{width: 100%;}
@@ -38,9 +39,15 @@
             </ul>
         </div>
         <ul class="layui-nav">
-            <!--<li class="layui-nav-item ">
-                <a href="/doc/">消息</a>
-            </li>-->
+            <li class="layui-nav-item ">
+                <a href="{:url('system/notice/index')}">
+                    <i class="fa fa-bullhorn" style="margin-right: 2px;"></i>消息
+                    <span
+                            class="layui-badge notice-badge hide"
+                            style="margin:0;margin-left: -5px;top: 22%;border-radius: 50%;"
+                    >6</span>
+                </a>
+            </li>
             <li class="layui-nav-item">
                 <a href="javascript:;">
                     <i class="fa fa-user" style="margin-right: 2px;"></i>
@@ -143,10 +150,14 @@
     });
 
     $(function () {
-        //  setInterval(getMsgTotal,20000);
-        function getMsgTotal() {
-
-        }
+        var getMsgTotal = function() { //获取未读公告数目
+            $.post("{:url('system/notice/hasNewPost')}", {}, function (res) {
+                if(res.data.total > 0){
+                    $('.notice-badge').removeClass('hide').text(res.data.total);
+                }
+            });
+        };
+        setInterval(getMsgTotal, 20000);
 
         var screenSize = parseInt("{$screen_size}");
         $('.set-screen').text(screenSize > 0 ? '正常' : '宽屏' );

@@ -20,8 +20,13 @@ use app\common\facade\KyTree;
 
 class Menu extends Base
 {
+    /**
+     * @var \app\common\model\Menu
+     */
+    private $menuM;
     public function initialize(){
         parent::initialize();
+        $this->menuM = model('menu');
     }
 
     /**
@@ -30,10 +35,17 @@ class Menu extends Base
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
+     * @throws \think\Exception
      * Author: fudaoji<fdj@kuryun.cn>
      */
     public function index()
     {
+        if(request()->isPost()){
+            $id = input('id', 0);
+            $menu = $this->menuM->getOne($id);
+            $this->menuM->updateOne(['id' => $id, 'status' => abs($menu['status'] - 1)]);
+            $this->success('操作成功');
+        }
         $all_menu = model('menu')->getAll(['order' => ['sort' => 'asc']]);
         return $this->show(['menu_list' => KyTree::toFormatTree($all_menu)]);
     }

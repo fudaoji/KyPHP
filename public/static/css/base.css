@@ -52,7 +52,7 @@ a { text-decoration: none; }
 
 .header {min-width: 1200px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border-bottom: 1px solid rgb(217, 218, 220); }
 .header .logo { float: left; padding: 10px 15px 10px 0px; }
-.header .main-logo { float: left; width: 268px; margin-right: 12px; background: rgba(0, 0, 0, 0) url('../../imgs/admin/logo.png') no-repeat scroll 0% 0%; }
+.header .main-logo { float: left; width: 268px; margin-right: 12px; background: rgba(0, 0, 0, 0)  no-repeat scroll 0% 0%; }
 .header .main-logo a { display: block; height: 36px; line-height: 999px; overflow: hidden; }
 .header .sub-logo { float: left; width: 100px; height: 18px; margin-top: 12px; display: none; }
 .header .nav { float: left; position: relative; bottom: -1px; }

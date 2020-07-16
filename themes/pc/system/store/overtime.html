@@ -1,0 +1,92 @@
+{extend name="../layout/base"}
+{block name="tool_bar"}
+<form class="layui-form" action="">
+    <div class="layui-row layui-col-space10">
+
+        <div class="layui-col-xs2">
+            <div class="layui-form-item">
+                <select name="type2" lay-filter="types">
+                    <option {if $type==''} selected {/if} value="">所有</option>
+                    <option {if $type=='mp'} selected {/if} value="mp">公众号</option>
+                    <option {if $type=='mini'} selected {/if} value="mini">小程序</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-col-xs7">
+            <div class="layui-col-md5" style="margin-left: 5px; line-height: 38px;">
+                <div class="layui-form-item">
+                    <input name="search_key"
+                           placeholder="请输入关键词"
+                           value="{$search_key}"
+                           class="layui-input"
+                           type="text">
+                </div>
+            </div>
+            <div class="layui-col-md4" style="margin-left: 5px; line-height: 38px;">
+                <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="formDemo">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+        <div class="layui-col-xs3 tr">
+            <a href="{:url('apps')}" class="layui-btn layui-btn-sm">更多应用</a>
+        </div>
+
+    </div>
+</form>
+{/block}
+{block name="body"}
+<div>
+    <div class="layui-row">
+        <div id="app-body">
+            <div id="apps">
+                <form class="layui-form" action="">
+                    <div class="layui-row">
+                        {volist name="data_list" id="v"}
+                        <div class="layui-col-xs4 apps-volist">
+                            <div class="apps-volists">
+                                <div class="apps-icon">
+                                    <img src="{$v.logo}">
+                                </div>
+                                <div class="app-desc">
+                                    <h2>
+                                        {$v.name}
+                                        <span class="apps-money layui-badge layui-bg-blue">{if $v.type =='mp'}公众号{else /}小程序{/if}</span>
+                                    </h2>
+                                    <div class="app-desc-body">
+                                        <div class="description">{:mb_substr($v.desc,0,16)}</div>
+                                        <div class="tr">
+                                            <span class="layui-badge layui-bg-danger overtime-tip">{:date('Y-m-d H:i', $v.deadline)}到期</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/volist}
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="page">{$page|raw}</div>
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+<script>
+    layui.use(['layer','form'], function() {
+        var layer = layui.layer
+            ,form = layui.form;
+        form.render();
+        form.on('select(types)', function(data){
+            window.location.href="/system/store/myapps/type/"+data.value+"/search_key/{$search_key}";
+        });
+    });
+</script>
+{/block}
+
+{block name="css"}
+<style>
+    /*.overtime-tip{float: left;}*/
+</style>
+{/block}

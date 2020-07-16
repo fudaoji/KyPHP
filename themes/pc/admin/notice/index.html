@@ -1,0 +1,43 @@
+{extend name="../layout/base" /}
+
+{block name="tool_bar"}
+<div class="layui-row">
+    <div class="layui-col-xs3 layui-col-xs-offset9 tr">
+        <a href="{:url('add')}"class="layui-btn layui-btn-sm bg-success">发公告</a>
+    </div>
+</div>
+{/block}
+
+{block name="body"}
+<div>
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th>标题</th>
+            <th>发布时间</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="data_list" id="vo"}
+            <tr id="row-{$vo.id}">
+                <td>{$vo.title}</td>
+                <td>{:date('Y-m-d H:i:s', $vo.publish_time)}</td>
+                <th>{if condition="$vo.status=='1'"} 正常{else/}停用{/if}</th>
+                <td>
+                    <a class="bt-a" href="{:url('edit', ['id'=>$vo['id']])}">编辑</a>
+                </td>
+            </tr>
+        {/volist}
+        </tbody>
+    </table>
+    <div id="page">{$page|raw}</div>
+</div>
+{/block}
+
+{block name="js"}
+<script>
+
+</script>
+{/block}

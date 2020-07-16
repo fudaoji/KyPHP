@@ -154,6 +154,9 @@ class Upload extends BaseModel
             case $config['imageActionName']:
                 $upload_config = self::config();
                 break;
+            case $config['uploadvideo']:
+                $upload_config = self::config('video');
+                break;
             default:
                 $upload_config = self::config('file');
                 break;
@@ -205,26 +208,22 @@ class Upload extends BaseModel
         $size = isset($_GET['size']) ? (int)htmlspecialchars($_GET['size']) : $listSize;
         $start = isset($_GET['start']) ? (int)htmlspecialchars($_GET['start']) : 0;
         $page = intval(($_GET['start'] / $size))+1;
+        $total = 0;
+        $files = [];
         switch($driver){
             //不同的上传驱动对应不同的列表
             case 'qiniu':
             default:
                 $where = ['uid' => $extra['uid']];
                 if($action === 'listimage'){
-                    $where['ext'] = ['in', explode(',', self::$setting['image_ext'])];
-                    $total = $this->total($where);
-                    $files = $this->getList([$page, $size], $where, ['id' => 'desc'], 'url,create_time');
-                }else{
-                    $where['ext'] = ['in', explode(',', self::$setting['file_ext'])];
-                    $total = $this->total($where);
-                    $files = $this->getList([$page, $size], $where, ['id' => 'desc'], 'url,create_time');
+                    //$where['ext'] = ['in', explode(',', self::$setting['image_ext'])];
+                    $total = model('mediaImage')->total($where);
+                    $files = model('mediaImage')->getList([$page, $size], $where, ['id' => 'desc'], 'url,create_time');
                 }
                 if($files){
                     foreach($files as &$v){
                         $v['mtime'] = $v['create_time'];
                     }
-                }else{
-                    $files = [];
                 }
                 break;
         }
