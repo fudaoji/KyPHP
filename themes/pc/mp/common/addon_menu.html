@@ -4,7 +4,7 @@
     {if condition="count($menu_app) > 0"}
     {volist name="menu_app" id="v"}
     <dd class="">
-        <a href="{:url('app/index',['name'=>$v['addon'], 'mid'=>$mp_id])}" target="_blank">{$v.name}</a>
+        <a href="{:url('app/index',['name'=>$v['addon'], 'mid'=>$mp_id])}">{$v.name}</a>
     </dd>
     {/volist}
     {/if}

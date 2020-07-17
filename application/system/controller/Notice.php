@@ -18,7 +18,13 @@ namespace app\system\controller;
 
 class Notice extends Base
 {
+    /**
+     * @var \app\common\model\Notice
+     */
     private $noticeM;
+    /**
+     * @var \app\common\model\NoticeRead
+     */
     private $readM;
     public function initialize()
     {
@@ -31,6 +37,7 @@ class Notice extends Base
      * 系统公告
      * @return mixed
      * Author: fudaoji<fdj@kuryun.cn>
+     * @throws \think\exception\DbException
      */
     public function index(){
         $data_list = $this->noticeM->page($this->pageSize, [], ['publish_time' => 'desc'],true, 1);
@@ -58,7 +65,7 @@ class Notice extends Base
             $read = $this->readM->getOneByMap(['uid' => $this->adminId]);
             if($read){
                 strpos($read['notice'], 'id'.$id) === false
-                && $this->readM->updateOne(['id' => $id, 'notice' => $read['notice'] . ',id'.$id]);
+                && $this->readM->updateOne(['id' => $read['id'], 'notice' => $read['notice'] . ',id'.$id]);
             }else{
                 $this->readM->addOne(['uid' => $this->adminId,'notice' => 'id'.$id]);
             }

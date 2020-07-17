@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>会员登录</title>
+    <title>会员注册</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -43,11 +43,15 @@
                 {:token()}
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-username"></label>
-                    <input type="text" value="{$username}" name="username" lay-verify="required|username" placeholder="账号" autocomplete="off" class="layui-input">
+                    <input type="text" name="username" lay-verify="required|username" placeholder="账号" autocomplete="off" class="layui-input">
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-password"></label>
                     <input type="password" name="password" lay-verify="required|password" placeholder="密码" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-icon layui-icon-password"></label>
+                    <input type="password" name="repassword" lay-verify="required|rePassword" placeholder="再次输入密码" autocomplete="off" class="layui-input">
                 </div>
                 <div class="layui-form-item layui-row">
                     <div class="layui-col-md6">
@@ -60,13 +64,10 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <input type="checkbox" name="keeplogin" value="1" lay-skin="primary" title="记住账号">
+                    <button class="layui-btn layui-btn-fluid" lay-submit="" lay-filter="login">注册</button>
                 </div>
                 <div class="layui-form-item">
-                    <button class="layui-btn layui-btn-fluid" lay-submit="" lay-filter="login">登 录</button>
-                </div>
-                <div class="layui-form-item">
-                    <a href="{:url('register')}" style="float: right;color: #459ae9;font-size: 12px;">无账号？去注册</a>
+                    <a href="{:url('register')}" style="float: right;color: #459ae9;font-size: 12px;">已有账号？去登录</a>
                 </div>
             </form>
         </div>
@@ -102,6 +103,11 @@
                 /^[\S]{6,20}$/
                 , '密码必须6到20位，且不能出现空格'
             ]
+            , rePassword: function (value, item) {
+                if (value != $('input[name=password]').val()) {
+                    return '两次输入的密码不一致';
+                }
+            }
         });
 
         // 进行登录操作

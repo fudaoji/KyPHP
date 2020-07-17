@@ -46,6 +46,26 @@ class Store extends Base
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function index(){
+        $type = input('type', 'all');
+        $where = ['uid' => $this->adminId];
+        $type !== 'all' && $where['type'] = $type;
+        $data_list = $this->storeM->page($this->pageSize, $where, ['update_time' => 'desc'], true, true);
+        $this->assign['page'] = $data_list->appends(['type' => $type])->render();
+        foreach ($data_list as $k => $v){
+            $v['data'] = model($v['type'])->getOne($v['id']);
+            switch ($v['type']){
+                case 'mini':
+                    $v['href'] = url($v['type'].'/index/index', ['store_id' => $v['id']]);
+                    break;
+                default:
+                    $v['href'] = url($v['type'].'/index/index', ['mid' => $v['id']]);
+                    break;
+            }
+            $data_list[$k] = $v;
+        }
+        $this->assign['types'] = ['all' => '全部'] + $this->storeM->types();
+        $this->assign['data_list'] = $data_list;
+        $this->assign['type'] = $type;
         return $this->show();
     }
 

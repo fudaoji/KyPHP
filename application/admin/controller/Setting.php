@@ -80,6 +80,9 @@ class Setting extends Base
                     ->addFormItem('close_reason', 'textarea', '关闭原因', '不超过100个字', [], 'maxlength=100')
                     ->addFormItem('icp', 'text', '备案号', '备案号')
                     ->addFormItem('logo', 'picture_url', 'LOGO', '250x36')
+                    ->addFormItem('login_title', 'legend', '注册站点', '注册站点')
+                    ->addFormItem('default_group_id', 'number', '游客用户组id', '自主注册进来的用户组id')
+                    ->addFormItem('seo_title', 'legend', '推广', '推广')
                     ->addFormItem('keywords', 'text', 'SEO关键词', 'head头部的keywords')
                     ->addFormItem('description', 'textarea', 'SEO描述', 'head头部的description');
                 break;

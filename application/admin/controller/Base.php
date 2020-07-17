@@ -29,7 +29,7 @@ class Base extends BaseCtl {
     {
         parent::initialize();
 
-        if(CONTROLLER_NAME !== 'auth'){
+        if(CONTROLLER_NAME !== 'auth' && !request()->isPost()){
             //记录当前url
             cookie('redirect_url', request()->domain().request()->url());
         }

@@ -1,7 +1,7 @@
 {extend name="../layout/base"}
 
 {block name="body"}
-<div class="layui-collapse">
+<div class="layui-collapse" lay-accordion>
     {volist name="data_list" id="vo"}
     <div class="layui-colla-item">
         <h2 class="layui-colla-title" data-id="{$vo.id}">

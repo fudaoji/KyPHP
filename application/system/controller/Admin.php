@@ -245,7 +245,7 @@ class Admin extends Base
     public function index()
     {
         $groups = model('adminGroup')->getField('id,title');
-        $list = model('admin')->getAll(['where' => ['admin_id' => $this->adminId]]);
+        $list = model('admin')->getAll(['order' => ['id' => 'desc'], 'refresh' => 1]);
         return $this->show(['admin_list' => $list, 'groups' => $groups]);
     }
 }

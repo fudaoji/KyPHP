@@ -130,6 +130,7 @@
     <div class="wrap">
         <!--请遵守安装使用协议，未经允许不得删除或者屏蔽有关KyPHP字样与版权-->
         Powered By KyPHP<?= config("version")?> <?= config("app_title");?> Copyright © {:date('Y')} All Rights Reserved.
+        {if config("system.site.icp")}<p><?= config("system.site.icp");?></p>{/if}
     </div>
 </div>
 </body>
@@ -157,6 +158,7 @@
                 }
             });
         };
+        getMsgTotal();
         setInterval(getMsgTotal, 20000);
 
         var screenSize = parseInt("{$screen_size}");

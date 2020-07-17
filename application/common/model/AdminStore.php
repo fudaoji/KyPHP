@@ -21,7 +21,21 @@ use ky\BaseModel;
 class AdminStore extends BaseModel
 {
     const MP = 'mp';
-    const MINIAPP = 'miniapp';
+    const MINI = 'mini';
     const APP = 'app';
     const PC = 'pc';
+
+    /**
+     * 类型
+     * @param null $id
+     * @return array|mixed
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public static function types($id = null){
+        $list = [
+            self::MP => '微信公众号',
+            self::MINI => '微信小程序'
+        ];
+        return isset($list[$id]) ? $list[$id] : $list;
+    }
 }

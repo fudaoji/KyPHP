@@ -11,7 +11,8 @@
     .body-head .layui-badge{margin-left: 15px;}
     .body-head .fa{font-size: 21px;color: #949494;margin-right: 8px;}
     .body-head .simulate{margin-right: 15px;}
-    .body-head .exchange{margin-left: 30px;}
+    .body-head .exchange{margin-left: 30px;color: #459ae9;}
+    .body-head .exchange .fa{color: #459ae9;}
 </style>
 <div class="body-head">
     <div class="layui-row">
@@ -23,7 +24,7 @@
         <div class="layui-col-sm6 layui-col-xs6">
             <a href="http://mp.weixin.qq.com/debug/" target="_blank" class="simulate"><i class="fa fa-mobile-phone"></i>模拟调试</a>
             <a href="{:url('system/mp/info', ['mid' => $mp_info['id']])}" class="set"><i class="fa fa-cog"></i>公众号设置</a>
-            <a href="{:url('system/mp/index')}" class="exchange"><i class="fa fa-exchange"></i>切换平台</a>
+            <a href="{:url('system/store/index')}" class="exchange"><i class="fa fa-exchange"></i>切换平台</a>
         </div>
     </div>
 </div>

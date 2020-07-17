@@ -1,5 +1,90 @@
 {extend name="../layout/base"}
-
+{block name="breadcrumb"}
+<h2>
+    <span class="layui-breadcrumb" lay-separator="/">
+        <a><cite>切换平台</cite></a>
+    </span>
+</h2>
+{/block}
 {block name="body"}
-切换平台
+<div class="layui-tab layui-tab-brief">
+    <ul class="layui-tab-title">
+        {volist name="types" id="vo"}
+        <li {if $type === $key }class="layui-this" {/if}>
+            <a href="{:url('index', ['type' => $key])}">{$vo}</a>
+        </li>
+        {/volist}
+    </ul>
+    <div class="layui-tab-content" style="margin-top: 10px;">
+        <div class="layui-tab-item layui-show">
+            <div class="layui-row layui-col-space10">
+                {volist name="data_list" id="item"}
+                <div class="layui-col-xs3">
+                    <div class="item" __href="{$item.href}">
+                        <div class="item-head">
+                            <i class="fa fa-sign-in"></i>
+                        </div>
+                        <div class="cover" style="background-image: url('{$item.data.head_img}')"></div>
+                        <div class="item-footer">
+                            <div class="layui-row">
+                                <div class="layui-col-xs5">
+                                    <div class="icon">
+                                        <i class="fa fa-wechat"></i>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs7">
+                                    <p class="title">{$item.data.nick_name}</p>
+                                    <p class="type">类型： {$types[$item.type]}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/volist}
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+<script>
+    $(function () {
+        $('.item').on('click', function () {
+            location.href = $(this).attr('__href');
+        });
+        layui.use('element', function(){
+            var element = layui.element;
+
+        });
+    });
+</script>
+{/block}
+
+{block name="css"}
+<style>
+    .item{background-color: #f4f4f4;cursor: pointer;}
+    .item-head{text-align: right;padding-right: 15px;padding-top: 10px;font-size: 20px;}
+    .item-footer{padding-bottom: 20px;}
+    .item-footer .icon{
+        text-align: right;
+        padding-right: 10px;
+        padding-top: 10px;
+        margin-right: 8px;
+        border-right: 1px solid #e5e5e5;
+    }
+    .item-footer .icon i{
+        color: #ccc;
+        font-size: 24px;
+    }
+    .item-footer .title{color: #4c4c4c;}
+    .item-footer .type{color: #999;}
+    .cover{
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        margin: 10px auto 20px;
+        height: 100px;
+    }
+</style>
 {/block}
