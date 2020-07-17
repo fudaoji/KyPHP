@@ -20,7 +20,7 @@ namespace app\system\controller;
 class Store extends Base
 {
     /**
-     * @var \think\Model
+     * @var \app\common\model\AdminStore
      */
     private $storeM;
     private $storeId;
@@ -43,6 +43,7 @@ class Store extends Base
     /**
      * 切换平台
      * @return mixed
+     * @throws \think\exception\DbException
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function index(){
