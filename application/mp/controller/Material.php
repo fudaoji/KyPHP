@@ -207,7 +207,9 @@ class Material extends Base
     public function voice(){
         $from = input('from', 'local'); //本地或微信
         $field = input('field', ''); //目标input框
-        $where = ['uid' => $this->adminId, 'mpid' => $this->mpId];
+        $where = ['uid' => $this->adminId, 'media_id' => ''];
+        $controller = input('controller', '');
+        $controller == 'reply' && $where['mpid'] = $this->mpId;
         if($from == 'mp'){
             $where['media_id'] = ['neq', ''];
         }
@@ -260,7 +262,9 @@ class Material extends Base
     public function image(){
         $from = input('from', 'local'); //本地或微信
         $field = input('field', ''); //目标input框
-        $where = ['uid' => $this->adminId, 'media_id' => '', 'mpid' => $this->mpId];
+        $where = ['uid' => $this->adminId, 'media_id' => ''];
+        $controller = input('controller', '');
+        $controller == 'reply' && $where['mpid'] = $this->mpId;
         if($from == 'mp'){
             $where['media_id'] = ['neq', ''];
         }
@@ -287,7 +291,9 @@ class Material extends Base
         }
         $from = input('from', 'local'); //本地或微信
         $field = input('field', ''); //目标input框
-        $where = ['uid' => $this->adminId, 'mpid' => $this->mpId];
+        $where = ['uid' => $this->adminId];
+        $controller = input('controller', '');
+        $controller == 'reply' && $where['mpid'] = $this->mpId;
         $data_list = $this->musicM->page(7, $where, ['id' => 'desc'], 'id,url,title', 1);
         $pager = $data_list->appends(['from' => $from])->render();
         $assign = ['data_list' => $data_list, 'pager' => $pager, 'field' => $field];
@@ -302,7 +308,9 @@ class Material extends Base
     public function video(){
         $from = input('from', 'local'); //本地或微信
         $field = input('field', ''); //目标input框
-        $where = ['uid' => $this->adminId, 'media_id' => '', 'mpid' => $this->mpId];
+        $where = ['uid' => $this->adminId, 'media_id' => ''];
+        $controller = input('controller', '');
+        $controller == 'reply' && $where['mpid'] = $this->mpId;
         if($from == 'mp'){
             $where['media_id'] = ['neq', ''];
         }

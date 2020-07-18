@@ -58,6 +58,7 @@ class Addon extends Base
         $name = $params['name'];
         Db::startTrans();
         try {
+            $addon = model('addons')->getOneByMap(['addon' => $name]);
             $cf = model('addons')->getAddonConfigByFile($name);
             if (isset($cf['install_sql']) && $cf['install_sql'] != '') {
                 $install_file = ADDON_PATH . $name . DS . $cf['install_sql'];
@@ -92,8 +93,10 @@ class Addon extends Base
                 }
             }
 
-            model('addons')->where('addon', '=', $name)->delete();
+            model('addonsInfo')->delOne($addon['id']);
+            model('addons')->delOne($addon['id']);
             model('mpAddon')->where('addon', '=', $name)->delete();
+            //todo 删除小程序-应用关联表中的数据
             Db::commit();
             $res = true;
         }catch (\Exception $e){

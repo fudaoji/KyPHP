@@ -101,11 +101,11 @@ class Store extends Base
     public function apps(){
         $type = input('type', '');
         $search_key = input('search_key', '');
-        $cate = input('cate', 0, 'intval');
+        $cate = input('cate', 'all');
         $where = ['a.status' => 1];
         $type && $where['a.type'] = $type;
         $search_key && $where['a.name|a.desc'] = ['like', '%'.$search_key.'%'];
-        $cate && $where['ai.cate_id'] = $cate;
+        $cate !== 'all' && $where['ai.cates'] = ['like', '%'.$cate.'%'];
         $data_list = $this->addonM->pageJoin([
             'alias' => 'a',
             'join' => [
@@ -118,13 +118,13 @@ class Store extends Base
             'where' => $where
         ]);
         $page = $data_list->appends(['type' => $type, 'search_key' => $search_key])->render();
-
+        $cates = array_values(model('addonsCate')->getField('title'));
         $assign = [
             'data_list' => $data_list,
             'type' => $type,
             'search_key' => $search_key,
             'page' => $page,
-            'cates' => [0 => '全部'] + model('addonsCate')->getField('id,title'),
+            'cates' => ['all' => '全部'] + array_combine($cates, $cates),
             'cate' => $cate
         ];
         return $this->show($assign);

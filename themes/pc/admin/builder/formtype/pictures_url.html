@@ -1,105 +1,63 @@
-<div class="form-group" id="container_{$form['name']}">
-    <style>
-        .preview_{$form['name']} .col-md-3 .remove-img-{$form['name']}{float: left;}
-        .preview_{$form['name']} .col-md-3 img{width: 180px; height: 100px;max-width: 100%;}
-    </style>
-    <label for="{$form['name']}" class="control-label col-sm-3 {$form['extra_class']}">
-        {$form['title']}
+<div class="layui-form-item">
+    <label class="layui-form-label {$form['extra_class']}" for="{$form['name']}">
         {if condition="is_int(strpos($form['extra_attr'], 'required'))"}
         <span class="text-danger">*</span>
         {/if}
+        {$form['title']}
     </label>
-    <input type="hidden" value='{notempty name="form.value"}{$form["value"] ?? ""}{/notempty}' name="{$form['name']}" id="{$form['name']}" {$form['extra_attr']}>
-    <div class="col-sm-8">
-        <div class="row preview_{$form['name']}">
-            <div class="col-md-3">
-                <i class="fa fa-plus-square-o" id="pick_{$form['name']}" style="font-size: 10rem;"></i>
-            </div>
-            {notempty name="form.value"}
-            <?php $pictures = json_decode($form['value'], true);  ?>
-            {volist name="pictures" id="vo"}
-            <div class="col-md-3">
-                <i class="fa fa-remove text-danger remove-img-{$form['name']}" img-id="{$vo}"></i>
-                <img src="{$vo}">
-            </div>
-            {/volist}
-            {/notempty}
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="progress" id="process_{$form['name']}" style="background-color: #fff;">
-                    <div class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0; display: none;">
-                        <span class="sr-only">进度条显示</span>
-                    </div>
-                </div>
-            </div>
+    <div class="layui-input-block">
+        <input style="display: inline-block;width: 75%;"
+               readonly
+               type="text"
+               value="{$form['value'] ?? ''}"
+               id="{$form['name']}"
+               name="{$form['name']}"
+               class="layui-input"
+               {$form['extra_attr']}
+        ／>
+        <div class="layui-btn-group" style="margin-left: -5px;margin-top: -3px;">
+            <a href="javascript:;" class="layui-btn layui-btn-primary" id="picker-{$form['name']}">选择图片</a>
+            <a href="javascript:;" class="layui-btn bg-success <?=empty($form['value']) ? 'hide' : '';?>" id="preview-{$form.name}" style="border-left: none;">预览</a>
         </div>
     </div>
-    <script type="text/javascript">
-        head.load("<?php  echo $static_url;?>/plupload/plupload.full.min.js");
 
-        head.ready(function () {
-            //图片上传
-            var uploader_{$form['name']} = new plupload.Uploader({
-                runtimes : 'html5, flash, silverlight, html4',
-                browse_button : "pick_{$form['name']}",
-                container: document.getElementById("container_{$form['name']}"),
-                url : '/admin/upload/picturepost',
-                flash_swf_url : '<?php  echo $static_url;?>/plupload/Moxie.swf',
-                silverlight_xap_url : '<?php  echo $static_url;?>/plupload/Moxie.xap',
-                multipart: true,
-                filters : {
-                    max_file_size : '10mb',
-                    mime_types: [
-                        {title : "Image files", extensions : "jpg,gif,png,jpeg,bmp"}
-                    ]
-                },
-
-                init: {
-                    'FilesAdded': function(up, files) {
-                        uploader_{$form['name']}.start();
-                    },
-
-                    UploadProgress: function(uploader,file){
-                        var process_bar = $("#process_{$form['name']}").find('.progress-bar');
-                        $(process_bar).show();
-                        $(process_bar).css('width', String(file.percent) +'%');
-                    },
-
-                    FileUploaded: function(up, file, responseObject) {
-                        $("#process_{$form['name']}").find('.progress-bar').hide();
-                        var res = JSON.parse(responseObject.response);
-                        var files = res.data;
-                        if(res.code == 1){
-                            var img_box = '<div class="col-md-3">'+
-                                    '<i class="fa fa-remove text-danger remove-img-{$form['name']}" img-id="'+files[0].url+'"></i>'+
-                                    '<img src="'+files[0].url+'">'+
-                                    '</div>';
-                            $(".preview_{$form['name']}").append(img_box);
-                            var value = $.trim($("#{$form['name']}").val());
-                            var current_picture_ids = value ? JSON.parse(value) : []; //获取当前图集以逗号分隔的ID并转换成数组
-                            current_picture_ids.push(files[0].url);
-                            $("#{$form['name']}").val(JSON.stringify(current_picture_ids));
-                        }else{
-                            $.toast('error', res.msg);
-                            return false;
-                        }
-                    },
-
-                    Error: function(up, err) {
-                        console.log(err);
-                    }
+    <script>
+        $(function () {
+            //点击预览
+            $("#preview-{$form['name']}").on('click', function () {
+                var urls = $("#{$form['name']}").val().split(',');
+                var data = [];
+                for(var i = 0; i < urls.length; i++){
+                    data.push({
+                        "alt": urls[i],
+                        "pid": urls[i], //图片id
+                        "src": urls[i], //原图地址
+                        "thumb": urls[i] //缩略图地址
+                    })
                 }
+                layer.photos({
+                    photos: {
+                        "data": data
+                    }
+                    ,anim: 0 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+                });
             });
-
-            uploader_{$form['name']}.init();
-            //modal 有bug
-            $(".preview_{$form['name']}").on('click', ".remove-img-{$form['name']}", function(){
-                var current_picture_ids = JSON.parse($.trim($("#{$form['name']}").val())); //获取当前图集以逗号分隔的ID并转换成数组
-                current_picture_ids.remove($(this).attr('img-id'));
-                $("#{$form['name']}").val(JSON.stringify(current_picture_ids));
-                $(this).closest('.col-md-3').remove();
+            //点击选择图片
+            $("#picker-{$form['name']}").on('click', function () {
+                layer.open({
+                    type: 2,
+                    title: '图片',
+                    shadeClose: false,
+                    shade: 0.8,
+                    area: ['900px', '576px'],
+                    content: ['{:url("mp/material/handle", ["type" => "image", "field" => $form["name"]])}', 'no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                });
             });
         });
+        //根据iframe传回的值进行当前页面的赋值
+        function setPictureValue (value, field) {
+            $("#"+field).val(value.map(item => item.url).join(','));
+            $("#preview-"+field).removeClass("hide");
+        }
     </script>
 </div>

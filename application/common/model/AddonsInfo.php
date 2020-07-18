@@ -22,4 +22,5 @@ use ky\BaseModel;
 class AddonsInfo extends BaseModel
 {
     protected $isCache = true;
+    protected $autoWriteTimestamp = false;
 }
