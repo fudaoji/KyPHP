@@ -177,6 +177,7 @@ a { text-decoration: none; }
 .app-desc-body{color: #707070;font-size: 14px;}
 .app-desc-body .description{font-size: 14px;}
 .apps-volists {border:1px  solid rgb(231, 231, 235);margin: 0px 5px 5px 0px;padding: 5px;overflow: hidden;}
+.apps-volists:hover{border-color: var(--main-color);}
 .apps-volist{cursor: pointer}
 .apps-icon{float: left;margin-right: 10px;}
 .apps-icon img{ width: 68px;height: 68px;border-radius:8px; }

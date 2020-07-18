@@ -31,7 +31,6 @@ class Menu extends Base
 
     /**
      * 菜单列表
-     * @return \think\response\View
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
@@ -112,7 +111,6 @@ class Menu extends Base
 
     /**
      * 增加菜单
-     * @return \think\response\View
      * Author: fudaoji<fdj@kuryun.cn>
      */
     public function add()

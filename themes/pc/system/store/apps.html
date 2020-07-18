@@ -1,5 +1,102 @@
 {extend name="../layout/base"}
+{block name="tool_bar"}
+<form class="layui-form" action="">
+    <div class="layui-row layui-col-space10">
 
+        <div class="layui-col-xs2">
+            <div class="layui-form-item">
+                <select name="type2" lay-filter="types">
+                    <option {if $type==''} selected {/if} value="">所有</option>
+                    <option {if $type=='mp'} selected {/if} value="mp">公众号</option>
+                    <option {if $type=='mini'} selected {/if} value="mini">小程序</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-col-xs7">
+            <div class="layui-col-xs5" style="margin-left: 5px; line-height: 38px;">
+                <div class="layui-form-item">
+                    <input name="search_key"
+                           placeholder="请输入关键词"
+                           value="{$search_key}"
+                           class="layui-input"
+                           type="text">
+                </div>
+            </div>
+            <div class="layui-col-xs4" style="margin-left: 5px; line-height: 38px;">
+                <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="formDemo">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <span class="layui-breadcrumb" lay-separator="|">
+            {volist name="cates" id="c"}
+            <a
+                    href="{:url('apps', ['cate' => $key, 'type' => $type])}"
+                    {if $cate == $key}class="layui-this"{/if}
+            >{$c}</a>
+            {/volist}
+        </span>
+        <hr>
+    </div>
+</form>
+{/block}
 {block name="body"}
-应用市场
+<div>
+    <div class="layui-row">
+        <div id="app-body">
+            <div id="apps">
+                <form class="layui-form" action="">
+                    <div class="layui-row">
+                        {volist name="data_list" id="v"}
+                        <div class="layui-col-xs4 apps-volist">
+                            <div class="apps-volists">
+                                <div class="apps-icon">
+                                    <img src="{$v.logo}">
+                                </div>
+                                <div class="app-desc">
+                                    <h2>
+                                        {$v.name}
+                                        <span class="apps-money layui-badge layui-bg-blue">{if $v.type =='mp'}公众号{else /}小程序{/if}</span>
+                                    </h2>
+                                    <div class="app-desc-body">
+                                        <div class="description">{:mb_substr($v.desc,0,16)}</div>
+                                        <div class="tr">
+                                            <span class="sale_num">销量 {$v.sale_num_show}</span>
+                                            <span class="price">{$v.price > 0 ? ('¥'.$v.price) : '免费'}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/volist}
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="page">{$page|raw}</div>
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+<script>
+    layui.use(['layer','form'], function() {
+        var layer = layui.layer
+                ,form = layui.form;
+        //form.render();
+        form.on('select(types)', function(data){
+            window.location.href="/system/store/myapps/type/"+data.value+"/search_key/{$search_key}";
+        });
+    });
+</script>
+{/block}
+
+{block name="css"}
+<style>
+    .layui-breadcrumb .layui-this{color: #44b549 !important;}
+    .sale_num{margin-right: 70px;color: #4f99cf;}
+    .price{color: #e63a2e;font-size: 18px;margin-right: 10px;}
+</style>
 {/block}

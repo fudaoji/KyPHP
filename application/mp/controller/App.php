@@ -52,8 +52,8 @@ class App extends Base
         if (empty($addon_db)) {
             $this->error('应用不存在或已下架');
         }
-        if(! $this->adminAddonM->total(['addon' => $name, 'uid' => $this->adminId], 1)){
-            $this->error('请先开通此应用');
+        if(! $this->adminAddonM->total(['addon' => $name, 'uid' => $this->adminId, 'deadline' => ['gt', time()]], 1)){
+            $this->error('请先开通或续费此应用');
         }
         if(! $this->mpAddonM->total(['addon' => $name, 'mpid' => $this->mpId], 1)){
             $this->mpAddonM->addOne(['addon' => $name, 'mpid' => $this->mpId]);

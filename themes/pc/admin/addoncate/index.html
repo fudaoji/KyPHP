@@ -1,0 +1,83 @@
+{extend name="../layout/base" /}
+
+{block name="tool_bar"}
+<div class="layui-row">
+    <div class="layui-col-md3 layui-col-md-offset9 tr">
+        <a href="{:url('add')}" class="layui-btn layui-btn-sm bg-success">新增分类</a>
+    </div>
+</div>
+{/block}
+
+{block name="body"}
+<form class="layui-form" action="">
+    <table class="layui-table">
+        <colgroup>
+            <col width="100">
+            <col width="400">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th>排序</th>
+            <th>名称</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="data_list" id="v"}
+        <tr>
+            <td><input style="width: 35px; text-align:center" name="{$v.id}_{$v.sort}" value="{$v.sort}"></td>
+            <td>{$v.title}</td>
+            <td>
+                <input
+                        type="checkbox"
+                        name="status{$v.id}"
+                        lay-filter="status"
+                        lay-skin="switch"
+                        lay-text="显示|隐藏"
+                        value="{$v.id}"
+                        {if $v.status}checked{/if}
+                >
+            </td>
+            <td>
+                <a class="bt-a" href="{:url('edit',['id'=>$v['id']])}">修改</a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn  layui-btn-sm bg-success" lay-submit lay-filter="updateSort">更新排序</button>
+        </div>
+    </div>
+</form>
+<script>
+    layui.use('form', function(){ //更新排序
+        var form = layui.form;
+        form.on('submit(updateSort)', function(data){
+            $.post("{:url('updateSort')}", data.field, function (res) {
+                if(res.code === 1 ){
+                    layer.msg(res.msg, {time:1000}, function () {
+                        window.location.reload();
+                    });
+                }else {
+                    layer.alert(res.msg);
+                }
+            });
+            return false;
+        });
+
+        form.on('switch(status)', function(data){
+            var loadingIndex = layer.load(1);
+            $.post('', {id: data.value}, function (res) {
+                layer.close(loadingIndex);
+                if(res.code !== 1){
+                    layer.alert(res.msg);
+                }
+            });
+        });
+    });
+</script>
+{/block}

@@ -17,9 +17,10 @@ use think\facade\Env;
 return [
     // 应用名称
     'app_name'               => Env::get('app_name', 'KyPHP'),
-    'app_title'               => Env::get('app_title', '酷在云端微信营销平台'),
+    'app_title'              => Env::get('app_title', '酷在云端微信营销平台'),
     'app_prefix'             => Env::get('app_prefix', 'ky_'),
     'version'                => 'v1.0.0',
+    'founder_id'             => 1,  //创始人ID
     // 应用地址
     'app_host'               => '',
     // 应用调试模式

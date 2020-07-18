@@ -34,7 +34,7 @@ class Menu extends BaseModel
     public function getTopMenus($group_info = []){
         $where = ['pid' => 0, 'status' => 1];
         $aid = (int)session("adminId");
-        if($aid != 1) { //非创始人
+        if($aid != config('founder_id')) { //非创始人
             $where['id'] = ['in', $group_info['menu_config']];
         }
 
@@ -54,7 +54,7 @@ class Menu extends BaseModel
     public function getSideMenus($pid = 0, $group_info = []){
         $where = ['pid' => $pid, 'status' => 1,'type' => 1];
         $aid = (int)session("adminId");
-        if($aid != 1) { //非创始人
+        if($aid != config('founder_id')) { //非创始人
             $where['id'] = ['in', $group_info['menu_config']];
         }
         return $this->getAll([

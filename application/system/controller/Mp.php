@@ -203,7 +203,22 @@ class Mp extends Base
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function choose(){
+        $this->checkCanAdd();
         return $this->show();
+    }
+
+    /**
+     * 判断是否可以继续添加公众号
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    protected function checkCanAdd(){
+        $res = controller('common/adminGroup', 'event')->canAddStore([
+            'admin_info' => $this->adminInfo,
+            'type' => 'mp'
+        ]);
+        if($res === false){
+            $this->error('您当前添加的公众号数量已达上限，请升级会员');
+        }
     }
 
     /**
