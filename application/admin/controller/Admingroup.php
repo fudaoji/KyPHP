@@ -83,25 +83,21 @@ class Admingroup extends Base
 
         $menu_tree = [];
         foreach ($top_menu as $menu){
-            if(in_array($menu['id'], $data['menu_config'])){
-                $menu['checked'] = 1;
-            }
             $menu['children'] = model('menu')->getAll([
                 'field' => 'id,title',
                 'where' => ['pid' => $menu['id'], 'status' => 1],
                 'order' => ['sort' => 'asc'],
                 'refresh' => 1
             ]);
+            count($menu['children']) < 1 && in_array($menu['id'], $data['menu_config']) && $menu['checked'] = 1;
             foreach ($menu['children'] as $k => $menu1) {
-                if(in_array($menu1['id'], $data['menu_config'])){
-                    $menu1['checked'] = 1;
-                }
                 $menu1['children'] = model('menu')->getAll([
                     'field' => 'id,title',
                     'where' => ['pid' => $menu1['id'], 'status' => 1],
                     'order' => ['sort' => 'asc'],
                     'refresh' => 1
                 ]);
+                count($menu1['children']) < 1 && in_array($menu1['id'], $data['menu_config']) && $menu1['checked'] = 1;
                 foreach ($menu1['children'] as $j => $menu2){
                     if(in_array($menu2['id'], $data['menu_config'])){
                         $menu2['checked'] = 1;

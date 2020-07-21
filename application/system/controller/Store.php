@@ -17,6 +17,9 @@
 
 namespace app\system\controller;
 
+use think\Db;
+use think\facade\Log;
+
 class Store extends Base
 {
     /**
@@ -48,6 +51,103 @@ class Store extends Base
         if($this->storeId){
             $this->storeInfo = $this->storeM->getOne($this->storeId);
         }
+    }
+
+    /**
+     * 应用采购下单
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function addOrderPost(){
+        if(request()->isPost()){
+            $post_data = input('post.');
+            $addon = $this->addonM->getOneJoin([
+                'alias' => 'a',
+                'join' => [
+                    ['addons_info ai', 'ai.id=a.id']
+                ],
+                'where' => ['a.id' => $post_data['id']],
+                'field' => 'a.*,ai.*',
+                'refresh' => 1
+            ]);
+            if(empty($post_data['id']) || !$addon){
+                $this->error('参数错误');
+            }
+
+            $return = ['addon' => $addon];
+            $msg = '续费成功';
+            $url = url('store/myapps');
+            Db::startTrans();
+            $res = true;
+            try {
+                if($addon['price'] <= 0){
+                    $res = controller('common/addon', 'event')->afterBuyAddon([
+                        'addon' => $addon,
+                        'uid' => $this->adminId
+                    ]);
+                }else{
+                    //下单，前台走支付
+                    $total = $addon['price'] * 100;
+                    $insert_data = [
+                        'channel'       => \ky\Payment::WX_NATIVE,
+                        'order_no'      => build_order_no('addon'),
+                        'addon'         => $addon['addon'],
+                        'amount'        => $total,
+                        'total'         => $total,
+                        'subject'       => '开通'. $addon['name'] .'应用',
+                        'body'          => '开通'. $addon['name'] .'应用',
+                        'uid'           => $this->adminId,
+                        'username'      => $this->adminInfo['username'],
+                        'mobile'        => $this->adminInfo['mobile'],
+                        'client_ip'     => $this->request->ip()
+                    ];
+
+                    model('orderAddon')->addOne($insert_data);
+                    $return['order'] = $insert_data;
+                    $msg = '下单成功，前往支付';
+                    $url = url('payment/orderAddon', ['order_no' => $insert_data['order_no']]);
+                }
+                Db::commit();
+            }catch (\Exception $e){
+                $res = false;
+                dump($e->getMessage());
+                Log::write($e->getMessage());
+                Db::rollback();
+            }
+            if($res){
+                $this->success($msg, $url, $return);
+            }else{
+                $this->error('系统错误，请刷新重试');
+            }
+        }
+    }
+
+    /**
+     * 应用详情
+     * @return mixed
+     * Author: fudaoji<fdj@kuryun.cn>
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function appDetail(){
+        $id = input('id', 0, 'intval');
+        $data = $this->addonM->getOneJoin([
+            'alias' => 'a',
+            'join' => [
+                ['addons_info ai', 'ai.id=a.id']
+            ],
+            'where' => ['a.id' => $id],
+            'field' => 'a.*,ai.*',
+            'refresh' => 1
+        ]);
+        if(! $data){
+            $this->error('数据不存在');
+        }
+        
+        $data['snapshot'] = explode(',', $data['snapshot']);
+        $this->assign['admin_addon'] = $this->adminAddonM->getOneByMap(['uid' => $this->adminId, 'addon' => $data['addon']]);
+        $this->assign['data'] = $data;
+        return $this->show();
     }
 
     /**
@@ -155,7 +255,7 @@ class Store extends Base
             'aa.deadline' => ['gt', time()], 'aa.uid' => $this->adminId,
         ];
         $type && $where['ad.type'] = $type;
-        $status != -1 && $where['aa.status'] = $status;
+        $status != -1 && $where['ad.status'] = $status;
         $search_key && $where['ad.name|ad.desc'] = ['like', '%'.$search_key.'%'];
         $data_list = $this->adminAddonM->pageJoin([
             'alias' => 'aa',
@@ -165,7 +265,7 @@ class Store extends Base
             ],
             'order' => ['aa.update_time' => 'desc'],
             'page_size' => $this->pageSize,
-            'field' => 'aa.*,a.username,a.mobile,a.realname,ad.name,ad.logo,ad.desc,ad.type',
+            'field' => 'aa.deadline,aa.status,a.username,a.mobile,a.realname,ad.id,ad.name,ad.logo,ad.desc,ad.type',
             'refresh' => 1,
             'where' => $where
         ]);

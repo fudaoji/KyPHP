@@ -33,6 +33,10 @@ class Setting extends Base
             'upload' => [
                 'title' => '附件设置',
                 'href' => url('index', ['name' => 'upload'])
+            ],
+            'pay' => [
+                'title' => '支付设置',
+                'href' => url('index', ['name' => 'pay'])
             ]
         ];
     }
@@ -74,14 +78,25 @@ class Setting extends Base
         }
         $builder = new FormBuilder();
         switch ($current_name){
+            case 'pay':
+                $builder->addFormItem('wx_title', 'legend', '微信支付', '微信支付')
+                    ->addFormItem('wx_appid', 'text', 'AppId', 'AppId', [], 'required maxlength=150')
+                    ->addFormItem('wx_secret', 'text', 'Secret', 'Secret', [], 'required maxlength=150')
+                    ->addFormItem('wx_merchant_id', 'text', '商户ID', '商户ID', [], 'required maxlength=100')
+                    ->addFormItem('wx_key', 'text', '支付秘钥', '支付秘钥', [], 'required maxlength=32 minlength=32')
+                    ->addFormItem('wx_cert_path', 'textarea', '支付证书cert', '请在微信商户后台下载支付证书，用记事本打开apiclient_cert.pem，并复制里面的内容粘贴到这里。', [], 'maxlength=20000')
+                    ->addFormItem('wx_key_path', 'textarea', '支付证书key', '请在微信商户后台下载支付证书，使用记事本打开apiclient_key.pem，并复制里面的内容粘贴到这里。', [], ' maxlength=20000')
+                    ->addFormItem('wx_rsa_path', 'textarea', 'RSA公钥', '企业付款到银行卡需要RSA公钥匙');
+                break;
             case 'site':
                 empty($data) && $data['close'] = 0;
                 $builder->addFormItem('close', 'radio', '关闭站点', '关闭站点', [1 => '是', 0 => '否'], 'required')
                     ->addFormItem('close_reason', 'textarea', '关闭原因', '不超过100个字', [], 'maxlength=100')
                     ->addFormItem('icp', 'text', '备案号', '备案号')
                     ->addFormItem('logo', 'picture_url', 'LOGO', '250x36')
+                    ->addFormItem('kefu', 'picture_url', '客服信息', '请将客服信息拼装成一张图片')
                     ->addFormItem('login_title', 'legend', '注册站点', '注册站点')
-                    ->addFormItem('default_group_id', 'number', '游客用户组id', '自主注册进来的用户组id')
+                    ->addFormItem('default_group_id', 'number', '游客组id', '自主注册进来的用户组id')
                     ->addFormItem('seo_title', 'legend', '推广', '推广')
                     ->addFormItem('keywords', 'text', 'SEO关键词', 'head头部的keywords')
                     ->addFormItem('description', 'textarea', 'SEO描述', 'head头部的description');

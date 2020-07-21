@@ -110,7 +110,7 @@
             elem: '#menu-config'  //绑定元素
             ,showCheckbox: true  //是否显示复选框
             ,data: {:json_encode($menu_tree)}
-    });
+        });
 
         form.on('submit(form-add)', function (data) {
             var menus = tree.getChecked('menu-tree');

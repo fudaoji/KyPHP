@@ -10,6 +10,16 @@
 // +----------------------------------------------------------------------
 
 /**
+ * 获取支付配置
+ * @param string $type
+ * @return array
+ * Author: fudaoji<fdj@kuryun.cn>
+ */
+function get_pay_config($type = 'wx') {
+    return controller('common/payment', 'event')->getPayConfig($type);
+}
+
+/**
  * 生成唯一订单号
  * @param string $prefix
  * @return string

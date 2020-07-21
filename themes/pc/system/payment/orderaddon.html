@@ -1,0 +1,63 @@
+{extend name="../layout/base"}
+
+{block name="body"}
+<div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+        <div class="layui-col-md9">
+            <h2 class="page-header">微信支付</h2>
+        </div>
+    </div>
+    <div class="layui-col-md12">
+        <div class="wechat-body">
+            <div class="order-info">
+                <p>订单标题： {$order_info.subject}</p>
+                <p>订单编号： {$order_info.order_no}</p>
+                <p>订单金额： <i class="amount">￥{$order_info.amount/100}</i></p>
+            </div>
+            <img src="<?= url('generatePayCode', ['code_url' => urlencode($order_info['code_url'])]);?>" alt="" />
+            <div class="wechat-tips">
+                <p>请使用微信扫一扫<br>扫描二维码支付</p>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+<script>
+    layui.use(["jquery", "layer"], function () {
+        let $ = layui.jquery,
+            layer = layui.layer;
+
+        $(document).ready(function () {
+            let checkOrder = function(){
+                $.post("{:url('orderAddon')}", {order_no: "{$order_info.order_no}"}, function (res) {
+                    if(res.code === 1){
+                        layer.msg('支付成功', function () {
+                            location.href = "{:url('store/myapps')}";
+                        });
+                    }
+                }, 'json');
+            };
+            let interval = setInterval(checkOrder, 1000);
+        });
+    });
+</script>
+{/block}
+
+{block name="css"}
+<style>
+    .wechat-body{width: 400px;margin: 10px auto 30px;}
+    .order-info{color: #333;}
+    .order-info p{margin-bottom: 10px;}
+    .amount{color: red;}
+    .wechat-body img{width: 100%;border: 1px solid #eee;margin-bottom: 20px;}
+    .wechat-tips {
+        height: 45px;
+        padding: 8px 0 8px 125px;
+        background: #00c800 url(__STATIC__/imgs/scan.png) 50px 12px no-repeat;
+        background-size: 36px 36px;
+        color: #fff;
+    }
+</style>
+{/block}

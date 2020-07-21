@@ -23,6 +23,45 @@ use think\facade\Log;
 class Addon extends Base
 {
     /**
+     * 应用购买核销
+     * @param array $params
+     * Author: fudaoji<fdj@kuryun.cn>
+     * @return bool
+     */
+    function afterBuyAddon($params = []){
+        Db::startTrans();
+        try {
+            $addon = $params['addon'];
+            $admin_addon = model('adminAddon')->getOneByMap(['uid' => $params['uid'], 'addon' => $addon['addon']]);
+            if(empty($admin_addon)){
+                model('adminAddon')->addOne([
+                    'uid' => $params['uid'],
+                    'addon' => $addon['name'],
+                    'deadline' => strtotime("+1 year", time())
+                ]);
+            }else{
+                model('adminAddon')->updateOne([
+                    'id' => $admin_addon['id'],
+                    'deadline' => strtotime("+1 year", max($admin_addon['deadline'], time()))
+                ]);
+            }
+            $addon_info = model('addonsInfo')->getOne($addon['id']);
+            model('addonsInfo')->updateOne([
+                'id' => $addon_info['id'],
+                'sale_num' => $addon_info['sale_num'] + 1,
+                'sale_num_show' => $addon_info['sale_num_show'] + 1
+            ]);
+            Db::commit();
+            $res = true;
+        }catch (\Exception $e){
+            Log::write($e->getMessage());
+            Db::rollback();
+            $res = false;
+        }
+        return $res;
+    }
+
+    /**
      * 获取公众号插件模板风格
      * @param array $params
      * @return array|bool

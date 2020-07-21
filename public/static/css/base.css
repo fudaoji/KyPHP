@@ -66,6 +66,8 @@ a { text-decoration: none; }
 .header .layui-nav-item a:hover{color: #222;}
 .header .layui-nav-more{border-top-color: #222;}
 .header .layui-nav-mored{border-bottom-color: #222;border-top-color: #fff;}
+.header .kefu-nav a:hover{border-bottom: none;}
+.header .kefu-nav img{width: 180px;position: absolute;z-index: 1001;left: -60px;top: 45px;border: 1px solid #e7e6eb;}
 .wrap { width: 1200px; margin: 0 auto; position: relative;}
 
 .footer { padding-bottom: 30px; color: rgb(141, 141, 141); text-align: center; font: 12px/1.6 tahoma,arial,"Hiragino Sans GB",宋体,sans-serif; }

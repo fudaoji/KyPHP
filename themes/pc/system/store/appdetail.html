@@ -1,0 +1,130 @@
+{extend name="../layout/base"}
+
+{block name="body"}
+<div class="layui-row layui-col-space30">
+    <div class="layui-col-xs5">
+        <!--应用快照-->
+        <div class="layui-carousel" id="snapshot">
+            <div carousel-item>
+                {volist name="data.snapshot" id="ss"}
+                <div style="background-image: url('{$ss}')" class="snapshot-item"></div>
+                {/volist}
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-xs7 info">
+        <!--应用信息参数-->
+        <div class="layui-row layui-col-space20">
+            <div class="layui-col-xs2 tr">
+                <div class="logo" style="background-image: url({$data.logo});"></div>
+            </div>
+            <div class="layui-col-xs10">
+                <p class="title">{$data.name}</p>
+                <p class="version">版本号：{$data.version}</p>
+            </div>
+        </div>
+        <div class="price-div">
+            <p>价格：<span class="price">￥{$data.price}</span></p>
+            <p>服务时长： 1年</p>
+        </div>
+        <div class="layui-row layui-col-space20">
+            <div class="layui-col-xs2 tr">销量：</div>
+            <div class="layui-col-xs10">{$data.sale_num_show}</div>
+        </div>
+        <div class="layui-row layui-col-space20">
+            <div class="layui-col-xs2 tr">标签：</div>
+            <div class="layui-col-xs10">{$data.cates}</div>
+        </div>
+        <div class="layui-row layui-col-space20">
+            <div class="layui-col-xs2 tr">适用：</div>
+            <div class="layui-col-xs10">{$data.type == 'mp' ? '微信公众号' : '微信小程序'}</div>
+        </div>
+        {if $admin_addon}
+        <div class="layui-row layui-col-space20">
+            {if $admin_addon.deadline > time()}
+            <div class="layui-col-xs2 tr">到期时间：</div>
+            <div class="layui-col-xs10"><span style="color: #cf1010;">{:date('Y-m-d H:i:s', $admin_addon.deadline)}</span></div>
+            {else/}
+            <div class="layui-col-xs2 tr">已过期：</div>
+            <div class="layui-col-xs6 tr"><span class="layui-badge">截止{:date('Y-m-d H:i:s', $admin_addon.deadline)}</span></div>
+            {/if}
+        </div>
+        {/if}
+        <div class="layui-row layui-col-space20">
+            <div class="layui-col-xs3 tr">
+                <button class="layui-btn buy-btn">{$admin_addon ? '续费' : '立即购买'}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="layui-tab layui-tab-brief addon-detail" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+        <li class="layui-this">软件介绍</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">{$data.detail|raw}</div>
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+<script>
+    $(function () {
+        layui.use(['carousel', 'element'], function(){
+            var carousel = layui.carousel;
+            //建造实例
+            carousel.render({
+                elem: '#snapshot'
+                ,width: '100%' //设置容器宽度
+                ,arrow: 'always' //始终显示箭头
+                ,height: '489px',
+                //,anim: 'updown' //切换动画方式
+            });
+        });
+
+        $('.buy-btn').on('click', function () {
+            layer.confirm('你确定' + $(this).text() + '吗？', {
+                btn: ['确定','不的'],
+                title:'提醒'
+            }, function () {
+                var loadingIndex = layer.load(1);
+                $.post('{:url("addOrderPost")}', {id: "{$data.id}"}, function (res) {
+                    layer.close(loadingIndex);
+                    if(res.code === 1){
+                        layer.msg(res.msg, {time: 1000}, function () {
+                            location.href = res.url;
+                        });
+                    }else{
+                        layer.alert(res.msg);
+                    }
+                });
+            });
+        });
+    });
+</script>
+{/block}
+
+{block name="css"}
+<style>
+    #snapshot{padding: 10px;}
+    #snapshot .snapshot-item{background-size: contain;background-position: center;background-repeat: no-repeat;}
+    .info .logo{display: inline-block;width: 76px;height: 76px;background-repeat: no-repeat;background-size: contain;background-position: center;}
+    .info .title{color: #4e4e4e;font-size: 22px;}
+    .info .version{color: #999;font-size: 14px;}
+    .info .price-div{
+        padding: 10px 10px 5px;
+        margin: 10px 10px 20px;
+        line-height: 40px;
+        background-color: #ffede7;
+        color: #787878;
+        padding-left: 60px;
+    }
+    .info .price-div .price{
+        color: #cf1010;
+        font-size: 24px;
+    }
+    .addon-detail{margin-top: 25px;}
+    .info .buy-btn{margin-top: 25px;}
+</style>
+{/block}

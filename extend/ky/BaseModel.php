@@ -578,8 +578,7 @@ class BaseModel extends Model
             $selector->join($params['join']);
         }
         $this->_where($selector, $where);
-        $data = $selector->order($order)->page($limit[0], $limit[1])->select();
-        return $data;
+        return $selector->order($order)->page($limit[0], $limit[1])->select();
     }
 
     /**
@@ -617,8 +616,7 @@ class BaseModel extends Model
             $selector->join($params['join']);
         }
         $this->_where($selector, $where);
-        $data = $selector->order($order)->select();
-        return $data;
+        return $selector->order($order)->select();
     }
 
     /**
@@ -720,5 +718,40 @@ class BaseModel extends Model
         }
         $this->_where($selector, $where);
         return $selector->group($group_field)->order($order)->select();
+    }
+
+    /**
+     * 获取单条数据的关联查询
+     * @param array $params
+     * @return mixed
+     * e.g: model('user')->getOneJoin([
+     * 'alias' => 'u',
+     * 'join' => [['profile p', 'p.user_id=u.id']],
+     * 'where' => ['u.id' => 1]
+     * ]);
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @author fudaoji<fdj@kuryun.cn>
+     */
+    public function getOneJoin($params = []){
+        $where = empty($params['where']) ? [] : $params['where'];
+        $refresh = empty($params['refresh']) ? 0 : $params['refresh'];
+        $field = empty($params['field']) ? true : $params['field'];
+        unset($params['refresh']);
+        $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) . __FUNCTION__ . serialize($params));
+        $refresh && cache($cache_key, null);
+        $selector = $this->getBuilder($where)->field($field);
+        if($this->isCache){
+            $selector->cache($cache_key, $this->expire, $this->getTrueTable($where));
+        }
+        if(!empty($params['alias'])){
+            $selector->alias($params['alias']);
+        }
+        if(!empty($params['join'])){
+            $selector->join($params['join']);
+        }
+        $this->_where($selector, $where);
+        return $selector->find();
     }
 }

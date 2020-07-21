@@ -1,0 +1,115 @@
+{extend name="../layout/base" /}
+
+{block name="tool_bar"}
+<form class="layui-form" action="">
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-xs5">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <div class="layui-input-inline" style="width: 145px;">
+                        <input type="text" value="{$from_date}" name="from_date" class="layui-input" id="from_date" placeholder="开始时间">
+                    </div>
+                    <div class="layui-form-mid">-</div>
+                    <div class="layui-input-inline" style="width: 145px;">
+                        <input type="text" value="{$to_date}" name="to_date" class="layui-input" id="to_date" placeholder="结束时间">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs2">
+            <div class="layui-form-item">
+                <select name="paid" lay-filter="paid">
+                    <option {if $paid==-1} selected {/if} value="-1">支付失败</option>
+                    <option {if $paid==0} selected {/if} value="0">待支付</option>
+                    <option {if $paid==1} selected {/if} value="1">付款成功</option>
+                    <option {if $paid==2} selected {/if} value="2">已退款</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-col-xs4">
+            <div class="layui-col-xs5" style="margin-left: 5px; line-height: 38px;">
+                <div class="layui-form-item">
+                    <input name="search_key"
+                           placeholder="请输入关键词"
+                           value="{$search_key}"
+                           class="layui-input"
+                           type="text">
+                </div>
+            </div>
+            <div class="layui-col-xs4" style="margin-left: 5px; line-height: 38px;">
+                <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="formDemo">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="layui-col-xs1 tr">
+            <a href="{:url('export')}" class="layui-btn layui-btn-sm layui-btn-info">批量导出</a>
+        </div>
+    </div>
+</form>
+
+{/block}
+
+{block name="body"}
+<div>
+    <table class="layui-table" lay-even lay-skin="nob">
+        <thead>
+        <tr>
+            <th>订单号</th>
+            <th width="80">应用</th>
+            <th>会员</th>
+            <th>总金额</th>
+            <th>实付金额</th>
+            <th>下单时间</th>
+            <th>支付时间</th>
+            <th >操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="data_list" id="vo"}
+        <tr>
+            <td>{$vo.order_no}</td>
+            <td>{$vo.name}</td>
+            <td>
+                <p>{$vo.username}</p>
+                <p>{$vo.mobile}</p>
+            </td>
+            <td>￥{:number_format($vo.total/100, 2, '.', '')}</td>
+            <td>￥{:number_format($vo.amount/100, 2, '.', '')}</td>
+            <td>{:date('Y.m.d H:i:s', $vo.create_time)}</td>
+            <td>{$vo.pay_time ? date('Y.m.d H:i:s', $vo.pay_time) : ''}</td>
+            <td>
+                <a class="layui-btn layui-btn-xs layui-btn-normal" href="{:url('edit',['id'=>$vo.id])}">编辑</a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    <div id="page">{$page|raw}</div>
+</div>
+{/block}
+
+{block name="js"}
+<script>
+    layui.use(['layer', 'form', 'laydate'], function(){
+        var layer = layui.layer
+                ,form = layui.form
+        ,laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#to_date'
+            ,type: 'datetime'
+        });
+        laydate.render({
+            elem: '#from_date' //指定元素
+            ,type: 'datetime'
+        });
+
+        form.on('select(paid)', function(data){
+            $('.layui-form').submit();
+        });
+    });
+</script>
+{/block}
