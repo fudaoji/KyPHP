@@ -1,11 +1,11 @@
 {extend name="../layout/base"}
 {block name="tool_bar"}
-<form class="layui-form" action="">
+<form class="layui-form search-form" action="">
     <div class="layui-row layui-col-space10">
 
         <div class="layui-col-xs2">
             <div class="layui-form-item">
-                <select name="type2" lay-filter="types">
+                <select name="type" lay-filter="types">
                     <option {if $type==''} selected {/if} value="">所有</option>
                     <option {if $type=='mp'} selected {/if} value="mp">公众号</option>
                     <option {if $type=='mini'} selected {/if} value="mini">小程序</option>
@@ -77,9 +77,9 @@
     layui.use(['layer','form'], function() {
         var layer = layui.layer
             ,form = layui.form;
-        form.render();
+        
         form.on('select(types)', function(data){
-            window.location.href="/system/store/myapps/type/"+data.value+"/search_key/{$search_key}";
+            $('.search-form').submit();
         });
     });
 </script>
