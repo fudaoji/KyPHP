@@ -62,7 +62,6 @@ class Call extends Controller
             View::config($view_config);
 
             $filename = ADDON_PATH . $this->addon . '/controller/' . ucfirst($this->col) . '.php';
-
             if (file_exists($filename)) {
                 include_once $filename;
                 $class = '\addons\\' . $this->addon . '\controller\\' . ucfirst($this->col);
