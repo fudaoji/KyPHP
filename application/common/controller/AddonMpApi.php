@@ -10,7 +10,7 @@
  * Created by PhpStorm.
  * Script Name: AddonMpApi.php
  * Create: 2020/7/7 15:34
- * Description: 公众号微信回复接口控制器基类
+ * Description: 公众号应用微信回复接口控制器基类
  * Author: fudaoji<fdj@kuryun.cn>
  */
 

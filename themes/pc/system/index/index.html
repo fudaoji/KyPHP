@@ -6,62 +6,34 @@
         <div class="layui-col-xs6">
             <div class="layui-card">
                 <div class="layui-card-header">
-                    微信公众号
+                    平台
                 </div>
                 <div class="layui-card-body">
                     <div class="welcome-module">
                         <div class="layui-row layui-col-space10">
-                            <div class="layui-col-xs3">
+                            <div class="layui-col-xs6">
                                 <div class="panel layui-bg-number">
                                     <div class="panel-body">
                                         <div class="panel-title">
-                                            <h5>平台数</h5>
+                                            <h5>公众号</h5>
                                         </div>
                                         <div class="panel-content">
                                             <h1 class="no-margins">
-                                                <a href="{:url('mp/index')}" class="bt-a today">{$mp_data.mp_num}</a>
+                                                <a href="{:url('mp/index')}" class="bt-a today">{$data_info.mp_num}</a>
                                             </h1>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="layui-col-xs3">
+                            <div class="layui-col-xs6">
                                 <div class="panel layui-bg-number">
                                     <div class="panel-body">
                                         <div class="panel-title">
-                                            <h5>微信应用</h5>
+                                            <h5>小程序</h5>
                                         </div>
                                         <div class="panel-content">
                                             <h1 class="no-margins">
-                                                <a href="{:url('store/myapps', ['type' => 'mp'])}" class="bt-a today">{$mp_data.addon_num}</a>
-                                            </h1>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="layui-col-xs3">
-                                <div class="panel layui-bg-number">
-                                    <div class="panel-body">
-                                        <div class="panel-title">
-                                            <h5>告警应用</h5>
-                                        </div>
-                                        <div class="panel-content">
-                                            <h1 class="no-margins">
-                                                <a href="{:url('store/myapps', ['type' => 'mp'])}" class="bt-a today text-warning">{$mp_data.will_overtime_num}</a>
-                                            </h1>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="layui-col-xs3">
-                                <div class="panel layui-bg-number">
-                                    <div class="panel-body">
-                                        <div class="panel-title">
-                                            <h5>过期应用</h5>
-                                        </div>
-                                        <div class="panel-content">
-                                            <h1 class="no-margins">
-                                                <a href="{:url('store/overtime')}" class="bt-a today text-danger">{$mp_data.overtime_num}</a>
+                                                <a href="{:url('mini/index')}" class="bt-a today">{$data_info.mini_num}</a>
                                             </h1>
                                         </div>
                                     </div>
@@ -75,12 +47,53 @@
         <div class="layui-col-xs6">
             <div class="layui-card">
                 <div class="layui-card-header">
-                    微信小程序
+                    应用
                 </div>
                 <div class="layui-card-body">
                     <div class="welcome-module">
                         <div class="layui-row layui-col-space10">
-
+                            <div class="layui-col-xs4">
+                                <div class="panel layui-bg-number">
+                                    <div class="panel-body">
+                                        <div class="panel-title">
+                                            <h5>应用数</h5>
+                                        </div>
+                                        <div class="panel-content">
+                                            <h1 class="no-margins">
+                                                <a href="{:url('store/myapps')}" class="bt-a today">{$data_info.addon_num}</a>
+                                            </h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4">
+                                <div class="panel layui-bg-number">
+                                    <div class="panel-body">
+                                        <div class="panel-title">
+                                            <h5>告警应用</h5>
+                                        </div>
+                                        <div class="panel-content">
+                                            <h1 class="no-margins">
+                                                <a href="{:url('store/myapps')}" class="bt-a today text-warning">{$data_info.will_overtime_num}</a>
+                                            </h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4">
+                                <div class="panel layui-bg-number">
+                                    <div class="panel-body">
+                                        <div class="panel-title">
+                                            <h5>过期应用</h5>
+                                        </div>
+                                        <div class="panel-content">
+                                            <h1 class="no-margins">
+                                                <a href="{:url('store/overtime')}" class="bt-a today text-danger">{$data_info.overtime_num}</a>
+                                            </h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

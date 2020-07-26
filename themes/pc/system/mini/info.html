@@ -1,0 +1,189 @@
+{extend name="../layout/base" /}
+
+{block name="body"}
+<div class="layui-row info-simple">
+    <div class="layui-col-md1 tr icon-col color-gray">
+        <i class="fa fa-wechat"></i>
+    </div>
+    <div class="layui-col-md1 tc">
+        <img src="{$data_info.head_img}" alt="{$data_info.nick_name}" class="head_img">
+    </div>
+    <div class="layui-col-md7 tl">
+        <p>{$data_info.nick_name}</p>
+        <p class="color-gray">{:controller('common/mini', 'event')->getTypeDesc($data_info)}</p>
+    </div>
+    <div class="layui-col-md2">
+        <div class="layui-btn-group">
+            {if condition="!empty($data_info['appsecret'])"}
+            <a href="{:url('edit', ['store_id' => $data_info['id']])}" class="layui-btn layui-btn-sm layui-btn-normal">编辑</a>
+            {else}
+            <a href="{$auth_url}" class="layui-btn layui-btn-sm">重新授权</a>
+            {/if}
+            {if condition="$data_info['status'] eq 1"}
+            <a href="javascript:;" class="layui-btn layui-btn-sm layui-btn-danger js-forbid">停用</a>
+            {else}
+            <a href="javascript:;" class="layui-btn layui-btn-sm js-forbid bg-success">启用</a>
+            {/if}
+        </div>
+    </div>
+</div>
+
+<div class="layui-tab">
+    <ul class="layui-tab-title">
+        <li class="layui-this">基本信息</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <table class="layui-table" lay-skin="line" >
+                <thead>
+                <tr>
+                    <th>小程序资料</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>AppID</td>
+                    <td>{$data_info.appid}</td>
+                </tr>
+                {if condition="!empty($data_info['appsecret'])"}
+                <tr>
+                    <td>AppSecret</td>
+                    <td>{$data_info.appsecret}</td>
+                </tr>
+                {/if}
+                <tr>
+                    <td>描述</td>
+                    <td>{$data_info.signature}</td>
+                </tr>
+                <tr>
+                    <td>原始ID</td>
+                    <td>{$data_info.user_name}</td>
+                </tr>
+                <tr>
+                    <td>接入方式</td>
+                    <td>{$data_info.appsecret ? "手动接入" : "授权接入"}</td>
+                </tr>
+                <tr>
+                    <td>接入时间</td>
+                    <td>{:date("Y-m-d", $data_info['create_time'])}</td>
+                </tr>
+                </tbody>
+            </table>
+            {if condition="$data_info['appsecret']"}
+            <table class="layui-table" lay-skin="line" >
+                <thead>
+                <tr>
+                    <th>服务器配置</th>
+                    <th></th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>request合法域名</td>
+                    <td class="url">{$domain}<span class="tip-url bt-a text-green"></span></td>
+                    <td><a href="javascript:;" class="bt-a js-zclip" data-name="url">复制</a></td>
+                </tr>
+                <tr>
+                    <td>socket合法域名</td>
+                    <td class="refresh_token">wss://{$host}<span class="tip-refresh_token bt-a text-green"></span></td>
+                    <td><a href="javascript:;" class="bt-a js-zclip" data-name="refresh_token">复制</a></td>
+                </tr>
+                <tr>
+                    <td>uploadFile合法域名</td>
+                    <td class="encodingaeskey">{$domain}<span class="tip-encodingaeskey bt-a text-green"></span></td>
+                    <td><a href="javascript:;" class="bt-a js-zclip" data-name="encodingaeskey">复制</a></td>
+                </tr>
+                <tr>
+                    <td>downloadFile合法域名</td>
+                    <td class="server_ip">{$domain}<span class="tip-server_ip bt-a text-green"></span></td>
+                    <td><a href="javascript:;" class="bt-a js-zclip" data-name="server_ip">复制</a></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table class="layui-table" lay-skin="line" >
+                <thead>
+                <tr>
+                    <th>业务域名</th>
+                    <th></th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>业务域名地址</td>
+                    <td class="business_url">{$host}<span class="tip-business_url bt-a text-green"></span></td>
+                    <td><a href="javascript:;" class="bt-a js-zclip" data-name="business_url">复制</a></td>
+                </tr>
+                </tbody>
+            </table>
+            {/if}
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+{js href='__STATIC__/libs/zclip/jquery.zclip.min.js' /}
+<script>
+    $(function () {
+        $('.js-zclip').zclip({
+            path: '__STATIC__/libs/zclip/ZeroClipboard.swf',
+            copy: function(){
+                var name = $(this).data('name');
+                $(".tip-"+name).show();
+                return $('.' + name).text();
+            },
+            afterCopy: function(){
+                var name = $(this).data('name');
+                $(".tip-" + name).insertAfter($('.tip-' + name)).html('复制成功').fadeOut(2000);
+            }
+        });
+
+        /*$('.js-zclip').on('click', function () {
+            var name = $(this).data('name');
+            $(".tip-" + name).show();
+            $('.' + name).select();
+            document.execCommand("Copy");
+            $(".tip-" + name).insertAfter($('.tip-' + name)).html('复制成功').fadeOut(2000);
+        });*/
+
+        //点击启用/禁用
+        $('.js-forbid').on('click', function () {
+            layer.confirm('确定'+($(this).text())+'吗？', {
+                title: '提示',
+                btn: ['是','不'] //按钮
+            }, function(){
+                layer.load(1);
+                $.post("{:url('setStatus')}", {'store_id': "{$data_info.id}"}, function (res) {
+                    if(res.code === 1){
+                        layer.msg(res.msg, {time: 1000}, function (index) {
+                            location.reload();
+                        });
+                    }else{
+                        layer.alert(res.msg);
+                    }
+                })
+            });
+        });
+    });
+</script>
+{/block}
+{block name="css"}
+<style>
+    .color-gray{color: #B2B2B2;}
+    .info-simple{
+        height: 50px;
+        padding: 20px 15px;
+        margin-bottom: 30px;
+        border: 1px solid #e7e7eb;
+        background-color: #f8f8f8;
+    }
+    .icon-col{border-right: 1px solid #e7e7eb;padding-right: 20px;padding-top: 7px;}
+    .fa-wechat{font-size: 28px;}
+    .head_img{width: 55px; height: 55px;}
+    .layui-btn-group{margin-top: 7px;}
+</style>
+{/block}

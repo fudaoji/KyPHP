@@ -17,10 +17,32 @@
 
 namespace app\common\event;
 
+use EasyWeChat\Factory;
+use ky\ErrorCode;
 use ky\Upload\Driver\Qiniu;
 
 class Base
 {
+    /**
+     * 获取开放平台
+     * @return \EasyWeChat\OpenPlatform\Application
+     * Author: fudaoji<fdj@kuryun.cn>
+     * @throws \Exception
+     */
+    public function getOpenPlatform(){
+        $platform = config('system.weixin.platform');
+        if(empty($platform)){
+            exception("开放平台参数未配置", ErrorCode::WxCompException);
+        }
+        $config = [
+            'app_id' => $platform['appid'],
+            'secret'   => $platform['appsecret'],
+            'token'    => $platform['token'],
+            'aes_key'  => $platform['aes_key']
+        ];
+        return Factory::openPlatform($config);
+    }
+
     /**
      * 获取七牛对象
      * @return Qiniu

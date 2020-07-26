@@ -1,0 +1,74 @@
+{extend name="../layout/base" /}
+
+{block name="tool_bar"}
+<div class="layui-row">
+    <div class="layui-col-xs3 layui-col-xs-offset9 tr">
+        <a href="{:url('choose')}" class="layui-btn layui-btn-sm">增加小程序</a>
+    </div>
+</div>
+{/block}
+
+{block name="body"}
+<div>
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th>小程序信息</th>
+            <th>接入状态</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="data_list" id="vo"}
+            <tr id="row-{$vo.id}">
+                <td>
+                    <div class="mp-logo">
+                        <div class="logo-left">
+                            <img src="{$vo.head_img}">
+                        </div>
+                    </div>
+                    <div class="logo-right">
+                        <p class="p1">{$vo.nick_name}</p>
+                        <p class="p2">认证：{$verify_type[$vo.verify_type_info]}</p>
+                    </div>
+                </td>
+                <td>
+                    {if condition="$vo.is_auth=='1'"} 已接入{else/}未接入{/if}
+                </td>
+                <th>{if condition="$vo.status=='1'"} 正常{else/}停用{/if}</th>
+                <td>
+                    <a class="bt-a" href="{:url('mini/index/index',['store_id'=>$vo['id']])}">进入小程序</a>
+                    <a class="bt-a" href="{:url('info', ['store_id'=>$vo['id']])}">管理设置</a>
+                </td>
+            </tr>
+        {/volist}
+        </tbody>
+    </table>
+    <div id="page">{$page|raw}</div>
+</div>
+{/block}
+
+{block name="js"}
+<script>
+
+    function delReply(id) {
+        layer.confirm('删除后无法恢复，你确定吗？', {
+            btn: ['是','不'] //按钮
+        }, function(){
+            var loading_index = layer.load(1);
+            $.post("{:url('delete')}", {'id':id}, function (res) {
+                if(res.code === 1){
+                    layer.msg(res.msg, {time: 1000}, function (index) {
+                        $("#row-"+id).remove();
+                        layer.close(loading_index);
+                    });
+                }else{
+                    layer.alert(res.msg);
+                }
+            })
+        });
+
+    }
+</script>
+{/block}

@@ -84,6 +84,7 @@ class Store extends Base
                         'addon' => $addon,
                         'uid' => $this->adminId
                     ]);
+                    $msg = '应用开通成功';
                 }else{
                     //下单，前台走支付
                     $total = $addon['price'] * 100;
@@ -166,7 +167,7 @@ class Store extends Base
             $v['data'] = model($v['type'])->getOne($v['id']);
             switch ($v['type']){
                 case 'mini':
-                    $v['href'] = url($v['type'].'/index/index', ['store_id' => $v['id']]);
+                    $v['href'] = url($v['type'].'/index/index', ['mini_id' => $v['id']]);
                     break;
                 default:
                     $v['href'] = url($v['type'].'/index/index', ['mid' => $v['id']]);

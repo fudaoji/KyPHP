@@ -103,7 +103,7 @@ class FormBuilder extends Base {
      * @return $this
      * @author Doogie <461960962@qq.com>
      */
-    public function addFormItem($name, $type, $title, $tip, $options = [], $extra_attr = '', $extra_class = '') {
+    public function addFormItem($name, $type, $title, $tip = '', $options = [], $extra_attr = '', $extra_class = '') {
         $item['name'] = $name;
         $item['type'] = $type;
         $item['title'] = $title;

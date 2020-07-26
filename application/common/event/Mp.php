@@ -11,7 +11,7 @@
  * Created by PhpStorm.
  * Script Name: Mp.php
  * Create: 2020/5/24 下午3:22
- * Description: 公众号
+ * Description: 公众号全局相关方法
  * Author: fudaoji<fdj@kuryun.cn>
  */
 

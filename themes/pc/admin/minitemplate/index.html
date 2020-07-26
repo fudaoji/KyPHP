@@ -1,0 +1,153 @@
+{extend name="../layout/base" /}
+
+{block name="tool_bar"}
+<div class="layui-row">
+    <div class="layui-col-xs3 layui-col-xs-offset9 tr">
+        {if $type == 1}
+        <button class="layui-btn layui-btn-sm " onclick="sync(1)">同步模板库</button>
+        {else/}
+        <button class="layui-btn layui-btn-sm " onclick="sync(2)">同步草稿箱</button>
+        {/if}
+    </div>
+</div>
+{/block}
+
+{block name="body"}
+<div>
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li {eq name="type" value="1"}class="layui-this"{/eq}> <a href="{:url('index',['type'=>1])}">模板库</a></li>
+            <li {eq name="type" value="2"}class="layui-this"{/eq}><a href="{:url('index',['type'=>2])}">草稿箱</a></li>
+        </ul>
+    </div>
+
+    {if $type == 1}
+    <table class="layui-table" lay-even lay-skin="nob">
+        <thead>
+        <tr>
+            <th width="80">templateID</th>
+            <th width="80">版本号</th>
+            <th>描述</th>
+            <th>添加到模板库时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="data_list" id="vo"}
+        <tr>
+            <td>{$vo.template_id}</td>
+            <td>{$vo.user_version}</td>
+            <td>{$vo.user_desc}</td>
+            <td>{:date('Y-m-d H:i:s', $vo.upload_time)}</td>
+            <td>
+                <a class="bt-a" onclick="del('{$vo.template_id}')">删除</a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    {else/}
+    <table class="layui-table" lay-even lay-skin="nob">
+        <thead>
+        <tr>
+            <th width="80">草稿ID</th>
+            <th width="80">版本号</th>
+            <th>描述</th>
+            <th>提交时间</th>
+            <th width="120">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="data_list" id="vo"}
+        <tr>
+            <td>{$vo.template_id}</td>
+            <td>{$vo.user_version}</td>
+            <td>{$vo.user_desc}</td>
+            <td>{:date('Y-m-d H:i:s', $vo.upload_time)}</td>
+            <td>
+                <a class="bt-a" onclick="addToTemplate('{$vo.template_id}')">设为模板</a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    {/if}
+    <div id="page">{$page|raw}</div>
+</div>
+{/block}
+
+{block name="js"}
+<script>
+    /**
+     * 删除
+     */
+    function del(id) {
+        layer.confirm('你确定删除此草稿吗？', {
+            btn: ['确定','不的'], title: '提醒'
+        }, function() {
+            var loadIndex = layer.load(1); //加载图标
+            $.post("{:url('delTemplatePost')}", {id: id}, function (res) {
+                layer.close(loadIndex);
+                if (res.code === 1) {
+                    layer.msg(res.msg, {time: 1000}, function () {
+                        location.reload();
+                    });
+                } else {
+                    layer.alert(res.msg, {title: '错误提示'});
+                }
+            }).error(function (error) {
+                layer.close(loadIndex);
+                layer.alert('500 Internal Server Error', {title: '错误提示'});
+            });
+            return false;
+        });
+    }
+    /**
+     * 设为模板
+     */
+    function addToTemplate(id) {
+        layer.confirm('你确定将此草稿设为模板吗？', {
+            btn: ['确定','不的'], title: '提醒'
+        }, function() {
+            var loadIndex = layer.load(1); //加载图标
+            $.post("{:url('addToTemplatePost')}", {draft_id: id}, function (res) {
+                layer.close(loadIndex);
+                if (res.code === 1) {
+                    layer.msg(res.msg, {time: 1000}, function () {
+                        location.reload();
+                    });
+                } else {
+                    layer.alert(res.msg, {title: '错误提示'});
+                }
+            }).error(function (error) {
+                layer.close(loadIndex);
+                layer.alert('500 Internal Server Error', {title: '错误提示'});
+            });
+            return false;
+        });
+    }
+
+    /**
+     * 同步
+     */
+    function sync(type) {
+        type = parseInt(type);
+        var loadIndex = layer.load(1); //加载图标
+        var url = (type === 2 ? "{:url('syncDraftPost')}" : "{:url('syncPost')}");
+        $.post(url, {}, function (res) {
+            layer.close(loadIndex);
+            if(res.code === 1){
+                layer.msg(res.msg, {time:1000}, function () {
+                    location.reload();
+                });
+            }else{
+                layer.alert(res.msg, {title: '错误提示'});
+            }
+        }).error(function (error) {
+            layer.close(loadIndex);
+            layer.alert('500 Internal Server Error', {title: '错误提示'});
+        });
+        return false;
+    }
+</script>
+{/block}

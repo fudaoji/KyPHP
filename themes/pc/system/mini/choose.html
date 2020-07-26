@@ -1,0 +1,38 @@
+{extend name="../layout/base" /}
+
+{block name="css"}
+<style>
+    .container{background-color: #fbfbfb;padding: 30px 50px;border: 1px solid #e7e7eb;}
+    .title{
+        font-size: 20px;
+        margin-bottom: 25px;
+    }
+    .con{height: 90px;padding-bottom: 20px;}
+</style>
+{/block}
+
+{block name="body"}
+<div class="container">
+    <div class="layui-row">
+        <div class="layui-col-md5">
+            <h3 class="title">我还没有小程序</h3>
+            <div class="con">
+                请到微信小程序官方网站注册，并认证。
+            </div>
+            <div>
+                <a href="https://mp.weixin.qq.com/" class="layui-btn layui-btn-primary" target="_blank">前往注册</a>
+            </div>
+        </div>
+
+        <div class="layui-col-md5 layui-col-lg-offset2">
+            <h3 class="title">我已注册小程序</h3>
+            <div class="con">
+                点击下方“授权添加小程序”，请事先准备好小程序管理员微信。
+            </div>
+            <div>
+                <a href="{$url}" class="layui-btn">授权登录</a>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}

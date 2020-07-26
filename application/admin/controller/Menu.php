@@ -131,7 +131,7 @@ class Menu extends Base
             ->addFormItem('url', 'text', 'URL', '注意：(小写)模块/控制器/操作方法')
             ->addFormItem('sort', 'number', '排序', '数字越小越靠前', [], 'min=0')
             ->addFormItem('icon', 'icon', '图标', '图标')
-            ->setFormData(['type' => 1, 'sort' => 0]);
+            ->setFormData(['type' => 1, 'sort' => 0, 'pid' => input('pid', 0, 'intval')]);
         return $builder->show();
     }
 

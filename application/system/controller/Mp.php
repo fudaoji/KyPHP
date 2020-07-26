@@ -165,6 +165,7 @@ class Mp extends Base
             ->addFormItem('alias', 'text', '微信号', '微信号')
             ->addFormItem('head_img', 'picture_url', '头像', '头像')
             ->addFormItem('qrcode_url', 'picture_url', '二维码', '关注二维码')
+            ->addFormItem('verify_file', 'file_to_root', '校验文件', '校验文件')
             ->setFormData($this->mpInfo);
         return $builder->show();
     }
@@ -262,7 +263,8 @@ class Mp extends Base
             ->addFormItem('user_name', 'text', '原始ID', '原始ID', [], 'required')
             ->addFormItem('alias', 'text', '微信号', '微信号')
             ->addFormItem('head_img', 'picture_url', '头像', '头像')
-            ->addFormItem('qrcode_url', 'picture_url', '二维码', '关注二维码');
+            ->addFormItem('qrcode_url', 'picture_url', '二维码', '关注二维码')
+            ->addFormItem('verify_file', 'file_to_root', '校验文件', '校验文件');
         return $builder->show();
     }
 

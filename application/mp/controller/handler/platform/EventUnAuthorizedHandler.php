@@ -32,11 +32,13 @@ class EventUnAuthorizedHandler extends WechatMp implements EventHandlerInterface
     /**
      * 取消授权处理器
      * @param mixed $payload
+     * @throws \think\Exception
+     * @throws \think\exception\PDOException
      * @author fudaoji<fdj@kuryun.cn>
      */
     public function handle($payload = null) {
-        Log::write("取消授权：" . $payload['AuthorizerAppid']);
-        $this->mpInfo = $this->mpM->getOneByMap(['appid' => $payload['AuthorizerAppid']]);
-        $this->mpInfo && $this->mpInfo = $this->mpM->updateOne(['id' => $this->mpInfo['id'], 'is_auth' => 0]);
+        if(! $this->mpInfo = $this->mpM->updateByMap(['appid' => $payload['AuthorizerAppid']], ['is_auth' => 0])){
+            $this->mpInfo = $this->miniM->updateByMap(['appid' => $payload['AuthorizerAppid']], ['is_auth' => 0]);
+        }
     }
 }

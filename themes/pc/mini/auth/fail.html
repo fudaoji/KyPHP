@@ -1,0 +1,106 @@
+{extend name="../layout/base" /}
+
+{block name="body"}
+<div>
+    <div class="wx-authorization">
+        <img class="wx-auth-logo" src="__STATIC__/imgs/mini/wx-mp-error.png">
+        <h1>授权错误</h1>
+        <?php if($code == 1):?>
+        <p>授权时，没有选择小程序</p>
+        <?php endif;?>
+        <?php if($code == 2):?>
+        <p>未获得开发管理权限</p>
+        <?php endif;?>
+        <a class="wx-auth-again" href="{$url}">重新授权</a>
+    </div>
+    <?php if($code == 1):?>
+    <div class="wx-auth-desp">
+        <h1>请检查，授权时选择小程序</h1>
+        <p>管理员扫码后，在选择公众平台帐号时，请务必选择你要授权的小程序，保证授权成功</p>
+    </div>
+    <?php endif;?>
+    <?php if($code == 2):?>
+    <div class="wx-auth-desp">
+        <h1>请检查，小程序是否授权到其他第三方平台</h1>
+        <p>小程序授权情况可在设置-第三方授权管理中查看，由于小程序部分权限集的唯一性，请先取消对其他第三方平台授权，才可以授权新的第三方</p>
+    </div>
+    <?php endif;?>
+    <?php if($code == 1):?>
+    <img class="wx-auth-fail-img" src="__STATIC__/imgs/mini/fail_reason_02.png">
+    <?php endif;?>
+    <?php if($code == 2):?>
+    <img class="wx-auth-fail-img" src="__STATIC__/imgs/mini/fail_reason_01.png">
+    <?php endif;?>
+</div>
+
+{/block}
+
+{block name="css"}
+<style>
+    .wx-authorization {
+        position: relative;
+        width: 300px;
+        height: 160px;
+        margin: 20px auto;
+        font-size: 14px;
+    }
+    .wx-authorization .wx-auth-logo {
+        margin: 20px;
+        width: 80px;
+        height: 80px;
+    }
+    .wx-authorization img {
+        float: left;
+        width: 80px;
+        height: 80px;
+        padding-right: 10px;
+    }
+    .wx-authorization h1 {
+        margin-bottom: 5px;
+        padding-top: 16px;
+        font-size: 18px;
+        line-height: 36px;
+        font-weight: 700;
+    }
+    .wx-authorization .wx-auth-again {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 130px;
+        margin: auto;
+        font-size: 16px;
+        display: inline-block;
+        width: 140px;
+        height: 36px;
+        background: var(--main-color);
+        color: #fff;
+        line-height: 32px;
+        text-align: center;
+        border-radius: 3px;
+        -webkit-border-radius: 3px;
+    }
+    .wx-auth-desp {
+        height: 60px;
+        background: #f3f3f3;
+        padding: 10px;
+    }
+    .wx-auth-desp h1 {
+        font-size: 14px;
+        line-height: 36px;
+        font-weight: 400;
+    }
+    .wx-auth-desp p {
+        font-size: 14px;
+        color: #aaa;
+    }
+    .wx-auth-fail-img {
+        margin: 20px 0;
+    }
+    img {
+        max-width: 100%;
+        vertical-align: middle;
+        border: 0;
+        -ms-interpolation-mode: bicubic;
+    }
+</style>
+{/block}

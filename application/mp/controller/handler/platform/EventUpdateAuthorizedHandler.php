@@ -10,7 +10,7 @@
  * Created by PhpStorm.
  * Script Name: EventAuthorizedHandler.php
  * Create: 2020/4/15 10:54
- * Description: 第三方公众号授权成功处理器
+ * Description: 第三方公众号/小程序授权成功处理器
  * Author: fudaoji<fdj@kuryun.cn>
  */
 namespace app\mp\controller\handler\platform;
@@ -35,7 +35,12 @@ class EventUpdateAuthorizedHandler extends WechatMp implements EventHandlerInter
      */
     public function handle($payload = null) {
         $authorizer_info = $this->openPlatform->getAuthorizer($payload['AuthorizerAppid']);
-        //公众号类型授权
-        controller('mp/mp', 'event')->updateAuthInfo($authorizer_info);
+        if(isset($authorizer_info['authorizer_info']['MiniProgramInfo'])) {
+            //小程序类型授权
+            controller('mini/mini', 'event')->updateAuthInfo($authorizer_info);
+        }else{
+            //公众号类型授权
+            controller('mp/mp', 'event')->updateAuthInfo($authorizer_info);
+        }
     }
 }

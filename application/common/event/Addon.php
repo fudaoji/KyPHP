@@ -36,7 +36,7 @@ class Addon extends Base
             if(empty($admin_addon)){
                 model('adminAddon')->addOne([
                     'uid' => $params['uid'],
-                    'addon' => $addon['name'],
+                    'addon' => $addon['addon'],
                     'deadline' => strtotime("+1 year", time())
                 ]);
             }else{

@@ -32,6 +32,27 @@ class Uploader extends Base
     }
 
     /**
+     * 上传文件到项目根目录
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function fileToRootPost(){
+        if(request()->isPost()){
+            // 获取表单上传文件 例如上传了001.jpg
+            $file = request()->file('file');
+            // 移动到服务器的上传目录 并且使用原文件名
+            $res = $file->validate([
+                    'size'=>config('system.upload.file_size'),
+                    'ext'=> config('system.upload.file_ext')]
+            )->move(ROOT_PATH,'');
+
+            if($res){
+                $this->success('上传成功', '', ['src' => '/' . $res->getFilename()]);
+            }
+            $this->error($file->getError());
+        }
+    }
+
+    /**
      * 图片上传
      * Author: Doogie <461960962@qq.com>
      */

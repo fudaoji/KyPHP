@@ -32,7 +32,7 @@ a { text-decoration: none; }
 .gapl-wide { margin-left: 14px; }
 .clr::after, .wrap::after, .form-item::after, .form-group::after, .page-msg .inner::after { content: "."; clear: both; display: block; height: 0px; visibility: hidden; }
 .ico-new, .ico-hot, .ico-top { display: inline-block; width: 17px; height: 9px; margin-left: 5px; overflow: hidden; }
-.bt-a{ color: #459ae9; text-decoration: none; padding: 0px 3px 0px 3px}
+.bt-a{ color: #459ae9; text-decoration: none; padding: 0px 3px 0px 3px;cursor: pointer;}
 .bt-a:hover{ color: #28a4c9; text-decoration: none;}
 .error-msg,.text-danger{color: #FF5722;}
 .text-green{color: var(--green);}
@@ -44,6 +44,7 @@ a { text-decoration: none; }
 .layui-btn.layui-btn-danger{background-color: #FF5722;}
 .layui-btn.layui-btn-primary{background-color: #fff;}
 .layui-btn.layui-btn-normal{background-color: #1E9FFF;}
+.layui-btn.layui-btn-warm {background-color: #FFB800;}
 .layui-btn-disabled, .layui-btn-disabled:active, .layui-btn-disabled:hover{background-color: #FBFBFB;}
 .layui-bg-green{color: var(--green);}
 .layui-elem-quote{border-left-color: var(--main-color);}

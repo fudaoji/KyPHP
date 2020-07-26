@@ -16,6 +16,7 @@
 
 namespace app\mp\controller;
 
+use app\common\model\AdminStore;
 use ky\ErrorCode;
 
 class Base extends \app\admin\controller\Base
@@ -91,7 +92,8 @@ class Base extends \app\admin\controller\Base
             'a.status' => 1,
             'ma.uid' => $this->adminId,
             'ma.status' => 1,
-            'ma.deadline' => ['gt', time()]
+            'ma.deadline' => ['gt', time()],
+            'a.type' => AdminStore::MP
         ];
         $list = model('AdminAddon')->getAllJoin([
             'alias' => 'ma',

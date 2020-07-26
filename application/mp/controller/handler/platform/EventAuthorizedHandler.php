@@ -17,6 +17,7 @@ namespace app\mp\controller\handler\platform;
 
 use app\common\controller\WechatMp;
 use EasyWeChat\Kernel\Contracts\EventHandlerInterface;
+use think\facade\Log;
 
 class EventAuthorizedHandler extends WechatMp implements EventHandlerInterface
 {
@@ -35,7 +36,12 @@ class EventAuthorizedHandler extends WechatMp implements EventHandlerInterface
      */
     public function handle($payload = null) {
         $authorizer_info = $this->openPlatform->getAuthorizer($payload['AuthorizerAppid']);
-        //公众号类型授权
-        controller('mp/mp', 'event')->updateAuthInfo($authorizer_info);
+        if(isset($authorizer_info['authorizer_info']['MiniProgramInfo'])) {
+            //小程序类型授权
+            controller('mini/mini', 'event')->updateAuthInfo($authorizer_info);
+        }else{
+            //公众号类型授权
+            controller('mp/mp', 'event')->updateAuthInfo($authorizer_info);
+        }
     }
 }

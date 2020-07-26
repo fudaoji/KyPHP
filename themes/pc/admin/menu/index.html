@@ -13,7 +13,7 @@
     <table class="layui-table">
         <colgroup>
             <col width="100">
-            <col width="400">
+            <col width="300">
             <col>
         </colgroup>
         <thead>
@@ -44,6 +44,9 @@
             </td>
             <td>
                 <a class="bt-a" href="{:url('edit',['id'=>$v['id']])}">修改</a>
+                {if $v.type == 1}
+                <a class="bt-a" href="{:url('add', ['pid'=>$v['id']])}">添加子菜单</a>
+                {/if}
                 <a href="javascript:;" onclick="delMenu('{$v.id}')" class="bt-a" >删除</a>
             </td>
         </tr>

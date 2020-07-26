@@ -27,7 +27,7 @@
         <div class="layui-col-md5 layui-col-lg-offset2">
             <h3 class="title">授权添加公众号</h3>
             <div class="con">
-                使用授权登录需认证微信开放平台和全网发布，认证微信开放平台和全网发布教程 <a href="{:url('platform')}" class="bt-a color-default">微信开放平台设置</a>
+                使用授权登录需认证微信开放平台和全网发布，并在 <a href="{:url('platform')}" class="bt-a color-default">微信开放平台设置</a>配置
             </div>
             <div>
                 <a href="{:url('mp/auth/index')}" class="layui-btn">授权添加公众号</a>
@@ -37,8 +37,3 @@
 </div>
 {/block}
 
-{block name="js"}
-<script>
-    //alert('缺少接入平台关键数据，等待微信开放平台推送数据，请十分钟后再试或是检查“授权事件接收URL”是否写错（index.php?c=account&amp;a=auth&amp;do=ticket地址中的&amp;符号容易被替换成&amp;amp;）')
-</script>
-{/block}

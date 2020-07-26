@@ -70,6 +70,43 @@ class BaseModel extends Model
     }
 
     /**
+     * 根据条件和排序获取单条数据
+     * @param array $params
+     * @return array|false|\PDOStatement|string|Model
+     * @throws \think\exception\DbException
+     * @Author: fudaoji <fdj@kuryun.cn>
+     */
+    public function getOneByOrder($params = []){
+        $where = empty($params['where']) ? [] : $params['where'];
+        $order = empty($params['order']) ? [] : $params['order'];
+        $field = empty($params['field']) ? true : $params['field'];
+        $refresh = empty($params['refresh']) ? 0 : $params['refresh'];
+        unset($params['refresh']);
+        $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) . __FUNCTION__ . serialize($params));
+        $refresh && cache($cache_key, null);
+        $selector = $this->getBuilder($where)->field($field);
+        if($this->isCache){
+            $selector->cache($cache_key, $this->expire, $this->getTrueTable($where));
+        }
+        $this->_where($selector, $where);
+        return $selector->order($order)->find();
+    }
+
+    /**
+     * 根据条件删除数据
+     * @param array $map
+     * @return int
+     * @throws \think\Exception
+     * @throws \think\exception\PDOException
+     * @throws \Exception
+     */
+    public function delByMap($map = []){
+        $selector = $this->getBuilder($map);
+        $this->_where($selector, $map);
+        return  $selector->delete();
+    }
+
+    /**
      * 设置临时缓存状态
      * @param bool $v
      * @return $this

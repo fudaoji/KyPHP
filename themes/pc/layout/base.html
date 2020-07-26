@@ -165,7 +165,7 @@
             });
         };
         getMsgTotal();
-        setInterval(getMsgTotal, 20000);
+        setInterval(getMsgTotal, parseInt("{:config('app_debug') ? 2000000 : 20000}"));
 
         var screenSize = parseInt("{$screen_size}");
         $('.set-screen').text(screenSize > 0 ? '正常' : '宽屏' );
