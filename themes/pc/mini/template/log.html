@@ -1,0 +1,65 @@
+{extend name="common/base" /}
+
+
+{block name="body"}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+        <li>
+            <a href="{:url('index')}">版本管理</a>
+        </li>
+        <li class="layui-this">
+            <a href="{:url('log')}">历史版本</a>
+        </li>
+    </ul>
+
+    <div class="layui-tab-content">
+        <table class="layui-table" lay-skin="line">
+
+            <thead>
+            <tr>
+                <th>应用</th>
+                <th>应用最新版本</th>
+                <th>当前版本</th>
+                <th>创建时间</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="data_list" id="vo"}
+            <tr>
+                <td>
+                    <p><img src="{$vo.logo}" alt="" class="item-logo"></p>
+                    <p class="item-name">{$vo.name}</p>
+                </td>
+                <td>
+                    {$vo.version}
+                    {if $vo.is_current and $vo.version > $vo.user_version}
+                    <p><span class="layui-badge layui-bg-green">可更新</span></p>
+                    {/if}
+                </td>
+                <td>{$vo.user_version}</td>
+                <td>{:date('Y-m-d H:i', $vo.create_time)}</td>
+                <td>{:model('miniTemplateLog')->statusList($vo.status)}</td>
+                <td>
+                    {if !$vo.is_current}
+                    <a class="bt-a">使用</a>
+                    {/if}
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+        <div id="page">
+            {$page|raw}
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="css"}
+<style>
+    .item-logo{width: 60px;}
+    .item-name{font-size: 12px;}
+</style>
+{/block}

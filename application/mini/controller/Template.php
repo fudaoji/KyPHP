@@ -21,9 +21,11 @@ use app\admin\controller\FormBuilder;
 use ky\ErrorCode;
 use ky\Helper;
 use ky\MiniPlatform\Request\WxaCommit;
+use ky\MiniPlatform\Request\WxaGetQrcode;
 use ky\MiniPlatform\Request\WxaModifyDomain;
 use ky\MiniPlatform\Request\WxaSetWebViewDomain;
 use ky\MiniPlatform\RequestClient;
+use think\Db;
 
 class Template extends Base
 {
@@ -44,12 +46,94 @@ class Template extends Base
     }
 
     /**
+     * 历史版本
+     * @return mixed
+     * @throws \think\exception\DbException
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function log(){
+        $where = [
+            'mini_id' => $this->miniId
+        ];
+        $data_list = $this->model->pageJoin([
+            'alias' => 'mtl',
+            'join' => [
+                ['addons a', 'mtl.addon = a.addon']
+            ],
+            'where' => $where,
+            'page_size' => $this->pageSize,
+            'order' => ['id' => 'desc'],
+            'field' => 'a.logo,a.version,a.name,mtl.*',
+            'refresh' => 'true'
+        ]);
+        $this->assign['page'] = $data_list->appends([])->render();
+        $this->assign['data_list'] = $data_list;
+        return $this->show();
+    }
+
+    /**
      * 版本管理
      * @return mixed
+     * @throws \think\exception\DbException
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function index(){
+        $this->assign['publish'] = $this->model->getOneByOrder([
+            'where' => ['status' => 4],
+            'order' => ['id' => 'desc'],
+            'refresh' => true
+        ]);
+        $this->assign['verify'] = $this->model->getOneByOrder([
+            'where' => ['status' => ['in', [1,2,3]]],
+            'order' => ['id' => 'desc'],
+            'refresh' => true
+        ]);
+        $this->assign['current'] = $this->model->getOneJoin([
+            'alias' => 'mtl',
+            'join' => [
+                ['addons a', 'a.addon=mtl.addon']
+            ],
+            'where' => ['mtl.is_current' => 1],
+            'field' => 'a.logo,a.name,mtl.*',
+            'refresh' => true
+        ]);
         return $this->show();
+    }
+
+    /**
+     * 获取体验二维码
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function getTestQrCode(){
+        if(request()->isPost()){
+            $post_data = input('post.');
+            $log = $this->model->getOne($post_data['id']);
+            if(empty($log)){
+                $this->error('参数错误');
+            }
+            if(empty($log['qr_code'])){
+                $request = new WxaGetQrcode();
+                $response = $this->client->setCheckRequest(false)->execute(
+                    $request,
+                    $this->miniApp->access_token->getToken()['authorizer_access_token'],
+                    true
+                );
+                if(is_array($response)){
+                    $this->error($response['errmsg']);
+                }else{
+                    $qiniu = controller('mini/mini', 'event')->getQiniu();
+                    $res = $qiniu->putString([
+                        'string' => $response,
+                        'key' => 'mini_qrcode_test_'.$this->miniId.'_'.time().'.png'
+                    ]);
+                    if($res === false){
+                        $this->error($qiniu->getError());
+                    }
+                    $log = $this->model->updateOne(['id' => $post_data['id'], 'qr_code' => $res]);
+                }
+            }
+            $this->success('success', '', ['src' => $log['qr_code']]);
+        }
     }
 
     /**
@@ -61,7 +145,7 @@ class Template extends Base
         $builder->setPostUrl(url('choosePost'))
             ->setTemplate('common/form')
             ->setTip('此操作会耗时一段时间，请务关闭窗口')
-            ->addFormItem('user_version', 'text', '版本号', '支持数字和字母,长度不超过64个字符', [], 'required maxlength=64')
+            //->addFormItem('user_version', 'text', '版本号', '支持数字和字母,长度不超过64个字符', [], 'required maxlength=64')
             ->addFormItem('user_desc', 'text', '版本描述', '版本描述', [], 'required maxlength=200')
             ->addFormItem('addon', 'choose_addon', '选择应用', '', [], 'required');
         return $builder->show();
@@ -76,10 +160,11 @@ class Template extends Base
         if(request()->isPost()){
             $post_data = input('post.');
             if(empty($post_data['user_desc']) ||
-                empty($post_data['user_version'] ||
-                empty($post_data['addon']))){
+                empty($post_data['addon'])){
                 $this->error('请完善必填项', '', ['token' => request()->token]);
             }
+            $addon = model('addons')->getOneByMap(['addon' => $post_data['addon']]);
+            $post_data['user_version'] = $addon['version']; //将应用的版本号作为小程序的版本号
             $access_token = $this->miniApp->access_token->getToken()['authorizer_access_token'];
             $total = model('miniTemplateLog')->total(['mini_id' => $this->miniId], true);
             if(! $total){ //有版本记录的说明设置过域名了
@@ -136,11 +221,23 @@ class Template extends Base
                     'user_version'  => $post_data['user_version'],
                     'user_desc'     => $post_data['user_desc']
                 ];
-                $result = $this->model->addOne($data);
+                Db::startTrans();
+                try {
+                    $this->model->updateByMap(['mini_id' => $this->miniId, 'is_current' => 1], ['is_current' => 0]);
+                    $result = $this->model->addOne($data);
+                    Db::commit();
+                }catch (\Exception $e){
+                    $result = false;
+                    Db::rollback();
+                }
+                if($result === false){
+                    $this->error('系统出错，请刷新重试', '', ['token' => request()->token]);
+                }
+
             }else {
                 $this->error($response['errmsg'], '', ['token' => request()->token]);
             }
-            $this->success('代码提交成功，在正式提交审核之前建议您先扫码体验');
+            $this->success('代码提交成功，在正式提交审核之前建议您先扫码体验', url('index'));
         }
     }
 }

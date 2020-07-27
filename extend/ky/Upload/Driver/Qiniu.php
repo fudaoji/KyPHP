@@ -277,4 +277,48 @@ class Qiniu
             return $ret;
         }
     }
+
+    /**
+     * 上传凭证
+     * @param string/array $params
+
+     * @return mixed
+     * @author: Doogie<461960962@qq.com>
+     */
+    public function upToken($params = '')
+    {
+        if(! is_array($params)){
+            $params = ['bucket' => $params];
+        }
+        $bucket = empty($params['bucket']) ? $this->config['bucket'] : $params['bucket'];
+        $key_to_overwrite = isset($params['key_to_overwrite']) ? $params['key_to_overwrite'] : null;
+        $expires = empty($params['expires']) ? 3600 : $params['expires'];
+        $policy = empty($params['policy']) ? null : $params['policy'];
+
+        // 生成上传 Token
+        return $this->auth->uploadToken($bucket, $key_to_overwrite, $expires, $policy);
+    }
+
+    /**
+     * 文件直传
+     * @param array $params
+     * @return bool|string
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function putString($params = []){
+        $key = empty($params['key']) ? uniqid() : $params['key'];
+        $string = empty($params['string']) ? '' : $params['string'];
+        // 初始化 UploadManager 对象并进行文件的上传。
+        $uploadMgr = new UploadManager();
+
+        // 调用 UploadManager 的 putFile 方法进行文件的上传。
+        list($ret, $err) = $uploadMgr->put($this->upToken(), $key, $string);
+        if ($err !== null) {
+            $this->error = '上传配置出错';
+            Log::error('ErrorCode: ' . ErrorCode::QiniuException . '; ErrorMsg: ' . $err->message());
+            return false;
+        } else {
+            return $this->downLink($key);
+        }
+    }
 }

@@ -9,5 +9,268 @@
 {/block}
 
 {block name="body"}
-版本管理
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+        <li class="layui-this">
+            <a href="{:url('index')}">版本管理</a>
+        </li>
+        <li>
+            <a href="{:url('log')}">历史版本</a>
+        </li>
+    </ul>
+
+    <div class="layui-tab-content">
+        <div class="inner">
+            <div class="line">
+                <div class="title">线上版本</div>
+                <?php if($publish):?>
+                <div class="clearfix box">
+                    <div class="version">
+                        <p>版本号</p>
+                        <h3><1.0</h3>
+                    </div>
+                    <div class="info">
+                        <div class="sub-box clearfix">
+                            <p class="sub-title">发布者</p>
+                            <p class="value">sdfsd</p>
+                        </div>
+                        <div class="sub-box clearfix">
+                            <p class="sub-title">发布时间</p>
+                            <p class="value">sd</p>
+                        </div>
+                        <div class="sub-box clearfix">
+                            <p class="sub-title">描述</p>
+                            <p class="value">ssss</p>
+                        </div>
+                    </div>
+                    <div class="btn">
+                        <a href="javascript: void(0);" class="select" data-bind="click: showFunc">
+                            <i class="iconfont icon-xiangxiajiantou"></i>
+                        </a>
+                        <a href="javascript: void(0);" class="operation" data-attr="publish" data-id="<?= $publish['id'] ?>" data-bind="click: showDetail">详情</a>
+                        <div class="operation-list hide">
+                            <ul>
+                                <li>
+                                    <a href="javascript:void(0);" data-id="1" data-bind="click: revertCodeRelease">版本回退</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <?php else:?>
+                <div class="empty-box">
+                    <p class="empty-tips">
+                        你暂无发布版本
+                    </p>
+                </div>
+                <?php endif;?>
+            </div>
+            <div class="line">
+                <input type="hidden" id="verifyId" value="1">
+                <div class="title">审核版本</div>
+                <?php if($verify):?>
+                <div class="clearfix box">
+                    <div class="version">
+                        <p>版本号</p>
+                        <h3><?= $verify['user_version'] ?></h3>
+                        <p class="status">
+                                <span><?php
+                                    switch($verify['status']) {
+                                        case 0:
+                                            echo '审核通过，待发布';
+                                            break;
+                                        case 1:
+                                            echo '审核失败';
+                                            break;
+                                        case 2:
+                                            echo '审核中';
+                                            break;
+                                    }
+                                ?></span>
+                        </p>
+                    </div>
+                    <div class="info">
+                        <div class="sub-box clearfix">
+                            <p class="sub-title">发布者</p>
+                            <p class="value">gouge</p>
+                        </div>
+                        <div class="sub-box clearfix">
+                            <p class="sub-title">上传审核时间</p>
+                            <p class="value"><?= date('Y-m-d H:i:s', $verify['verify_time']) ?></p>
+                        </div>
+                        <div class="sub-box clearfix">
+                            <p class="sub-title">描述</p>
+                            <p class="value"><?= 'gouge' . '在' . date('Y年m月d日 H点i分', $verify['verify_time']) . '提交上传审核'?></p>
+                        </div>
+                    </div>
+                    <div class="btn clearfix">
+                        <a href="javascript: void(0);" class="select" data-bind="click: showFunc">
+                            <i class="iconfont icon-xiangxiajiantou"></i>
+                        </a>
+                        <?php if($verify['status']):?>
+                        <a href="javascript: void(0);" class="operation" data-attr="verify" data-bind="click: showDetail">详情</a>
+                        <?php endif;?>
+                        <?php if(!$verify['status']):?>
+                        <a href="javascript: void(0);" class="operation" data-id="<?= $verify['id'] ?>" data-bind="click: doRelease">提交发布</a>
+                        <?php endif;?>
+                        <div class="operation-list hide">
+                            <ul>
+                                <?php if($verify['status'] == 2):?>
+                                <li>
+                                    <a href="javascript:void(0);" data-id="<?= $verify['id'] ?>" data-bind="click: undoCodeAudit">撤回审核</a>
+                                </li>
+                                <?php endif;?>
+                                <?php if(in_array($verify['status'], [0, 1])):?>
+                                <li>
+                                    <a href="javascript:void(0);" data-id="<?= $verify['id'] ?>" data-attr="verify" data-bind="click: showDetail">详情</a>
+                                </li>
+                                <?php endif;?>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <?php else:?>
+                <div class="empty-box">
+                    <p class="empty-tips">
+                        你暂无提交审核的版本或者版本已发布上线
+                    </p>
+                </div>
+                <?php endif;?>
+            </div>
+
+            <div class="line">
+                <div class="title">当前选择版本</div>
+                <?php if($current):?>
+                <div class="layui-row">
+                    <div class="layui-col-xs3 col1">
+                        <img src="{$current.logo}" alt="" class="addon-logo">
+                        <p>
+                            <button data-id="{$current.id}" data-src="{$current.qr_code}" class="js-view-demo layui-btn layui-btn-xs">体验码</button>
+                        </p>
+                    </div>
+                    <div class="layui-col-xs6">
+                        <p class="info-item">
+                            <span class="label">应用：</span>
+                            <span class="value">{$current.name}</span>
+                        </p>
+                        <p class="info-item">
+                            <span class="label">版本：</span>
+                            <span class="value">{$current.user_version}</span>
+                        </p>
+                        <p class="info-item">
+                            <span class="label">描述：</span>
+                            <span class="value">{$current.user_desc}</span>
+                        </p>
+                        <p class="info-item">
+                            <span class="label">提交时间：</span>
+                            <span class="value">{:date('Y-m-d H:i:s', $current.create_time)}</span>
+                        </p>
+                    </div>
+                    <div class="layui-col-xs3">
+                        <?php if(empty($verify) || $verify['status'] != 1):?>
+                        <button class="layui-btn layui-btn-sm layui-btn-normal js-audit" data-id="{$current.id}">提交审核</button>
+                        <?php else:?>
+                        <button class="layui-btn layui-btn-sm layui-btn-disabled">提交审核</button>
+                        <?php endif;?>
+                    </div>
+                </div>
+                <?php else:?>
+                <div class="empty-box">
+                    <p class="empty-tips">你暂未提交版本</p>
+                </div>
+                <?php endif;?>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+<script>
+    $(function () {
+        //点击提交审核
+        $('.js-audit').on('click', function () {
+            console.log(111);
+        });
+
+        //点击体验码
+        $('.js-view-demo').on('click', function () {
+
+            var src = $(this).data('src');
+            console.log(src);
+            if(src === ''){
+                var loadingIndex = layer.load(1);
+                $.post("{:url('getTestQrCode')}", {id: id}, function (res) {
+                    layer.close(loadingIndex);
+                    if(res.code === 1){
+                        src = res.data.src;
+                        layer.photos({
+                            photos: {
+                                "data": [  {"src": src}]
+                            }
+                        });
+                    }else{
+                        layer.alert(res.msg);
+                    }
+                });
+            }else{
+                layer.photos({
+                    photos: {
+                        "data": [ {"src": src}]
+                    }
+                });
+            }
+        });
+    });
+
+</script>
+{/block}
+
+{block name="css"}
+<style>
+    .content {
+        background: #FAFAFA;
+    }
+
+    .layui-tab-content .line {
+        margin-bottom: 30px;
+        background-color: #fff;
+        border-radius: 4px;
+        box-shadow: 0 1px 2px rgba(150,150,150,0.3);
+        padding: 20px 30px 30px;
+
+    }
+    .layui-tab-content .line .col1{
+        text-align: center;
+    }
+    .layui-tab-content .line .addon-logo{width: 60px;margin-bottom: 10px;}
+
+    .layui-tab-content .line .title {
+        font-size: 18px;
+        text-align: left;
+        margin-bottom: 30px;
+        color: #353535;
+    }
+    .layui-tab-content .line .info-item{
+        margin-bottom: 8px;
+    }
+    .layui-tab-content .line .label {
+        width: 84px;
+        color: #9a9a9a;
+        font-size: 14px;
+        margin-right: 15px;
+        text-align: left;
+    }
+    .layui-tab-content .line .value {
+        width: 510px;
+        color: #353535;
+    }
+
+    .layui-tab-content .empty-box .empty-tips {
+        padding: 60px 0;
+        text-align: center;
+        font-size: 14px;
+        color: #9a9a9a;
+    }
+</style>
 {/block}

@@ -59,7 +59,7 @@ class Material extends Base
             'join' => [['addons a', 'a.addon=aa.addon']],
             'page_size' => 7,
             'where' => $where,
-            'field' => ['a.id','a.name', 'a.desc', 'a.logo', 'a.addon'],
+            'field' => ['a.id','a.name', 'a.desc', 'a.logo', 'a.addon', 'a.version'],
             'order' => ['aa.id' => 'desc'],
             'refresh' => 1
         ]);

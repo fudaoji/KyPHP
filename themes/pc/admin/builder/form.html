@@ -97,7 +97,7 @@
                     },
                     success : function(res) {
                         if(res.code === 1 ) {
-                            layer.msg(res.msg, {time: 1000}, function(){
+                            layer.msg(res.msg, {time: 1500}, function(){
                                 if(typeof res.url !== 'undefined' && res.url){
                                     window.location.href = res.url;
                                 }else{
