@@ -2,7 +2,7 @@
 
 {block name="tool_bar"}
 <div class="layui-row">
-    <div class="layui-col-md3 layui-col-md-offset9 tr">
+    <div class="layui-col-xs3 layui-col-xs-offset9 tr">
         <a href="{:url('choose')}" class="layui-btn layui-btn-sm bg-success">新建版本</a>
     </div>
 </div>
@@ -24,37 +24,30 @@
             <div class="line">
                 <div class="title">线上版本</div>
                 <?php if($publish):?>
-                <div class="clearfix box">
-                    <div class="version">
-                        <p>版本号</p>
-                        <h3><1.0</h3>
+                <div class="layui-row">
+                    <div class="layui-col-xs3 col1">
+                        <img src="{$publish.logo}" alt="" class="addon-logo">
                     </div>
-                    <div class="info">
-                        <div class="sub-box clearfix">
-                            <p class="sub-title">发布者</p>
-                            <p class="value">sdfsd</p>
-                        </div>
-                        <div class="sub-box clearfix">
-                            <p class="sub-title">发布时间</p>
-                            <p class="value">sd</p>
-                        </div>
-                        <div class="sub-box clearfix">
-                            <p class="sub-title">描述</p>
-                            <p class="value">ssss</p>
-                        </div>
+                    <div class="layui-col-xs6">
+                        <p class="info-item">
+                            <span class="label">应用：</span>
+                            <span class="value">{$publish.name}</span>
+                        </p>
+                        <p class="info-item">
+                            <span class="label">版本：</span>
+                            <span class="value">{$publish.user_version}</span>
+                        </p>
+                        <p class="info-item">
+                            <span class="label">描述：</span>
+                            <span class="value">{$publish.user_desc}</span>
+                        </p>
+                        <p class="info-item">
+                            <span class="label">发布时间：</span>
+                            <span class="value">{:date('Y-m-d H:i:s', $verify.publish_time)}</span>
+                        </p>
                     </div>
-                    <div class="btn">
-                        <a href="javascript: void(0);" class="select" data-bind="click: showFunc">
-                            <i class="iconfont icon-xiangxiajiantou"></i>
-                        </a>
-                        <a href="javascript: void(0);" class="operation" data-attr="publish" data-id="<?= $publish['id'] ?>" data-bind="click: showDetail">详情</a>
-                        <div class="operation-list hide">
-                            <ul>
-                                <li>
-                                    <a href="javascript:void(0);" data-id="1" data-bind="click: revertCodeRelease">版本回退</a>
-                                </li>
-                            </ul>
-                        </div>
+                    <div class="layui-col-xs3">
+                        <button class="layui-btn layui-btn-sm layui-btn-normal js-revert" data-id="{$current.id}">版本回退</button>
                     </div>
                 </div>
                 <?php else:?>
@@ -65,68 +58,59 @@
                 </div>
                 <?php endif;?>
             </div>
+
             <div class="line">
                 <input type="hidden" id="verifyId" value="1">
                 <div class="title">审核版本</div>
                 <?php if($verify):?>
-                <div class="clearfix box">
-                    <div class="version">
-                        <p>版本号</p>
-                        <h3><?= $verify['user_version'] ?></h3>
-                        <p class="status">
-                                <span><?php
-                                    switch($verify['status']) {
-                                        case 0:
-                                            echo '审核通过，待发布';
-                                            break;
-                                        case 1:
-                                            echo '审核失败';
-                                            break;
-                                        case 2:
-                                            echo '审核中';
-                                            break;
-                                    }
-                                ?></span>
+                <div class="layui-row">
+                    <div class="layui-col-xs3 col1">
+                        <img src="{$verify.logo}" alt="" class="addon-logo">
+                        <p>
+                            {if $verify['status'] == 2}
+                            <span class="layui-badge layui-bg-green">审核通过</span>
+                            {elseif $verify['status'] == 3}
+                            <span class="layui-badge">审核失败</span>
+                            {else/}
+                            <span class="layui-badge layui-bg-orange">审核中...</span>
+                            <i class="fa fa-refresh js-get-audit-status"
+                               title="刷新审核进度"
+                               style="color: #9a9a9a"
+                               data-auditid="{$verify.audit_id}"
+                            ></i>
+                            {/if}
                         </p>
                     </div>
-                    <div class="info">
-                        <div class="sub-box clearfix">
-                            <p class="sub-title">发布者</p>
-                            <p class="value">gouge</p>
-                        </div>
-                        <div class="sub-box clearfix">
-                            <p class="sub-title">上传审核时间</p>
-                            <p class="value"><?= date('Y-m-d H:i:s', $verify['verify_time']) ?></p>
-                        </div>
-                        <div class="sub-box clearfix">
-                            <p class="sub-title">描述</p>
-                            <p class="value"><?= 'gouge' . '在' . date('Y年m月d日 H点i分', $verify['verify_time']) . '提交上传审核'?></p>
-                        </div>
+                    <div class="layui-col-xs6">
+                        <p class="info-item">
+                            <span class="label">应用：</span>
+                            <span class="value">{$verify.name}</span>
+                        </p>
+                        <p class="info-item">
+                            <span class="label">版本：</span>
+                            <span class="value">{$verify.user_version}</span>
+                        </p>
+                        <p class="info-item">
+                            <span class="label">描述：</span>
+                            <span class="value">{$verify.user_desc}</span>
+                        </p>
+                        <p class="info-item">
+                            <span class="label">提交审核时间：</span>
+                            <span class="value">{:date('Y-m-d H:i:s', $verify.verify_time)}</span>
+                        </p>
+                        {if $verify['status'] == 3}
+                        <p class="info-item">
+                            <span class="label">失败原因：</span>
+                            <span class="value">{$verify.reason|raw}</span>
+                        </p>
+                        {/if}
                     </div>
-                    <div class="btn clearfix">
-                        <a href="javascript: void(0);" class="select" data-bind="click: showFunc">
-                            <i class="iconfont icon-xiangxiajiantou"></i>
-                        </a>
-                        <?php if($verify['status']):?>
-                        <a href="javascript: void(0);" class="operation" data-attr="verify" data-bind="click: showDetail">详情</a>
+                    <div class="layui-col-xs3">
+                        <?php if($verify['status'] == 1):?>
+                        <button class="layui-btn layui-btn-sm layui-btn-normal js-cancel-audit" data-id="{$verify.id}">撤回</button>
+                        <?php elseif($verify['status'] == 2):?>
+                        <button class="layui-btn layui-btn-sm">提交发布</button>
                         <?php endif;?>
-                        <?php if(!$verify['status']):?>
-                        <a href="javascript: void(0);" class="operation" data-id="<?= $verify['id'] ?>" data-bind="click: doRelease">提交发布</a>
-                        <?php endif;?>
-                        <div class="operation-list hide">
-                            <ul>
-                                <?php if($verify['status'] == 2):?>
-                                <li>
-                                    <a href="javascript:void(0);" data-id="<?= $verify['id'] ?>" data-bind="click: undoCodeAudit">撤回审核</a>
-                                </li>
-                                <?php endif;?>
-                                <?php if(in_array($verify['status'], [0, 1])):?>
-                                <li>
-                                    <a href="javascript:void(0);" data-id="<?= $verify['id'] ?>" data-attr="verify" data-bind="click: showDetail">详情</a>
-                                </li>
-                                <?php endif;?>
-                            </ul>
-                        </div>
                     </div>
                 </div>
                 <?php else:?>
@@ -187,10 +171,54 @@
 
 {block name="js"}
 <script>
+    //提交审核后的回调函数
+    function closeAuditWindow(){
+        location.reload();
+    }
+
     $(function () {
+        /**
+         * 撤销审核
+         */
+        $('.js-cancel-audit').on('click', function () {
+            layer.confirm('单个帐号每天审核撤回次数最多不超过1次，一个月不超过10次。确定操作吗？', {}, function () {
+                var loadingIndex = layer.load(1);
+                $.post("{:url('cancelAuditPost')}", {id: $(this).data('id')}, function (res) {
+                    layer.close(loadingIndex);
+                    if(res.code === 1){
+                        location.reload();
+                    }else{
+                        layer.alert(res.msg);
+                    }
+                });
+            });
+        });
+
+        /**
+         * 刷新审核信息
+         */
+        $('.js-get-audit-status').on('click', function () {
+            var loadingIndex = layer.load(1);
+            $.post("{:url('getAuditStatusPost')}", {auditid: $(this).data('auditid')}, function (res) {
+                layer.close(loadingIndex);
+                if(res.code === 1){
+                    location.reload();
+                }else{
+                    layer.alert(res.msg);
+                }
+            })
+        });
+
         //点击提交审核
         $('.js-audit').on('click', function () {
-            console.log(111);
+            layer.open({
+                type: 2,
+                title: '审核项配置',
+                shadeClose: false,
+                shade: 0.8,
+                area: ['800px', '506px'],
+                content: ['/mini/template/commitaudit?log_id=' + $(this).data('id'), 'no']
+            });
         });
 
         //点击体验码
@@ -212,6 +240,9 @@
                     }else{
                         layer.alert(res.msg);
                     }
+                }).error(function (error) {
+                    layer.close(loadingIndex);
+                    layer.alert('500 Internal Server Error', {title: '错误提示'});
                 });
             }else{
                 layer.photos({
@@ -252,7 +283,7 @@
         color: #353535;
     }
     .layui-tab-content .line .info-item{
-        margin-bottom: 8px;
+        margin-bottom: 5px;
     }
     .layui-tab-content .line .label {
         width: 84px;

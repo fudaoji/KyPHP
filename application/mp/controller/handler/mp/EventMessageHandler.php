@@ -9,6 +9,7 @@
  */
 namespace app\mp\controller\handler\mp;
 
+use app\common\model\MiniTemplateLog;
 use app\common\model\MpSpecial;
 use EasyWeChat\Kernel\Messages\Text;
 use think\facade\Log;
@@ -210,4 +211,42 @@ class EventMessageHandler extends MessageHandler
         }
     }
 
+    /**
+     * 小程序审核通过事件
+     * @param $event
+     * @link https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/audit_event.html
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function eventWeappAuditSuccess($event){
+        model('miniTemplateLog')->updateByMap(
+            ['mini_id' => $this->mpInfo['id'], 'status' => MiniTemplateLog::VERIFYING],
+            ['status' => MiniTemplateLog::SUCCESS]
+        );
+    }
+
+    /**
+     * 小程序审核不通过事件
+     * @param $event
+     * @link https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/audit_event.html
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function eventWeappAuditFail($event){
+        model('miniTemplateLog')->updateByMap(
+            ['mini_id' => $this->mpInfo['id'], 'status' => MiniTemplateLog::VERIFYING],
+            ['reason' => $event['Reason'], 'status' => MiniTemplateLog::FAIL]
+        );
+    }
+
+    /**
+     * 小程序审核延后事件
+     * @param $event
+     * @link https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/audit_event.html
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function eventWeappAuditDelay($event){
+        model('miniTemplateLog')->updateByMap(
+            ['mini_id' => $this->mpInfo['id'], 'status' => MiniTemplateLog::VERIFYING],
+            ['reason' => $event['Reason'], 'status' => MiniTemplateLog::DELAY]
+        );
+    }
 }

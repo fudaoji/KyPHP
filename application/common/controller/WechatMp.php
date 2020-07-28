@@ -49,12 +49,14 @@ class WechatMp extends BaseCtl
     }
 
     /**
-     * 设置授权公众号应用
+     * 设置授权公众号/小程序应用
      * @author fudaoji<fdj@kuryun.cn>
      */
     protected function setApp() {
         if($this->mpInfo) {
-            $this->mpApp = controller('mp', 'event')->getApp($this->mpInfo);
+            $this->mpApp = isset($this->mpInfo['mini_program_info'])
+                ? controller('mini/mini', 'event')->getApp($this->mpInfo)
+                : controller('mp', 'event')->getApp($this->mpInfo);
         }
         $this->openPlatform = controller('mp', 'event')->getOpenPlatform();
     }

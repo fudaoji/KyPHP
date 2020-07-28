@@ -41,7 +41,6 @@ class Call extends Controller
     public function run()
     {
         if ($this->addon && $this->col && $this->act) {
-
             $_addon = $this->addonsM->getOneByMap(['addon' => $this->addon, 'status' => 1]);
             if (empty($_addon)) {
                 $this->error('此应用不存在，或已下架');

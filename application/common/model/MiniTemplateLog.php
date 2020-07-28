@@ -21,13 +21,14 @@ use ky\BaseModel;
 
 class MiniTemplateLog extends BaseModel
 {
-    //0待提交审核 1为， 2为审核成功，3为审核失败，4为已发布, 5:为已撤回
+    //0待提交审核 1为， 2为审核成功，3为审核失败，4为已发布, 5:为已撤回 6审核延后
     const READY = 0;
     const VERIFYING = 1;
     const SUCCESS = 2;
     const FAIL = 3;
     const PUBLISHED = 4;
     const CANCEL = 5;
+    const DELAY = 6;
 
     /**
      * 版本状态
@@ -42,7 +43,8 @@ class MiniTemplateLog extends BaseModel
             self::SUCCESS => '审核通过',
             self::FAIL => '审核失败',
             self::PUBLISHED => '已发布',
-            self::CANCEL => '已撤回'
+            self::CANCEL => '已撤回',
+            self::DELAY => '审核延后'
         ];
         return isset($list[$id]) ? $list[$id] : $list;
     }

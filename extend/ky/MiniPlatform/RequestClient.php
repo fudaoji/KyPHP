@@ -8,6 +8,7 @@
  */
 namespace ky\MiniPlatform;
 
+use ky\ErrorCode;
 use ky\Logger;
 
 class RequestClient

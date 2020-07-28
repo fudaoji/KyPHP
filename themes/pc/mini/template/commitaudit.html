@@ -1,0 +1,70 @@
+{extend name="../layout/inline_page_base"}
+
+{block name="body"}
+<div class="layui-container">
+    <form class="layui-form" action="" style="margin-top: 30px;">
+        <input type="hidden" name="log_id" value="{$log_id}">
+        <input type="hidden" name="page" value="{$page}">
+        <input type="hidden" name="version_desc" value="{$version_desc}">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">类目</label>
+            <div class="layui-input-block">
+                <select name="category" lay-verify="required">
+                    {volist name="category_list" id="cate"}
+                    <option value="{$key}">{$cate}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">标签</label>
+            <div class="layui-input-block">
+                <input type="text" name="tags" id="tags" required  lay-verify="required" placeholder="标签用英文逗号分开，填写与页面功能相关的标签，更容易被搜索" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="margin-top: 40px;">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="audit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{/block}
+
+{block name="js"}
+<script>
+
+    var parentIndex = parent.layer.getFrameIndex(window.name); //获取窗口索引
+
+    layui.use(['form'], function(){
+        var form = layui.form
+        ;
+
+        //监听提交
+        form.on('submit(audit)', function(data){
+            var loadingIndex = layer.load(1);
+            $.post('', data.field, function (res) {
+                layer.close(loadingIndex);
+                if(res.code === 1){
+                    layer.msg(res.msg, {time: 1000}, function () {
+                        //
+                        parent.closeAuditWindow();
+                        parent.layer.close(parentIndex);
+                    });
+                }else{
+                    layer.alert(res.msg);
+                }
+            }).error(function (error) {
+                layer.close(loadingIndex);
+                layer.alert('500 Internal Server Error', {title: '错误提示'});
+            });
+            return false;
+        });
+    });
+</script>
+{/block}

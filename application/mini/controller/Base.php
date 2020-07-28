@@ -105,4 +105,13 @@ class Base extends \app\admin\controller\Base
         $this->assign('menu_app', $list);
         $this->assign('menu_app_title', '当前应用');
     }
+
+    /**
+     * 获取小程序app的access token
+     * @return mixed
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    protected function getAccessToken(){
+        return $this->miniApp->access_token->getToken()['authorizer_access_token'];
+    }
 }

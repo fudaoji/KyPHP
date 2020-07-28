@@ -71,7 +71,7 @@ class Mp extends Base
             'principal_name'    => $auth_info['authorizer_info']['principal_name'],
             'alias'             => $auth_info['authorizer_info']['alias'],
             'business_info'     => json_encode($auth_info['authorizer_info']['business_info']),
-            'qrcode_url'        => $auth_info['authorizer_info']['qrcode_url'],
+            'qrcode_url'        => fetch_to_qiniu($auth_info['authorizer_info']['qrcode_url']),
             'idc'               => $auth_info['authorizer_info']['idc'],
             'signature'         => $auth_info['authorizer_info']['signature'],
             'func_info'         => json_encode($auth_info['authorization_info']['func_info']),

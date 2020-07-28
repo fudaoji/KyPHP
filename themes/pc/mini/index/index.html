@@ -1,5 +1,81 @@
 {extend name="common/base" /}
 
 {block name="body"}
-数据分析
+<div class="layui-card">
+    <div class="layui-card-header">
+        <i class="fa fa-warning icon"></i>昨日概况
+    </div>
+    <div class="layui-card-body">
+        <div class="welcome-module">
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-xs3">
+                    <div class="panel layui-bg-number">
+                        <div class="panel-body">
+                            <div class="panel-title">
+                                <h5>打开次数</h5>
+                            </div>
+                            <div class="panel-content">
+                                <h1 class="no-margins">
+                                    <span class="today">{$yesterday.session_cnt}</span>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs3">
+                    <div class="panel layui-bg-number">
+                        <div class="panel-body">
+                            <div class="panel-title">
+                                <h5>访问次数/人数</h5>
+                            </div>
+                            <div class="panel-content">
+                                <h1 class="no-margins">
+                                    <span class="today">{$yesterday.visit_pv}/{$yesterday.visit_uv}</span>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs3">
+                    <div class="panel layui-bg-number">
+                        <div class="panel-body">
+                            <div class="panel-title">
+                                <h5>新访问用户数</h5>
+                            </div>
+                            <div class="panel-content">
+                                <h1 class="no-margins">
+                                    <span class="today">{$yesterday.visit_uv_new}</span>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs3">
+                    <div class="panel layui-bg-number">
+                        <div class="panel-body">
+                            <div class="panel-title">
+                                <h5>人均/次均停留时长(秒)</h5>
+                            </div>
+                            <div class="panel-content">
+                                <h1 class="no-margins">
+                                    <span class="today">{$yesterday.stay_time_uv}/{$yesterday.stay_time_session}</span>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="css"}
+<style>
+    .layui-card-header{background-color: #f4f6f9;}
+    .layui-card-body{text-align: center;font-size: 16px;color: #98999a;}
+    .layui-card-body .no-margins{font-size: 24px;}
+    .layui-card-body .today{font-size: 30px;color: #4c4c4c;}
+    .panel-title{margin-bottom: 15px;}
+</style>
 {/block}

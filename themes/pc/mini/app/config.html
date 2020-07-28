@@ -1,0 +1,77 @@
+{extend name="app/base" /}
+
+{block name="body"}
+
+{include file="app/components/header" /}
+
+
+<form class="layui-form" action="" style="padding-right: 10px;">
+    <div class="layui-tab">
+        <ul class="layui-tab-title ">
+            <li class="layui-this">参数设置</li>
+        </ul>
+        <div class="layui-tab-content">
+            <br>
+            <div class="layui-tab-item layui-show">
+                {volist name="$config" key="key1" id="form"}
+                {switch name="form.type"}
+                {case value="toggle_radio"}{include file="../admin/builder/formtype/toggle_radio" /}{/case}
+                {case value="legend"}{include file="../admin/builder/formtype/legend" /}{/case}
+                {case value="media_text"}{include file="../admin/builder/formtype/media_text" /}{/case}
+                {case value="choose_media"}{include file="../admin/builder/formtype/choose_media" /}{/case}
+                {case value="media_image"}{include file="../admin/builder/formtype/media_image" /}{/case}
+                {case value="picture_url"}{include file="../admin/builder/formtype/picture_url" /}{/case}
+                {case value="textarea"}{include file="../admin/builder/formtype/textarea" /}{/case}
+                {case value="select"}{include file="../admin/builder/formtype/select" /}{/case}
+                {case value="radio"}{include file="../admin/builder/formtype/radio" /}{/case}
+                {case value="hidden"}{include file="../admin/builder/formtype/hidden" /}{/case}
+                {case value="icon"}{include file="../admin/builder/formtype/icon" /}{/case}
+                {default /}{include file="../admin/builder/formtype/text" /}
+                {/switch}
+                {/volist}
+                {notempty name="$themes"}
+                <div class="layui-form-item">
+                    <label class="layui-form-label">模板主题</label>
+                    <div class="layui-input-block">
+                        <select name="theme">
+                            {volist name="$themes" key="k" id="m"}
+                            <option value="{$m}" {eq name="$selected" value="$m"}selected{/eq}>{$m}</option>
+                            {/volist}
+                        </select>
+                        <p class="tip_for_p">小提示：系统会自动获取view下的目录作为主题名称</p>
+                    </div>
+                </div>
+                {/notempty}
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn bg-success" lay-submit="" lay-filter="config">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+{/block}
+
+{block name="js"}
+<script>
+    layui.use(['form'], function(){
+        let form = layui.form;
+        form.render();
+
+        form.on('submit(config)', function(data){
+            let index = layer.load(1);
+            $.post('', data.field, function (res) {
+                layer.close(index);
+                if(res.code === 1){
+                    layer.msg(res.msg, {time:1000}, function () {});
+                }else{
+                    layer.alert(res.msg, {title: '错误提示'});
+                }
+            });
+            return false;
+        });
+    });
+</script>
+{/block}

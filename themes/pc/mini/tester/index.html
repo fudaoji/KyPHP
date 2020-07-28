@@ -1,0 +1,86 @@
+{extend name="common/base"}
+
+{block name="tool_bar"}
+<div class="layui-row">
+    <div class="layui-col-xs10">
+        <form class="layui-form" action="">
+            <div class="layui-col-md5" style="margin-left: 5px; line-height: 38px;">
+                <div class="layui-form-item">
+                    <input name="search_key" placeholder="请输入微信号/备注搜索" value="{$search_key}" class="layui-input"
+                           type="text">
+                </div>
+            </div>
+            <div class="layui-col-md4" style="margin-left: 5px; line-height: 38px;">
+                <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="formDemo">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="layui-col-xs2 tr">
+        <a href="{:url('add')}" class="layui-btn layui-btn-sm bg-success">新增体验者</a>
+    </div>
+</div>
+{/block}
+
+{block name="body"}
+<table class="layui-table" lay-skin="line">
+    <colgroup>
+        <col width="250">
+        <col >
+    </colgroup>
+    <thead>
+    <tr>
+        <th>微信号</th>
+        <th>备注</th>
+        <th>绑定状态</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {volist name="data_list" id="vo"}
+    <tr>
+        <td>{$vo.wechat_id}</td>
+        <td>{$vo.remark}</td>
+        <td>
+            {$vo.status ? '已绑定' : '未绑定'}
+        </td>
+        <td>
+            {if $vo.status == 1}
+            <a class="bt-a js-bind" data-id="{$vo.id}">解绑</a>
+            {else /}
+            <a class="bt-a js-bind" data-id="{$vo.id}">重新绑定</a>
+            {/if}
+        </td>
+    </tr>
+    {/volist}
+    </tbody>
+</table>
+<div id="page">
+    {$page|raw}
+</div>
+{/block}
+
+{block name="js"}
+<script>
+    $(function () {
+        $('.js-bind').on('click', function () {
+            var loadingIndex = layer.load(1)
+            ,id = parseInt($(this).data('id'));
+            $.post("{:url('setStatusPost')}", {id: id}, function (res) {
+                layer.close(loadingIndex);
+                if(res.code === 1){
+                    layer.msg(res.msg, {time: 1000}, function () {
+                        location.reload();
+                    });
+                }else{
+                    layer.alert(res.msg);
+                }
+            }).error(function (error) {
+                layer.close(loadingIndex);
+                layer.alert('500 Internal Server Error', {title: '错误提示'});
+            });
+        });
+    });
+</script>
+{/block}

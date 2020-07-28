@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 /**
  * Created by PhpStorm.
- * Script Name: Addon.php
+ * Script Name: AddonMp.php
  * Create: 2020/6/29 15:50
  * Description: 公众号应用公共手机网页控制器
  * Author: fudaoji<fdj@kuryun.cn>

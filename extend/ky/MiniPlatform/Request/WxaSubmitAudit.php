@@ -4,6 +4,7 @@
  * Script Name: WxaSubmitAudit.php
  * Create: 2018/9/3 18:03
  * Description:将第三方提交的代码包提交审核
+ * @link https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/submit_audit.html
  * Author: Jason<dcq@kuryun.cn>
  */
 namespace ky\MiniPlatform\Request;
@@ -16,6 +17,24 @@ class WxaSubmitAudit
     private $itemList = array();
     private $getParams = array();
     private $postParams = array();
+    private $versionDesc = '';
+
+    /**
+     * @return string
+     */
+    public function getVersionDesc()
+    {
+        return $this->versionDesc;
+    }
+
+    /**
+     * @param string $versionDesc
+     */
+    public function setVersionDesc($versionDesc)
+    {
+        $this->versionDesc = $versionDesc;
+        $this->postParams['version_desc'] = $this->versionDesc;
+    }
 
     /**
      * 获取请求url
@@ -36,7 +55,7 @@ class WxaSubmitAudit
 
     /**
      * 设置itemList
-     * @param string $itemList
+     * @param array $itemList
      * @author Jason<dcq@kuryun.cn>
      */
     public function setItemList($itemList) {

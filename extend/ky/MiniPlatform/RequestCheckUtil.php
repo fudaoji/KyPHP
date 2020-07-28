@@ -34,13 +34,13 @@ class RequestCheckUtil
      * @param int $maxLength
      * @param string $fieldName
      * @return boolean
+     * @throws \Exception
      * @author Jason<dcq@kuryun.cn>
      */
     public static function checkMaxLength($value, $maxLength, $fieldName) {
         if(!self::checkEmpty($value) && mb_strlen($value, "UTF-8") > $maxLength) {
             Logger::setMsgAndCode("参数: " .$fieldName . " 的长度应小于 " . $maxLength);
         }
-
         return true;
     }
 
@@ -50,6 +50,7 @@ class RequestCheckUtil
      * @param int $maxSize
      * @param string $fieldName
      * @return boolean
+     * @throws \Exception
      * @author Jason<dcq@kuryun.cn>
      */
     public static function checkMaxListSize($value, $maxSize, $fieldName) {
@@ -69,6 +70,7 @@ class RequestCheckUtil
      * @param int $maxValue
      * @param string $fieldName
      * @return boolean
+     * @throws \Exception
      * @author Jason<dcq@kuryun.cn>
      */
     public static function checkMaxValue($value, $maxValue, $fieldName) {
@@ -88,6 +90,7 @@ class RequestCheckUtil
      * @param int $minValue
      * @param string $fieldName
      * @return boolean
+     * @throws \Exception
      * @author Jason<dcq@kuryun.cn>
      */
     public static function checkMinValue($value, $minValue, $fieldName) {
@@ -106,6 +109,7 @@ class RequestCheckUtil
      * @param string $value
      * @param string $fieldName
      * @return boolean
+     * @throws \Exception
      * @author Jason<dcq@kuryun.cn>
      */
     public static function checkNumberic($value, $fieldName) {
@@ -161,7 +165,22 @@ class RequestCheckUtil
         if(in_array($value, $range)) {
             return true;
         }
-
         return false;
+    }
+
+    /**
+     * 校验时间格式
+     * @param $date
+     * @param $fieldName
+     * @return bool
+     * Author: fudaoji<fdj@kuryun.cn>
+     * @throws \Exception
+     */
+    public static function checkDate($date = '', $fieldName = ''){
+        $timestamp = strtotime($date);
+        if($timestamp !== strtotime(date('YmdHis', $timestamp))){
+            Logger::setMsgAndCode("参数 " . $fieldName . " 的值合法的时间格式 : " . $date);
+        }
+        return  true;
     }
 }

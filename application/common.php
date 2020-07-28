@@ -271,7 +271,7 @@ function http_post($url, $data, $curlFile = false)
 }
 
 /**
- * 微信公众号扩展应用 URL 生成
+ * 扩展应用 URL 生成
  * @param $url  string 应用url 应用名称/控制器/方法
  * @param $vars array 参数
  * @param $suffix bool
@@ -302,24 +302,16 @@ function addon_url($url = '', $vars = '', $suffix = true, $domain = false)
                     break;
             }
         }
-        if (!empty($_mid = input('_mid')) || isset($vars['_mid'])) {
-            if (empty($_mid) && isset($vars['_mid'])) {
-                $_mid = $vars['_mid'];
+        if (!empty($mid = input('mid'))) {
+            if (is_array($vars)) {
+                $vars = array_merge($vars, ['mid' => $mid]);
+            } elseif ($vars != '' && !is_array($vars)) {
+                $vars = $vars . '&' . 'mid=' . $mid;
+            } else {
+                $vars = ['mid' => $mid];
             }
-            $url = \think\facade\Url::build('/api/' . $_mid . '/' . $node, $vars, $suffix, $domain);
-
-        } else {
-            if (!empty($mid = input('mid'))) {
-                if (is_array($vars)) {
-                    $vars = array_merge($vars, ['mid' => $mid]);
-                } elseif ($vars != '' && !is_array($vars)) {
-                    $vars = $vars . '&' . 'mid=' . $mid;
-                } else {
-                    $vars = ['mid' => $mid];
-                }
-            }
-            $url = \think\facade\Url::build(ADDON_ROUTE . $node, $vars, $suffix, $domain);
         }
+        $url = \think\facade\Url::build(ADDON_ROUTE . $node, $vars, $suffix, $domain);
         return str_replace('.' . config('template.view_suffix'), '', $url);
     }
 }

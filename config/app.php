@@ -19,6 +19,7 @@ return [
     'app_name'               => Env::get('app_name', 'KyPHP'),
     'app_title'              => Env::get('app_title', '酷在云端微信营销平台'),
     'app_prefix'             => Env::get('app_prefix', 'ky_'),
+    'app_key'                => Env::get('app_key', '9eT8gFN2J1ef1118fadfegas1DDewrqw'),
     'version'                => 'v1.0.0',
     'founder_id'             => 1,  //创始人ID
     // 应用地址

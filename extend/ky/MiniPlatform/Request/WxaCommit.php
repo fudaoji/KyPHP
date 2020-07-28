@@ -4,6 +4,7 @@
  * Script Name: WxaCommit.php
  * Create: 2018/9/3 17:04
  * Description: 为授权的小程序帐号上传小程序代码
+ * @link https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/commit.html
  * Author: Jason<dcq@kuryun.cn>
  */
 namespace ky\MiniPlatform\Request;
