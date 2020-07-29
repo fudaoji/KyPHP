@@ -57,7 +57,7 @@
             {if $type != 'notinstall'}
             <th>templateID</th>
             {/if}
-            <th width="180">操作</th>
+            <th>操作</th>
         </tr>
         </thead>
         <tbody>
@@ -85,7 +85,9 @@
                 {/case}
                 {case value="onsale"}
                 <a class="layui-btn layui-btn-xs layui-btn-normal" href="{:url('edit',['id'=>$vo.id])}">编辑</a>
+                {if $vo.template_id}
                 <button class="layui-btn layui-btn-xs " onclick="installApp('{$vo.addon}')">上架</button>
+                {/if}
                 <button class="layui-btn layui-btn-xs layui-btn-danger" onclick="wipeDataApp('{$vo.addon}')">还原</button>
                 {/case}
                 {case value="notinstall"}

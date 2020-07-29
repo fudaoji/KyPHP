@@ -200,22 +200,22 @@ class App extends Base
             $this->success('配置成功');
         } else {
             $addon_config_mp = json_decode($mp_addon['infos'], true);
-            $config = json_decode($this->addonCfByDb['config'], true);
 
+            $config = $this->addonCfByFile['config'];
             foreach ($config as $key1 => $val1) {
-                $val1['value'] = (!empty($addon_config_mp) && isset($addon_config_mp[$val1['name']])) ? $addon_config_mp[$val1['name']] : '';
+                $val1['value'] = (!empty($addon_config_mp) && isset($addon_config_mp[$val1['name']])) ? $addon_config_mp[$val1['name']] : $val1['value'];
                 $config[$key1] = $val1;
             }
 
             $themes = [];
             $selected = '';
-
             if (isset($this->addonCfByFile['is_theme']) && $this->addonCfByFile['is_theme'] == true) {
                 $themes = controller('common/addon', 'event')->getAddonThemes(['name' => $this->addonName]);
                 if (isset($addon_config_mp['theme']) && !empty($addon_config_mp['theme'])) {
                     $selected = $addon_config_mp['theme'];
                 }
             }
+
             $assign = [
                 'selected' => $selected,
                 'themes' => $themes,

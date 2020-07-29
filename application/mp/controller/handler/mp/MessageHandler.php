@@ -150,7 +150,7 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
      */
     public function replyAddon($addon = [], $message){
         $res = '';
-        $filename = ADDON_PATH . $addon['addon'] . '/controller/Api.php';
+        $filename = ADDON_PATH . $addon['addon'] . '/Api.php';
         $common_file = ADDON_PATH . $addon['addon'] . '/common.php';
         if (file_exists($common_file)) {
             include_once $common_file;
@@ -158,7 +158,7 @@ class MessageHandler extends WechatMp implements EventHandlerInterface
 
         if (file_exists($filename)) {
             include_once $filename;
-            $class = '\addons\\' . $addon['addon'] . '\controller\Api';
+            $class = '\addons\\' . $addon['addon'] . '\\Api';
             if (class_exists($class)) {
                 $obj = new $class;
                 if (method_exists($obj, 'message')) {

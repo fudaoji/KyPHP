@@ -13,7 +13,7 @@ Route::get('think', function () {
     return 'hello,ThinkPHP5!';
 });
 
-Route::rule(ADDON_ROUTE . ':addon/:col/:act', '\\app\\system\\controller\\Call@run');  //应用页面路由规则
+Route::rule(ADDON_ROUTE . ':addon/:module/:col/:act', '\\app\\system\\controller\\Call@run');  //应用页面路由规则
 
 return [
 

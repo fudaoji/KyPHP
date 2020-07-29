@@ -272,7 +272,7 @@ function http_post($url, $data, $curlFile = false)
 
 /**
  * 扩展应用 URL 生成
- * @param $url  string 应用url 应用名称/控制器/方法
+ * @param $url  string 应用url 应用名称/模块/控制器/方法
  * @param $vars array 参数
  * @param $suffix bool
  * @param $domain bool
@@ -283,22 +283,26 @@ function addon_url($url = '', $vars = '', $suffix = true, $domain = false)
 {
     if (!empty($addon_rule = session('addonRule')) || $url != '') {
         $addon_name = isset($addon_rule['addon']) ? $addon_rule['addon'] : '';
+        $addon_module = isset($addon_rule['module']) ? $addon_rule['module'] : '';
         $addon_controller = isset($addon_rule['col']) ? $addon_rule['col'] : '';
         $addon_action = isset($addon_rule['act']) ? $addon_rule['act'] : '';
         $node = '';
         if ($url == '') {
-            $node = $addon_name . '/' . $addon_controller . '/' . $addon_action;
+            $node = $addon_name . '/' .$addon_module .'/'. $addon_controller . '/' . $addon_action;
         } else {
             $node_arr = array_values(array_filter(explode('/', $url)));
             switch (count($node_arr)) {
                 case 1:
-                    $node = $addon_name . '/' . $addon_controller . '/' . $node_arr[0];
+                    $node = $addon_name . '/' .$addon_module. '/' . $addon_controller . '/' . $node_arr[0];
                     break;
                 case 2:
-                    $node = $addon_name . '/' . $node_arr[0] . '/' . $node_arr[1];
+                    $node = $addon_name . '/' .$addon_module. '/' . $node_arr[0] . '/' . $node_arr[1];
                     break;
                 case 3:
-                    $node = $node_arr[0] . '/' . $node_arr[1] . '/' . $node_arr[2];
+                    $node = $addon_name . '/' . $node_arr[0] . '/' . $node_arr[1] . '/' . $node_arr[2];
+                    break;
+                case 4:
+                    $node = $node_arr[0] . '/' . $node_arr[1] . '/' . $node_arr[2]. '/' . $node_arr[3];
                     break;
             }
         }

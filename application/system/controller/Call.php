@@ -16,6 +16,7 @@ use think\facade\View;
 class Call extends Controller
 {
     private $addon;
+    private $module;
     private $col;
     private $act;
     private $adParam;
@@ -27,6 +28,7 @@ class Call extends Controller
         $this->adParam = $param;
         session('addonRule', $param); //记录应用路由
         $this->addon = $param['addon'];
+        $this->module = $param['module'];
         $this->col = $param['col'];
         $this->act = $param['act'];
         $this->addonsM = model('common/addons');
@@ -60,17 +62,10 @@ class Call extends Controller
             ];
             View::config($view_config);
 
-            if(strpos($this->col, '_') > 0){ //兼容 demo/api_user/index  多层控制器的格式
-                $col = explode('_', $this->col);
-                $this->col = $col[1];
-            }else{
-                $col = $this->col;
-            }
-
-            $filename = ADDON_PATH . $this->addon . '/controller/' . (is_array($col) ? ($col[0].'/'.ucfirst($col[1])) : ucfirst($col)) . '.php';
+            $filename = ADDON_PATH . $this->addon . '/'.$this->module.'/controller/' . ucfirst($this->col) . '.php';
             if (file_exists($filename)) {
                 include_once $filename;
-                $class = '\addons\\' . $this->addon . '\\controller\\' . (is_array($col) ? ($col[0].'\\'.ucfirst($col[1])) : ucfirst($col));
+                $class = '\addons\\' . $this->addon .'\\'.$this->module. '\\controller\\' . ucfirst($this->col);
                 if (class_exists($class)) {
                     $model = new $class;
                     if (!method_exists($model, $this->act)) {
