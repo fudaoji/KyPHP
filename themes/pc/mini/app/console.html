@@ -24,7 +24,7 @@
     function initIframe(){
         var iframe = document.getElementById("iframe");
         var bodyHeight = $("#iframe").contents().find("body").height();
-        if(bodyHeight < 600) bodyHeight = 600;
+        if(bodyHeight < 550) bodyHeight = 550;
         iframe.height = bodyHeight + 50;
     }
     window.setTimeout("initIframe()", 500);

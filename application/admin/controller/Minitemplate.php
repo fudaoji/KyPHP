@@ -101,13 +101,6 @@ class Minitemplate extends Base
      */
     public function syncPost(){
         if(request()->isPost()){
-            try {
-
-            }catch (\Exception $e){
-                Log::write($e->getMessage());
-                $result = false;
-            }
-
             $token = controller('mini/mini', 'event')->getOpenPlatform()->access_token->getToken()['component_access_token'];
             $request = new WxaGetTemplateList();
             $response = $this->client->setCheckRequest(false)->execute($request, $token);
@@ -140,7 +133,6 @@ class Minitemplate extends Base
 
                 //库中数据与微信服务器数据比较，不存在的删除
                 $del_id = array_diff($db_ids, $ids);
-                dump($del_id);exit;
                 count($del_id) && $this->model->delByMap(['template_id' => ['in', $del_id], 'type' => Mt::TEMPLATE]);
             }
             $result = true;

@@ -17,3 +17,13 @@ database=rhaphp
 username=fdj
 password=fdj@oudewa
 port=3306
+
+;memcache配置
+[memcached]
+host=127.0.0.1
+port=11211
+
+;redis配置
+[redis]
+host=10.105.19.27
+port=6380

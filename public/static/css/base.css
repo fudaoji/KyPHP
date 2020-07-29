@@ -167,6 +167,7 @@ a { text-decoration: none; }
     /*border-top: 1px solid rgb(231, 231, 235);*/
 }
 .addon_menu-left-nav-a {text-decoration: none;color: #212121;line-height: 34px;padding-left: 58px;display: block;cursor: pointer;}
+.child-item-nav .addon_menu-left-nav-a{padding-left: 68px;}
 .item-icon{position: absolute;top:2px;left:25px;color: rgb(141, 141, 141);}
 .addon_menu-left-a-icon{display: inline-block;vertical-align: middle;width: 7px;height: 7px;border-left: 2px solid #ccc;border-bottom: 2px solid #ccc;display: inline-block;margin: 15px 15px 0px 0px;float: right;vertical-align: middle;-webkit-transition: all 0.3s ease-in-out;}
 .addon_menu_up {-webkit-transform: rotate(135deg);transform: rotate(135deg);top: 1px;}

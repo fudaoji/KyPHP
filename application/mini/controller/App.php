@@ -67,7 +67,6 @@ class App extends Base
         }
         //插件的管理菜单
         $addon_menu = isset($addon_local['menu']) ? $addon_local['menu'] : '';
-
         $node = input('node', '');
         if (!empty($addon_menu) && is_array($addon_menu)) {
             foreach ($addon_menu as $key => $val) {
@@ -83,12 +82,13 @@ class App extends Base
                         $addon_menu[$key]['child'][$k]['show'] = 0;
                         if ($node == $addon_menu[$key]['child'][$k]['url']) {
                             $addon_menu[$key]['child'][$k]['show'] = 1;
+                            $addon_menu[$key]['show'] = 1;
                         }
                     }
                 }
             }
         }
-
+        //dump($addon_menu);exit;
         $is_show_config_menu = false;
         if (!empty($addon_local['config']) || (isset($addon_local['is_theme']) && $addon_local['is_theme'] == true)
         ) {

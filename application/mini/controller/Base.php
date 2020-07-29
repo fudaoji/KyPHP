@@ -91,7 +91,7 @@ class Base extends \app\admin\controller\Base
      */
     public function getAddonForMenu(){
         $template_log = model('miniTemplateLog')->getOneByOrder([
-            'where' => ['mini_id' => $this->miniId],
+            'where' => ['mini_id' => $this->miniId, 'is_current' => 1],
             'order' => ['id' => 'desc'],
             'refresh' => 1
         ]);

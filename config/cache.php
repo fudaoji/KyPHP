@@ -12,14 +12,41 @@
 // +----------------------------------------------------------------------
 // | 缓存设置
 // +----------------------------------------------------------------------
+use think\facade\Env;
 
 return [
-    // 驱动方式
-    'type'   => 'File',
-    // 缓存保存目录
-    'path'   => env('runtime_path').'cache/',
+    // 使用复合缓存类型
+    'type'  =>  'complex',
     // 缓存前缀
-    'prefix' => 'kyphp_',
+    'prefix' => Env::get('app_prefix', 'kyphp_'),
     // 缓存有效期 0表示永久缓存
     'expire' => 0,
+
+    // 默认使用的缓存
+    'default' => [
+        'type'  => 'File',
+        'path'   => env('runtime_path').'cache/',
+        'port'  => Env::get('memcached.port', 11211),
+    ],
+    // 文件缓存
+    'file'   =>  [
+        // 驱动方式
+        'type' => 'file',
+        // 设置不同的缓存保存目录
+        'path'   => env('runtime_path').'cache/',
+    ],
+    // memcache缓存
+    'memcached' =>  [
+        'type'  => 'memcached',
+        'host'  => Env::get('memcached.host', 'localhost'),
+        'port'  => Env::get('memcached.port', 11211)
+    ],
+    // redis缓存
+    'redis' => [
+        // 驱动方式
+        'type' => 'redis',
+        // 服务器地址
+        'host' => Env::get('redis.host', 'localhost'),
+        'port' => Env::get('redis.port', '6379')
+    ]
 ];

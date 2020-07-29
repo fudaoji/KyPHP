@@ -22,9 +22,9 @@
                     <a class="addon_menu-left-nav-a" href="javascript:void(0);">
                         <i class="item-icon type-ico ico-trade rha-icon"  width="25px" height="25px">{$v.icon|raw}</i>
                         <span>{$v.name}</span>
-                        <span class="addon_menu-left-a-icon {if $v.show =='1'}addon_menu_down{else/}addon_menu_up{/if}"></span>
+                        <span class="addon_menu-left-a-icon {if $v.show =='0'}addon_menu_down{else/}addon_menu_up{/if}"></span>
                     </a>
-                    <ul class="child-item-nav" style="display: {if $v.show =='1'}block{else/}none{/if} ">
+                    <ul class="child-item-nav" style="display: {if $v.show =='1'}block{else/}none{/if};">
                         {volist name="$v.child" key="k" id="c"}
                         <li class="addon_menu-left-nav-item {eq name="$node" value="$c.url"}selected{/eq}">
                         <a class="addon_menu-left-nav-a" href="{:url('app/console',['name'=>$addonInfo.addon,'node'=>$c.url])}">{$c.name}</a>
@@ -46,18 +46,20 @@
     </div>
 </dl>
 <script>
-    $('#addon_menu').on('click','.addon_menu-left-nav-a',function(){
-        if($(this).parents('.addon_menu-left-nav-item').hasClass('on')){
-            $(this).parents('.addon_menu-left-nav-item').removeClass('on');
-            $(this).parents('.addon_menu-left-nav-item').find('.addon_menu-left-a-icon').removeClass('addon_menu_down').addClass('addon_menu_up');
-            $(this).siblings('.child-item-nav').hide();
-        }else{
-            $('.addon_menu-left-nav-item .addon_menu-left-a-icon').removeClass('addon_menu_down').addClass('addon_menu_up');
-            $(this).parents('.addon_menu-left-nav-item').addClass('on').siblings('#addon_menu .addon_menu-left-nav-item ').removeClass('on');
-            $(this).parents('.addon_menu-left-nav-item').find('.addon_menu-left-a-icon').addClass('addon_menu_down').removeClass('addon_menu_up');
-            $('#addon_menu .addon_menu-left-nav-item .child-item-nav').hide();
-            $(this).siblings('#addon_menu .addon_menu-left-nav-item .child-item-nav').show();
-        }
+    $(function () {
+        $('#addon_menu').on('click','.addon_menu-left-nav-a',function(){
+            if($(this).parents('.addon_menu-left-nav-item').hasClass('on')){
+                $(this).parents('.addon_menu-left-nav-item').removeClass('on');
+                $(this).parents('.addon_menu-left-nav-item').find('.addon_menu-left-a-icon').removeClass('addon_menu_up').addClass('addon_menu_down');
+                $(this).siblings('.child-item-nav').hide();
+            }else{
+                $('.addon_menu-left-nav-item .addon_menu-left-a-icon').removeClass('addon_menu_up').addClass('addon_menu_down');
+                $(this).parents('.addon_menu-left-nav-item').addClass('on').siblings('#addon_menu .addon_menu-left-nav-item ').removeClass('on');
+                $(this).parents('.addon_menu-left-nav-item').find('.addon_menu-left-a-icon').addClass('addon_menu_up').removeClass('addon_menu_down');
+                $('#addon_menu .addon_menu-left-nav-item .child-item-nav').hide();
+                $(this).siblings('#addon_menu .addon_menu-left-nav-item .child-item-nav').show();
+            }
+        });
     });
 </script>
 {/block}

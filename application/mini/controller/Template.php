@@ -366,7 +366,7 @@ class Template extends Base
             $addon_template = model('addonsTemplate')->getOneByMap(['addon' => $post_data['addon']]);
             $request = new WxaCommit();
             $request->setTemplateId($addon_template['template_id']);
-            $ext_json = json_encode(['ext' => ['appId' => $this->miniInfo['appid']]]);
+            $ext_json = json_encode(['ext' => ['appId' => $this->miniInfo['appid'], 'id' => $this->miniInfo['id']]]);
             $request->setExtJson($ext_json);
             $request->setUserVersion($post_data['user_version']);
             $request->setUserDesc($post_data['user_desc']);
