@@ -20,9 +20,6 @@ use ky\Helper;
 
 class AddonMiniApi extends BaseCtl
 {
-    protected $needToken; //是否需要token
-    protected $token = '';
-    protected $jscode2session = [];
     //protected $openPlatform;
     protected $miniApp;
     protected $miniInfo;
@@ -32,12 +29,7 @@ class AddonMiniApi extends BaseCtl
      */
     protected $miniM;
     protected $miniId;
-    protected $followInfo;
-    /**
-     * 是否需要获取授权信息
-     * @var bool
-     */
-    protected $needWxLogin = true;
+
     /**
      * @var string
      */
@@ -61,28 +53,8 @@ class AddonMiniApi extends BaseCtl
             $this->setApp();
             $this->setAddonInfo();
 
-            Helper::$ajax = $this->getAjax();
-            $this->checkToken();
-            $this->checkLogin();
-
         }else{
             abort(ErrorCode::CatchException, '非法请求');
-        }
-    }
-
-    /**
-     * 微信授权获取用户信息
-     * @author: fudaoji<fdj@kuryun.cn>
-     */
-    public function checkLogin(){
-        if($this->jscode2session){
-            $this->followInfo = model('MiniFollow')->getOneByMap([
-                'mini_id' => $this->miniId,
-                'openid' => $this->jscode2session['openid']
-            ]);
-        }
-        if($this->needWxLogin && empty($this->followInfo['headimgurl'])){
-            Helper::error(ErrorCode::RedirectAjax, '请进行微信授权登录');
         }
     }
 
@@ -101,29 +73,6 @@ class AddonMiniApi extends BaseCtl
             $this->miniAddonInfo['infos'] = json_decode($this->miniAddonInfo['infos'], true);
         }else{
             Helper::error(ErrorCode::BadParam, '请先在电脑端进行应用配置');
-        }
-    }
-
-    /**
-     * 校验请求token
-     * @author: fudaoji<fdj@kuryun.cn>
-     */
-    public function checkToken(){
-        $this->checkSign();
-
-        if($this->needToken){
-            $header = request()->header();
-            if(empty($header['token'])){
-                Helper::error(ErrorCode::RedirectAjax, 'token缺失');
-            }
-            $this->token = $header['token'];
-            $this->jscode2session = json_decode(controller('mini/mini', 'event')->getRedis()->get($this->token), true);
-            if($this->jscode2session){ //续时
-                controller('mini/mini', 'event')->getRedis()->setex($this->token, 86400 * 7, json_encode($this->jscode2session));
-            }
-            if(empty($this->jscode2session)){
-                Helper::error(ErrorCode::RedirectAjax, 'token过期');
-            }
         }
     }
 
@@ -156,48 +105,5 @@ class AddonMiniApi extends BaseCtl
     protected function setApp() {
         $this->miniApp = controller('mini/mini', 'event')->getApp($this->miniInfo);
         //$this->openPlatform = controller('mp', 'event')->getOpenPlatform();
-    }
-
-    /**
-     * 获取AJAX请求参数
-     * @author fudaoji<fdj@kuryun.cn>
-     */
-    private function getAjax() {
-        $json = file_get_contents("php://input");
-        return json_decode($json, 1);
-    }
-
-    /**
-     * 签名验证
-     * @author: fudaoji<fdj@kuryun.cn>
-     */
-    protected function checkSign(){
-        if(empty(Helper::$ajax)){
-            abort(ErrorCode::ErrorParam, '非法请求');
-        }
-        $params = Helper::$ajax;
-        unset($params['sign']);
-        if(count($params) == 0){
-            $params_str = '';
-        }else{
-            //签名步骤一：按字典序排序参数
-            ksort($params);
-            $params_str = "";
-            foreach ($params as $k => $v)
-            {
-                if($k != "sign"){
-                    $params_str .= ($k . "=" . json_encode($v,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) . "&");
-                }
-            }
-            $params_str = trim($params_str, "&");
-        }
-        //签名步骤二：在string后加入KEY
-        $params_str .= empty($this->miniAddonInfo['infos']['app_key']) ? config('app_key') : $this->miniAddonInfo['infos']['app_key'];
-        //签名步骤三：MD5加密
-        $sign = md5($params_str);
-        //判断sign
-        if($sign !== Helper::$ajax['sign']){
-            abort(ErrorCode::ErrorParam, '非法请求');
-        }
     }
 }
