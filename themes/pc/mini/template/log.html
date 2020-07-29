@@ -43,7 +43,7 @@
                 <td>{:model('miniTemplateLog')->statusList($vo.status)}</td>
                 <td>
                     {if !$vo.is_current}
-                    <a class="bt-a">使用</a>
+                    <a class="bt-a js-change" data-id="{$vo.id}">使用</a>
                     {/if}
                 </td>
             </tr>
@@ -55,6 +55,32 @@
         </div>
     </div>
 </div>
+{/block}
+
+{block name="js"}
+<script>
+    $(function () {
+        $('.js-change').on('click', function () {
+            var id = parseInt($(this).data('id'));
+            layer.confirm('切换版本需要重新走代码提交、审核流程，确定吗?', {}, function () {
+                var loadingIndex = layer.load(1);
+                $.post("{:url('useLogPost')}", {id: id}, function (res) {
+                    layer.close(loadingIndex);
+                    if(res.code === 1){
+                        layer.msg(res.msg, {time: 2000}, function () {
+                            location.href = res.url;
+                        });
+                    }else{
+                        layer.alert(res.msg);
+                    }
+                }).error(function (error) {
+                    layer.close(loadingIndex);
+                    layer.alert('500 Internal Server Error', {title: '错误提示'});
+                });
+            });
+        });
+    });
+</script>
 {/block}
 
 {block name="css"}

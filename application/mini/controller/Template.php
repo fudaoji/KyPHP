@@ -401,4 +401,42 @@ class Template extends Base
             $this->success('代码提交成功，在正式提交审核之前建议您先扫码体验', url('index'));
         }
     }
+
+    /**
+     * 切换到历史版本
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function useLogPost(){
+        if(request()->isPost()){
+            $id = input('post.id', 0, 'intval');
+            $log = $this->model->getOneByMap(['id' => $id, 'mini_id' => $this->miniId], true, true);
+            if(empty($log)){
+                $this->error('参数错误');
+            }
+            $request = new WxaCommit();
+            $request->setTemplateId($log['template_id']);
+            $ext_json = $log['ext_json'];
+            $request->setExtJson($ext_json);
+            $request->setUserVersion($log['user_version']);
+            $request->setUserDesc($log['user_desc']);
+            $response = $this->client->execute($request, $this->getAccessToken());
+            if($response['errcode'] == 0) {
+                Db::startTrans();
+                try {
+                    $this->model->updateByMap(['mini_id' => $this->miniId, 'is_current' => 1], ['is_current' => 0]);
+                    $result = $this->model->updateOne(['id' => $id, 'is_current' => 1]);
+                    Db::commit();
+                }catch (\Exception $e){
+                    $result = false;
+                    Db::rollback();
+                }
+                if($result === false){
+                    $this->error('系统出错，请刷新重试');
+                }
+            }else {
+                $this->error($response['errmsg']);
+            }
+            $this->success('版本切换成功，在正式提交审核之前建议您先扫码体验', url('index'));
+        }
+    }
 }
