@@ -9,17 +9,20 @@
 
 namespace app\admin\controller;
 
-class FormBuilder extends Base {
-    private $_meta_title;            // 页面标题
-    private $_tab_nav = array();     // 页面Tab导航
-    private $_post_url = '';              // 表单提交地址
-    private $_form_items = array();  // 表单项目
-    private $_extra_items = array(); // 额外已经构造好的表单项目
-    private $_form_data = array();   // 表单数据
-    private $_extra_html;            // 额外功能代码
-    private $_ajax_submit = true;    // 是否ajax提交
-    private $_template;              // 模版
-    private $_tip = '';              // 提示语
+use app\common\controller\BaseCtl;
+
+class FormBuilder extends BaseCtl
+{
+    protected $_meta_title;            // 页面标题
+    protected $_tab_nav = array();     // 页面Tab导航
+    protected $_post_url = '';              // 表单提交地址
+    protected $_form_items = array();  // 表单项目
+    protected $_extra_items = array(); // 额外已经构造好的表单项目
+    protected $_form_data = array();   // 表单数据
+    protected $_extra_html;            // 额外功能代码
+    protected $_ajax_submit = true;    // 是否ajax提交
+    protected $_template;              // 模版
+    protected $_tip = '';              // 提示语
 
     /**
      * 初始化方法
