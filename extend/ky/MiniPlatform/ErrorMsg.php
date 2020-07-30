@@ -205,9 +205,10 @@ class ErrorMsg
             85082 => '当前的发布比例需要比之前设置的高',
 
             9400001 => '该开发小程序已开通小程序直播权限，不支持发布版本。如需发版，请解绑开发小程序后再操作。 hint: [nGNdlo4FE-fOdtwA]',
-            61500 => '日期格式不合法'
+            61500 => '日期格式不合法',
+            61503 => '数据没有准备好，请稍后重试',
         ];
 
-        return $msg_list[$code] ? $msg_list[$code] : null;
+        return isset($msg_list[$code]) ? $msg_list[$code] : null;
     }
 }

@@ -44,24 +44,22 @@ class Index extends Base
         $request->setBeginDate($yesterday_date);
         $request->setEndDate($yesterday_date);
         $response = $this->client->execute($request, $this->getAccessToken());
+        $yesterday = [
+            'session_cnt' => 0, //打开次数
+            'visit_pv' => 0,  //访问次数
+            'visit_uv' => 0, //访问人数
+            'visit_uv_new' => 0, //新用户数
+            'stay_time_uv' => 0,  //人均停留时长(秒)
+            'stay_time_session' => 0 //次均停留时长(秒)
+        ];
 
         if(isset($response['list'])){
             if(count($response['list'])){
                 $yesterday = $response['list'][0];
-            }else{
-                $yesterday = [
-                    'session_cnt' => 0, //打开次数
-                    'visit_pv' => 0,  //访问次数
-                    'visit_uv' => 0, //访问人数
-                    'visit_uv_new' => 0, //新用户数
-                    'stay_time_uv' => 0,  //人均停留时长(秒)
-                    'stay_time_session' => 0 //次均停留时长(秒)
-                ];
             }
-            $this->assign['yesterday'] = $yesterday;
-        }else{
-            $this->error($response['errmsg']);
         }
+
+        $this->assign['yesterday'] = $yesterday;
         return $this->show();
     }
 }

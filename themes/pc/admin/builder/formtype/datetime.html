@@ -8,7 +8,7 @@
     <div class="layui-input-block">
         <input
                 type="text"
-                value="{$form['value'] ?? ''}"
+                value="{:isset($form['value']) ? (is_string($form['value']) ? $form['value'] : date('Y-m-d H:i:s', $form['value'])) : ''}"
                 id="{$form['name']}"
                 name="{$form['name']}"
                 placeholder="{$form['tip'] ?? ('请输入'.$form['title'])}"

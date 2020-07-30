@@ -201,6 +201,26 @@
             history.go(-1);
         });
     }
+
+    /**
+     * 预览图片
+     * @param string/array img src字符串或src数组
+     */
+    function viewImg(img) {
+        var data = [];
+        if(typeof img === 'string'){
+            data = [ {"src": img}];
+        }else{
+            for(var i in img){
+                data.push({"src": img[i]})
+            }
+        }
+        layui.use('layer', function () {
+            layer.photos({
+                photos: {data: data}
+            });
+        });
+    };
 </script>
 
 {block name="js"}{/block}

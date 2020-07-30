@@ -118,7 +118,8 @@ class Laypage extends Paginator
                 );
             } else {
                 return sprintf(
-                    '<div class="layui-box layui-laypage layui-laypage-molv">%s %s %s</div>',
+                    '<div class="layui-box layui-laypage layui-laypage-molv">%s %s %s %s</div>',
+                    $this->getTotalLabel(),
                     $this->getPreviousButton(),
                     $this->getLinks(),
                     $this->getNextButton()
@@ -202,5 +203,15 @@ class Laypage extends Paginator
         }
 
         return $this->getAvailablePageWrapper($url, $page);
+    }
+
+    /**
+     * 获取总条数文段
+     * @return string
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    protected function getTotalLabel()
+    {
+        return sprintf('<span class="layui-laypage-count">共 %d 条</span>', $this->total());
     }
 }

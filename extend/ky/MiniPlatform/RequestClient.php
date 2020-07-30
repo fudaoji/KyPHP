@@ -128,7 +128,7 @@ class RequestClient
             $respWellFormed = true;
             if(isset($respObject["errcode"]) && $respObject["errcode"] >= 0) {
                 //错误信息中文翻译
-                $respObject["errmsg"] = ErrorMsg::getErrorMsg($respObject['errcode']);
+                $respObject["errmsg"] = ErrorMsg::getErrorMsg($respObject['errcode']) ? ErrorMsg::getErrorMsg($respObject['errcode']) : $respObject['errmsg'];
                 return $respObject;
             }
             if(isset($respObject["errcode"]) && $respObject["errcode"] == -1) {
