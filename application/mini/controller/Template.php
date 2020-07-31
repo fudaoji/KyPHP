@@ -328,9 +328,9 @@ class Template extends Base
             $post_data['user_version'] = $addon['version']; //将应用的版本号作为小程序的版本号
             $access_token = $this->miniApp->access_token->getToken()['authorizer_access_token'];
             $total = model('miniTemplateLog')->total(['mini_id' => $this->miniId], true);
+            $http_host = request()->server()['HTTP_HOST'];
             if(! $total){ //有版本记录的说明设置过域名了
                 //1、设置服务器域名
-                $http_host = request()->server()['HTTP_HOST'];
                 $request = new WxaModifyDomain();
                 $request->setAction('set');
                 $request->setRequestDomain(['https://' . $http_host]);
@@ -366,7 +366,19 @@ class Template extends Base
             $addon_template = model('addonsTemplate')->getOneByMap(['addon' => $post_data['addon']]);
             $request = new WxaCommit();
             $request->setTemplateId($addon_template['template_id']);
-            $ext_json = json_encode(['ext' => ['appId' => $this->miniInfo['appid'], 'id' => $this->miniInfo['id']]]);
+            $ext_json = json_encode([
+                'ext' => [
+                    'appId' => $this->miniInfo['appid'],
+                    'env' => [
+                        "restUrl" => "https://".$http_host."/app/gxtea/api/",
+                        //"qiniuRegion" => "SCN",
+                        "qiniuDomain" => config('system.upload.qiniu_domain'),
+                        "appKey" => $this->miniAddonInfo['infos']['app_key'],
+                        "mapKey" => config('system.common.map_qq_key'),
+                        "version" => $post_data['user_version']
+                    ],
+                ]
+            ]); //还要加其他的配置参数，例如地图key，七牛key等
             $request->setExtJson($ext_json);
             $request->setUserVersion($post_data['user_version']);
             $request->setUserDesc($post_data['user_desc']);

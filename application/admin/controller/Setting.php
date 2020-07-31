@@ -37,6 +37,10 @@ class Setting extends Base
             'pay' => [
                 'title' => '支付设置',
                 'href' => url('index', ['name' => 'pay'])
+            ],
+            'common' => [
+                'title' => '其他设置',
+                'href' => url('index', ['name' => 'common'])
             ]
         ];
     }
@@ -78,6 +82,10 @@ class Setting extends Base
         }
         $builder = new FormBuilder();
         switch ($current_name){
+            case 'common':
+                $builder->addFormItem('map_title', 'legend', '地图', '地图')
+                    ->addFormItem('map_qq_key', 'text', '腾讯地图key', '获取方法详见：https://lbs.qq.com/', [], 'required maxlength=150');
+                break;
             case 'pay':
                 $builder->addFormItem('wx_title', 'legend', '微信支付', '微信支付')
                     ->addFormItem('wx_appid', 'text', 'AppId', 'AppId', [], 'required maxlength=150')
