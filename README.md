@@ -1,4 +1,4 @@
-# 酷在云端（KyPHP）
+# KyPHP
 
 #### 介绍
 基于微信开放平台打造的微信营销SaaS平台，应用载体主要是微信公众号和微信小程序。
@@ -57,7 +57,7 @@
 1.  拉取项目
 2.  在项目根目录下`cp env .env`, 修改.env对应的配置信息
 3.  将项目目录下的install.sql导入数据库
-4.  修改runtime、public/uploads、addons、data 的读写权限
+4.  修改项目目录、runtime、public/uploads、addons、data 的读写权限
 5.  根目录下执行 `composer update`
 6.  默认超管账号：admin 密码：123456
 
