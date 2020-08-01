@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <title><?= config("app_title");?></title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="{:config('system.site.keywords')}">
+    <meta name="description" content="{:config('system.site.description')}">
+    <link rel="stylesheet" href="__STATIC__/libs/layui/css/layui.css">
+    <style>
+        @media screen and (min-width: 1191px) {
+            .layuimini-top-content {
+                float: right;
+            }
+            .ew-banner .layui-container{
+                min-height: 500px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="__STATIC__/css/home/common.css">
+    {block name="css"}{/block}
+</head>
+<body>
+
+<div class="ew-header">
+    <a class="layui-logo" href="/"><img src="<?=config('system.site.logo');?>" alt=""></a>
+
+    <div class="ew-nav-group">
+        <div class="nav-toggle"><i class="layui-icon layui-icon-more-vertical"></i></div>
+        <ul class="layui-nav" lay-filter="ew-header-nav">
+            <li class="layui-nav-item {if $controller.'/'.$action=='index/index'}layui-this{/if}">
+                <a href="<?=url('index');?>">首页</a>
+            </li>
+            <!--<li class="layui-nav-item {if $controller.'/'.$action=='index/apps'}layui-this{/if}">
+                <a href="<?=url('apps');?>">应用市场</a>
+            </li>-->
+            {if $user}
+            <li class="layui-nav-item">
+                <a href="<?=url('system/index/index');?>">控制台</a>
+            </li>
+            {else}
+            <li class="layui-nav-item ">
+                <a href="javascript:;">会员中心<i class="layui-hide-xs"> </i><span class="layui-nav-more"></span></a>
+                <dl class="layui-nav-child">
+                    <dd><a href="<?=url('admin/auth/login');?>">登录</a></dd>
+                    <dd><a href="<?=url('admin/auth/register');?>">注册</a></dd>
+                </dl>
+            </li>
+            {/if}
+        </ul>
+    </div>
+</div>
+
+{block name="body"} {/block}
+
+<div class="footer-bottom copyright_info hidden-xs">
+    <div class="links">
+        友情链接：
+        <ul>
+            {volist name="friend_link" id="link"}
+            <li><a href="{$link.link}" target="_blank">{$link.title}</a></li>
+            {/volist}
+        </ul>
+    </div>
+    Copyright © 2020 <?=request()->host();?> All rights reserved. | <a href="http://www.beian.miit.gov.cn" target="_blank">{:config('system.site.icp')}</a>
+</div>
+
+<script src="__STATIC__/libs/layui/layui.js"></script>
+<script type="text/javascript" src="__STATIC__/js/home/common.js"></script>
+
+{include file="../common/kefu" /}
+
+{block name="js"}
+
+{/block}
+</body>
+</html>

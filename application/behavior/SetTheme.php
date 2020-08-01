@@ -9,7 +9,7 @@
 
 /**
  * Created by PhpStorm.
- * Script Name: ${FILE_NAME}
+ * Script Name: SetTheme.php
  * Create: 2020/2/29 下午10:37
  * Description: set theme files position
  * Author: Doogie<461960962@qq.com>
@@ -25,11 +25,12 @@ class SetTheme
     {
         $root_path = env('root_path');
         $model = request()->module();
-        if (request()->isMobile()) {
+        /*if (request()->isMobile()) {
             $view_path = $root_path . 'themes/mobile/' . $model . '/';
         } else {
             $view_path = $root_path . 'themes/pc/' . $model . '/';
-        }
+        }*/
+        $view_path = $root_path . 'themes/pc/' . $model . '/';
         View::config('view_path', $view_path);
     }
 }

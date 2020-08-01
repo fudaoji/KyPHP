@@ -3,7 +3,6 @@
 <head>
     {include file="../common/header" /}
     <style>
-        .main-logo{background-image: url('<?=config("system.site.logo") ? config("system.site.logo") :"/public/static/imgs/admin/logo.png";?>') !important;}
         {if !empty($screen_size) && $screen_size == 1}
         .header{min-width: auto;}
         .wrap{width: 100%;}
@@ -25,7 +24,11 @@
 <div class="header">
     <div class="wrap">
         <div class="logo">
-            <h1 class="main-logo"><a href="{:url('mp/mp/index')}"></a></h1>
+            <h1 class="main-logo">
+                <a href="/">
+                    <img src='<?=config("system.site.logo") ? config("system.site.logo") : "/public/static/imgs/logo.png";?>' alt="">
+                </a>
+            </h1>
             <div class="sub-logo"></div>
         </div>
         <div class="nav">
@@ -39,12 +42,6 @@
             </ul>
         </div>
         <ul class="layui-nav">
-            <li class="layui-nav-item kefu-nav">
-                <a href="javascript:;">
-                    <i class="fa fa-headphones"></i>
-                </a>
-                <img src="{:config('system.site.kefu')}" class="hide">
-            </li>
             <li class="layui-nav-item ">
                 <a href="{:url('system/notice/index')}">
                     <i class="fa fa-bullhorn" style="margin-right: 2px;"></i>
@@ -169,12 +166,6 @@
 
         var screenSize = parseInt("{$screen_size}");
         $('.set-screen').text(screenSize > 0 ? '正常' : '宽屏' );
-        //客服图标
-        $('.kefu-nav').hover(function () {
-            $(this).find('img').removeClass('hide');
-        }, function () {
-            $(this).find('img').addClass('hide');
-        });
     });
 
     //清空缓存
@@ -222,7 +213,7 @@
         });
     };
 </script>
-
+{include file="../common/kefu" /}
 {block name="js"}{/block}
 
 {include file="../common/footer" /}

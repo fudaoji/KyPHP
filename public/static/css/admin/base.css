@@ -53,8 +53,9 @@ a { text-decoration: none; }
 
 .header {min-width: 1200px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border-bottom: 1px solid rgb(217, 218, 220); }
 .header .logo { float: left; padding: 10px 15px 10px 0px; }
-.header .main-logo { float: left; width: 268px; margin-right: 12px; background: rgba(0, 0, 0, 0)  no-repeat scroll 0% 0%; }
-.header .main-logo a { display: block; height: 36px; line-height: 999px; overflow: hidden; }
+.header .main-logo { float: left; margin-right: 25px;}
+.header .main-logo img { max-height: 40px;}
+.header .main-logo a { display: block; height: 40px;  overflow: hidden; }
 .header .sub-logo { float: left; width: 100px; height: 18px; margin-top: 12px; display: none; }
 .header .nav { float: left; position: relative; bottom: -1px; }
 .header .nav li { float: left; }
@@ -68,7 +69,6 @@ a { text-decoration: none; }
 .header .layui-nav-more{border-top-color: #222;}
 .header .layui-nav-mored{border-bottom-color: #222;border-top-color: #fff;}
 .header .kefu-nav a:hover{border-bottom: none;}
-.header .kefu-nav img{width: 180px;position: absolute;z-index: 1001;left: -60px;top: 45px;border: 1px solid #e7e6eb;}
 .wrap { width: 1200px; margin: 0 auto; position: relative;}
 
 .footer { padding-bottom: 30px; color: rgb(141, 141, 141); text-align: center; font: 12px/1.6 tahoma,arial,"Hiragino Sans GB",宋体,sans-serif; }

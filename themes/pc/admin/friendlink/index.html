@@ -1,0 +1,50 @@
+{extend name="../layout/base" /}
+
+{block name="tool_bar"}
+<div class="layui-row">
+    <div class="layui-col-md3 layui-col-md-offset9 tr">
+        <a href="{:url('add')}" class="layui-btn layui-btn-sm bg-success">增加友链</a>
+    </div>
+</div>
+{/block}
+
+{block name="body"}
+<div >
+    <table class="layui-table" lay-even="" lay-skin="line">
+        <colgroup>
+            <col>
+            <col>
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th>名称</th>
+            <th>链接</th>
+            <th>排序</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="data_list" id="vo"}
+        <tr>
+            <td>{$vo.title}</td>
+            <td><a class="bt-a" href="{$vo.link}" target="_blank">{$vo.link}</a></td>
+            <td>{$vo.sort}</td>
+            <td>{if condition="$vo.status eq '1'"}正常{else/}禁用中{/if}</td>
+            <td>
+                <a class="bt-a" href="{:url('edit',['id'=>$vo.id])}">编辑</a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    <div id="page">{$page|raw}</div>
+</div>
+{/block}
+
+{block name="js"}
+<script>
+
+</script>
+{/block}

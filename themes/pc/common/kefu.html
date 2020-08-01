@@ -1,0 +1,32 @@
+<style>
+    .hide{display: none;}
+    .service-img{
+        position: fixed;
+        right: 65px;
+        bottom: 16px;
+        z-index: 999999;
+        width: 180px;
+        border: 1px solid #e7e6eb;
+    }
+</style>
+
+<img src="{:config('system.site.kefu')}" class="hide service-img">
+<script>
+    layui.use(["jquery", "util"], function () {
+        var f = layui.jquery,
+            d = layui.util;
+
+        setTimeout(function () { //客服
+            f("body").find('.layui-fixbar li:first-child,.service-img').hover(function () {
+                f('.service-img').removeClass('hide');
+            }, function () {
+                f('.service-img').addClass('hide');
+            });
+        }, 1500);
+
+        d.fixbar({
+            bar1: '&#xe626;'
+            ,bgcolor: "#44b549"
+        })
+    });
+</script>

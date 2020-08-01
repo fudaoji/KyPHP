@@ -1,0 +1,111 @@
+{extend name="../layout/frontend" /}
+
+
+{block name="body"}
+<div class="layui-carousel" id="swiper">
+    <div carousel-item>
+        <div style="background: url(__STATIC__/imgs/home/banner1.png) no-repeat center; background-size: cover;">
+            <div class="banner-dott">
+                <div class="layui-container">
+                    <div class="layui-row">
+                        <div class="layui-col-xs12 ">
+                            <h1>微信全行业营销平台</h1>
+                            <p><i class="layui-icon layui-icon-rate-solid"></i>全渠道小程序电商解决方案 &nbsp;&nbsp;&nbsp; 助力企业构建私域流量进入品牌电商新时代</p>
+                            <p><i class="layui-icon layui-icon-rate-solid"></i>赋能线下门店，重构消费连接</p>
+                            <p><i class="layui-icon layui-icon-rate-solid"></i>开启卖货“新机遇” &nbsp;&nbsp;&nbsp;助力商家实现流量高效变现</p>
+                            <p><i class="layui-icon layui-icon-rate-solid"></i>实现小程序+公众号餐饮解决方案 &nbsp;&nbsp;&nbsp;营销+会员+点餐+支付+外卖等应用打造餐饮一体化服务 &nbsp;&nbsp;&nbsp;免费试用</p>
+                            <a href="{:url('system/index/index')}" class="layui-btn go-login">
+                                <i class="layui-icon layui-icon-release"></i> 即可体验
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section" nav-id="description" style="padding-bottom: 15px;">
+    <div class="section-title">
+        <h2>解决方案</h2>
+    </div>
+    <div class="layui-container">
+        <div class="layui-row">
+
+            <div class="layui-col-md4 layui-col-sm6">
+                <div class="feature">
+                    <i class="layui-icon layui-icon-cart"></i>
+                    <h3>微商城</h3>
+                    微商城解决方案致力于为零售业提供多渠道电商解决方案，通过自建商城，以及营销系统、分销系统、会员系统帮助企业搭建新一代微商城销售体系，快速实现去中心化流量聚合，客户粉丝沉淀，助力企业快速步入移动电商时代。
+                </div>
+            </div>
+
+            <div class="layui-col-md4 layui-col-sm6">
+                <div class="feature">
+                    <i class="layui-icon layui-icon-chart-screen"></i>
+                    <h3>智慧零售解决方案</h3>
+                    智慧零售解决方案是一款面向线下零售门店的一体化多渠道零售解决方案。智慧零售以在线商城、门店收银、多渠道进销存、客户管理、互动营销、数据分析在内的六大核心服务，实现线上线下商品、会员、场景的互联互通，助推企业快速实现营销、服务、效率转型升级。
+                </div>
+            </div>
+
+            <div class="layui-col-md4 layui-col-sm6">
+                <div class="feature">
+                    <i class="layui-icon layui-icon-fire"></i>
+                    <h3>餐饮解决方案</h3>
+                    智慧餐厅完美整合营销、会员、外卖、支付、商城等餐厅经营所需的所有功能，通过微信营销和会员管理帮助餐厅多渠道吸引新客到店，通过多样化营销促进客户二次消费，同时让老客主动帮助商家带来新客，为餐饮商户提供国内领先餐厅O2O解决方案。
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md4 layui-col-sm6">
+                <div class="feature">
+                    <i class="layui-icon layui-icon-diamond"></i>
+                    <h3>美业解决方案</h3>
+                    智慧美业，美业行业小程序+公众号一体化解决方案。适合美发、美甲、美睫、美容、SPA、芊体瘦身等美业。致力于帮助美业商家完成吸粉，客户转化，会员复购等一系列经营流程。深度对接商家微信公众号，支持线上下单购买，线下到店消费，协助商家打造自己的线上门店，拓展门店业务，最终实现互联网转型。
+                </div>
+            </div>
+
+            <div class="layui-col-md4 layui-col-sm6">
+                <div class="feature">
+                    <i class="layui-icon layui-icon-location"></i>
+                    <h3>酒店解决方案</h3>
+                    智慧酒店解决方案集成酒店业所需的重要功能，如客房管理、房间状态管理、线上预约、线上购物、会员管理和营销活动，以协助酒店通过线上渠道扩大其客户群，发展社交粉丝。并通过完善的线下客房管理减少人工成本，增加营业收入。
+                </div>
+            </div>
+
+            <div class="layui-col-md4 layui-col-sm6">
+                <div class="feature">
+                    <i class="layui-icon layui-icon-find-fill"></i>
+                    <h3>教育营销解决方案</h3>
+                    基于海量数据资源和先进的AI能力，构建营销线索管理平台，挖掘高价值潜客，营销智能触达，助力教育客户低成本、高效拓客。
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+<script type="text/javascript" src="__STATIC__/js/home/index/index.js"></script>
+{/block}
+{block name="css"}
+<style>
+    .banner-dott {
+        color: #fff;
+        background: url(__STATIC__/imgs/home/dott.png)repeat 0px 0px;
+        background-size: 2px;
+        -webkit-background-size: 2px;
+        -moz-background-size: 2px;
+        -o-background-size: 2px;
+        -ms-background-size: 2px;
+        width: 100%;
+        height: 100%;
+        font-size: 1.5em;
+    }
+    .banner-dott  h1{margin: 50px auto;font-size: 2.5em;}
+    .banner-dott  p{line-height: 40px;}
+    .banner-dott i{margin-right: 10px;font-size: 1.1em;}
+    .go-login{margin: 30px;}
+</style>
+{/block}
+

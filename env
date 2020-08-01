@@ -17,6 +17,7 @@ database=rhaphp
 username=fdj
 password=fdj@oudewa
 port=3306
+prefix=ky_
 
 ;memcache配置
 [memcached]
