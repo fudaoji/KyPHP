@@ -57,7 +57,7 @@
 1.  拉取项目
 2.  在项目根目录下`cp env .env`, 修改.env对应的配置信息
 3.  将项目目录下的install.sql导入数据库
-4.  修改runtime、public/uploads、addons 的读写权限
+4.  修改runtime、public/uploads、addons、data 的读写权限
 5.  根目录下执行 `composer update`
 6.  默认超管账号：admin 密码：123456
 
