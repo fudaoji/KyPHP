@@ -393,21 +393,25 @@ class BaseModel extends Model
     /**
      * 条件链接器
      * @param $self
-     * @param array $where 两种情况[id=>1]或[[id=>1], ['name' => ['like', '%ddd%']]]
+     * @param array $where
      * @Author: Doogie <461960962@qq.com>
      * @return BaseModel
      */
     private function _where(&$self, $where=[]){
         if($where){
+            if(isset($where['or'])){
+                //高级查询: https://www.kancloud.cn/manual/thinkphp5_1/354030
+                //SELECT * FROM `think_user` WHERE ( `name` LIKE 'thinkphp%' AND `title` LIKE '%thinkphp' ) OR ( `name` LIKE 'kancloud%' AND `title` LIKE '%kancloud' )
+                $self->whereOr($where['or']);
+                return  $self;
+            }
             foreach($where as $k => $w){
                 if(! is_int($k)){
-                    $self->where(new Where($where));
+                    $self->where(new Where($where));  //兼容旧版数组查询条件： [id=>1, name=>'sss']
                     break;
-                }
-                if(is_array($w) && count($w) >= 3){
-                    $self->where($w[0], $w[1], $w[2]);  //[['name', 'like', '%ddd%']]
                 }else{
-                    $self->where($w);   //[[id=>1], ['name' => ['like', '%ddd%']]]
+                    $self->where($where); //新版鼓励形式： [['id', '=', 1], ['name', '=', 'sss']]
+                    break;
                 }
             }
         }

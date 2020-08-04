@@ -373,7 +373,7 @@ class Template extends Base
                         "restUrl" => "https://".$http_host."/app/gxtea/api/",
                         //"qiniuRegion" => "SCN",
                         "qiniuDomain" => config('system.upload.qiniu_domain'),
-                        "appKey" => $this->miniAddonInfo['infos']['app_key'],
+                        "appKey" => config('app_key'),
                         "mapKey" => config('system.common.map_qq_key'),
                         "version" => $post_data['user_version']
                     ],

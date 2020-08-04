@@ -38,7 +38,7 @@
                 </td>
                 <th>{if condition="$vo.status=='1'"} 正常{else/}停用{/if}</th>
                 <td>
-                    <a class="bt-a" href="{:url('mini/index/index',['store_id'=>$vo['id']])}">进入小程序</a>
+                    <a class="bt-a" href="{:url('mini/index/index',['mini_id'=>$vo['id']])}">进入小程序</a>
                     <a class="bt-a" href="{:url('info', ['store_id'=>$vo['id']])}">管理设置</a>
                 </td>
             </tr>

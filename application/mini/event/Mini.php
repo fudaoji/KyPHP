@@ -19,6 +19,7 @@ namespace app\mini\event;
 use app\common\event\Base;
 use app\common\model\AdminStore;
 use EasyWeChat\Factory;
+use ky\ErrorCode;
 use think\Db;
 use think\facade\Log;
 
@@ -100,5 +101,40 @@ class Mini extends Base
         }
 
         return $result;
+    }
+
+    /**
+     * 获取小程序支付配置
+     * @param int $mini_id
+     * @return array
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function getPayConfig($mini_id = 0){
+        $setting = model('common/miniSetting')->getOneByMap(['mini_id' => $mini_id, 'name' => 'wxpay']);
+        $config = json_decode($setting['value'], true);
+        if(empty($config)){
+            abort(ErrorCode::WxpayException, '请先配置小程序支付参数');
+        }
+        $base_path = ROOT_PATH . 'data/mini/';
+        if(! is_dir($base_path)){
+            mkdir($base_path, 0755, true);
+        }
+        $cert_path = $base_path . md5($mini_id . '_apiclient_cert.pem');
+        $key_path = $base_path . md5($mini_id . '_apiclient_key.pem');
+        $rsa_path = $base_path . md5($mini_id . '_public_rsa.pem');
+        if(!file_exists($key_path) || !file_exists($cert_path) || !file_exists($rsa_path)){
+            !empty($config['cert_path']) && file_put_contents($cert_path, $config['cert_path']);
+            !empty($config['key_path']) && file_put_contents($key_path, $config['key_path']);
+            !empty($config['rsa_path']) && file_put_contents($rsa_path, $config['rsa_path']);
+        }
+        return [
+            'appid'     => $config['appid'],
+            'appsecret' => $config['secret'],
+            'mchid'     => $config['merchant_id'], //商户号
+            'key'       => $config['key'], //API秘钥
+            'sslcert_path' => $cert_path,
+            'sslkey_path' => $key_path,
+            'rsa_path'  => $rsa_path
+        ];
     }
 }

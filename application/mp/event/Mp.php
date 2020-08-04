@@ -113,9 +113,9 @@ class Mp extends Base
         $key_path = $base_path . md5($mpid . '_apiclient_key.pem');
         $rsa_path = $base_path . md5($mpid . '_public_rsa.pem');
         if(!file_exists($key_path) || !file_exists($cert_path) || !file_exists($rsa_path)){
-            file_put_contents($cert_path, empty($config['cert_path']) ? '' : $config['cert_path']);
-            file_put_contents($key_path, empty($config['key_path']) ? '' : $config['key_path']);
-            file_put_contents($rsa_path, empty($config['rsa_path']) ? '' : $config['rsa_path']);
+            !empty($config['cert_path']) && file_put_contents($cert_path, $config['cert_path']);
+            !empty($config['key_path']) && file_put_contents($key_path, $config['key_path']);
+            !empty($config['rsa_path']) && file_put_contents($rsa_path, $config['rsa_path']);
         }
         return [
             'appid'     => $config['appid'],
