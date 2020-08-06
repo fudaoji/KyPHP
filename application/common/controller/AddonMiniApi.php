@@ -46,6 +46,7 @@ class AddonMiniApi extends BaseCtl
      * @var string
      */
     protected $addonAction;
+    protected $mpAddon;
 
     public function initialize()
     {
@@ -55,6 +56,7 @@ class AddonMiniApi extends BaseCtl
             $this->setMiniInfo();
             $this->setApp();
             $this->setAddonInfo();
+            $this->setMpAddon();
         }else{
             abort(ErrorCode::CatchException, '非法请求');
         }
@@ -77,6 +79,15 @@ class AddonMiniApi extends BaseCtl
         }else{
             Helper::error(ErrorCode::BadParam, '请先在电脑端进行应用配置');
         }
+    }
+
+    /**
+     * 设置小程序与应用关联信息
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    protected function setMpAddon(){
+        $this->mpAddon = model('common/miniAddon')->getOneByMap(['mini_id' => $this->miniId, 'addon' => $this->addonName], 'infos');
+        $this->mpAddon && $this->mpAddon['infos'] = json_decode($this->mpAddon['infos'], true);
     }
 
     /**

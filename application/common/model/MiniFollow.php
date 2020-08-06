@@ -28,4 +28,19 @@ class MiniFollow extends BaseModel
         'type' => 'mod', // 分表方式
         'num'  => 5      // 分表数量
     ];
+
+    /**
+     * 性别
+     * @param null $id
+     * @return array|mixed
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public static function genders($id = null){
+        $list = [
+            0 => '未知',
+            1 => '男',
+            2 => '女'
+        ];
+        return isset($list[$id]) ? $list[$id] : $list;
+    }
 }

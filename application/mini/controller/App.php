@@ -88,7 +88,7 @@ class App extends Base
                 }
             }
         }
-        //dump($addon_menu);exit;
+
         $is_show_config_menu = false;
         if (!empty($addon_local['config']) || (isset($addon_local['is_theme']) && $addon_local['is_theme'] == true)
         ) {
