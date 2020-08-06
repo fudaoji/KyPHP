@@ -230,7 +230,7 @@ class Template extends Base
             ],
             'limit' => [0, 1],
             'order' => ['id' => 'desc'],
-            'where' => ['mtl.status' => 4],
+            'where' => ['mini_id' => $this->miniId, 'mtl.status' => 4],
             'field' => 'a.logo,a.name,mtl.*',
             'refresh' => true
         ]);
@@ -243,7 +243,7 @@ class Template extends Base
             ],
             'limit' => [0, 1],
             'order' => ['id' => 'desc'],
-            'where' => ['mtl.status' => ['in', [1,2,3,6]]],
+            'where' => ['mini_id' => $this->miniId,'mtl.status' => ['in', [1,2,3,6]]],
             'field' => 'a.logo,a.name,mtl.*',
             'refresh' => true
         ]);
@@ -254,7 +254,7 @@ class Template extends Base
             'join' => [
                 ['addons a', 'a.addon=mtl.addon']
             ],
-            'where' => ['mtl.is_current' => 1],
+            'where' => ['mini_id' => $this->miniId, 'mtl.is_current' => 1],
             'field' => 'a.logo,a.name,mtl.*',
             'refresh' => true
         ]);
