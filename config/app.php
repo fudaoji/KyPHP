@@ -20,6 +20,7 @@ return [
     'app_title'              => Env::get('app_title', '酷在云端微信营销平台'),
     'app_prefix'             => Env::get('app_prefix', 'ky_'),
     'app_key'                => Env::get('app_key', '9eT8gFN2J1ef1118fadfegas1DDewrqw'),
+    'queue_name'             => Env::get('queue', 'kyphp'),   //任务队列名，请务必与supervisor配置文件中的名称一致
     'version'                => 'v1.0.0',
     'founder_id'             => 1,  //创始人ID
     // 应用地址
@@ -34,7 +35,8 @@ return [
     'auto_bind_module'       => false,
     // 注册的根命名空间
     'root_namespace'         => [
-        'addons'=> ADDON_PATH
+        'addons'=> ADDON_PATH,
+        'miniapp'=> MINIAPP_PATH,
     ],
     // 默认输出类型
     'default_return_type'    => 'html',

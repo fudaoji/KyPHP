@@ -23,6 +23,11 @@ use ky\Upload\Driver\Qiniu;
 
 class Base
 {
+    public function __construct()
+    {
+        model('common/setting')->settings();
+    }
+
     /**
      * 获取开放平台
      * @return \EasyWeChat\OpenPlatform\Application

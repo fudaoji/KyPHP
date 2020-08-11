@@ -20,7 +20,7 @@ class ErWeiCode
 {
     private $error;
     private $config = [
-        'savePath' => UPLOAD_PATH . 'qrcode/',
+        'savePath' => './public/uploads/qrcode/',
         'rootPath' => '',
     ];
 
@@ -97,7 +97,7 @@ class ErWeiCode
             imagecopyresampled ( $qr, $logo, $from_width, $from_width, 0, 0, $logo_qr_width, $logo_qr_height, $logo_width, $logo_height );
             @unlink('./' . $code);
             imagepng ( $qr, './' . $code );//带Logo二维码的文件名
-            return $qr_code;
+            return $code;
         }else{
             $this->setError('logo图片无法访问');
             return false;

@@ -19,6 +19,7 @@ class AddonAdmin extends Addon
 {
     protected $adminId;
     protected $adminInfo;
+    protected $mpInfo = [];
 
     public function initialize()
     {
@@ -36,5 +37,18 @@ class AddonAdmin extends Addon
         if (empty($this->adminInfo)) {
             echo "请先登录";exit;
         }
+    }
+
+    /**
+     * 公众号/小程序信息
+     * @return array
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    protected function getMpInfo(){
+        $this->mpInfo = model('common/mp')->getOne($this->mid);
+        if(empty($this->mpInfo)){
+            $this->mpInfo = model('common/mini')->getOne($this->mid);
+        }
+        return $this->mpInfo;
     }
 }

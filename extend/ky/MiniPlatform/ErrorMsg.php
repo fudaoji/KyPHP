@@ -64,6 +64,7 @@ class ErrorMsg
             41008 => '缺失code参数',
             41009 => '缺失openid参数',
             41010 => '缺失url参数',
+            41030 => 'page页面不存在，或者小程序没有发布',
             42001 => 'access_token超时',
             42002 => 'refresh_token超时',
             42003 => 'code超时',

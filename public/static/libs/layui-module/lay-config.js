@@ -13,6 +13,7 @@ layui.config({
     base: rootPath + "module/",
     version: true
 }).extend({
+    excel: 'layui-excel/excel.min',  //http://excel.wj2015.com/_book/
     formSelects: 'formSelects/formSelects-v4',  //下拉框多选  https://hnzzmsf.github.io/example/example_v4.html
     step: 'step-lay/step', // 分步表单扩展  http://layuimini.99php.cn/onepage/v2/index.html#/page/form-step.html
     treetable: 'treetable-lay/treetable', //table树形扩展

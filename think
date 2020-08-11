@@ -11,7 +11,8 @@
 // +----------------------------------------------------------------------
 
 namespace think;
-
+// 加载常量定义文件
+require __DIR__ . '/define.php';
 // 加载基础文件
 require __DIR__ . '/thinkphp/base.php';
 

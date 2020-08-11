@@ -10,6 +10,47 @@
 // +----------------------------------------------------------------------
 
 /**
+ * 短连接生成
+ * @param string $url
+ * @return false|string
+ * Author: fudaoji<fdj@kuryun.cn>
+ */
+function short_url($url = ''){
+    $api_url = 'https://tinyurl.com/create.php';
+    $content = http_post($api_url, ['url' => $url]);
+    $pattern = '/<b>(.+)<\/b><div id="success">.*<\/div>/U';
+    preg_match($pattern, $content,$dir);
+    return  (is_array($dir) && count($dir) >=2) ? $dir[1] : '' ;
+}
+
+/**
+ * 生成二维码
+ * @param array $params
+ * @return string
+ * Author: fudaoji<fdj@kuryun.cn>
+ */
+function generate_qr($params = []){
+    try {
+        $qrClass = new \ky\ErWeiCode();
+        $file_name = $params['file_name'] . '.png';
+        $size = empty($params['size']) ? 6 : $params['size'];
+        $margin = empty($params['margin']) ? 2 : $params['margin'];
+        $qr_url = empty($params['logo'])
+            ? $qrClass->qrCode($params['text'], $file_name, QR_ECLEVEL_H, $size, $margin, false)
+            : $qrClass->qrCodeWithLogo($params['text'], $file_name, QR_ECLEVEL_H, $size, $margin, false, $params['logo']);
+        $qiniu_url = fetch_to_qiniu(request()->domain() . $qr_url, 'qrcode_' . $params['file_name'] . time());
+        if ($qiniu_url) {
+            @unlink('.' . $qr_url);
+        }
+        unset($qrClass, $text, $file_name, $qr_url, $qiniuClass, $qiniu_key);
+    } catch (\Exception $e) {
+        \think\facade\Log::write($e->getMessage());
+        $qiniu_url = ' ';
+    }
+    return $qiniu_url;
+}
+
+/**
  * 过滤掉emoji表情
  * @param $str
  * @return mixed
