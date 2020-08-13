@@ -225,7 +225,7 @@
         $('.js-view-demo').on('click', function () {
 
             var src = $(this).data('src')
-            ,id = parseInt($(this).data('src'));
+            ,id = parseInt($(this).data('id'));
             if(src === ''){
                 var loadingIndex = layer.load(1);
                 $.post("{:url('getTestQrCode')}", {id: id}, function (res) {
