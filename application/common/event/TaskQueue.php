@@ -17,6 +17,7 @@
 
 namespace app\common\event;
 use ky\ErrorCode;
+use think\facade\Log;
 use think\Queue;
 
 class TaskQueue extends Base
@@ -38,5 +39,15 @@ class TaskQueue extends Base
         }else{
             Queue::later($params['delay'], $worker, $params['params'], $queue);
         }
+    }
+
+    /**
+     * 任务队列测试消费者
+     * @param $data
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function testTask($data){
+        echo '测试任务队列执行';
+        Log::error('测试任务队列执行');
     }
 }
