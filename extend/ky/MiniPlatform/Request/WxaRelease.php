@@ -13,7 +13,7 @@ class WxaRelease
 {
     private $url = "https://api.weixin.qq.com/wxa/release";
     private $getParams = array();
-    private $postParams = array(1);
+    private $postParams = array('{}');
 
     /**
      * 获取请求url

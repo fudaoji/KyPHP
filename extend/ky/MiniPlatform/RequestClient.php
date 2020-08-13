@@ -53,9 +53,9 @@ class RequestClient
             $postBodyString = "";
             $postMultipart = false;
             foreach($postFields as $k => $v) {
-                if(is_int($k)){
-                    unset($postFields[$k]);
-                    continue;
+                if(is_int($k) && count($postFields) == 1){ //例如发布小程序就是这种情况
+                    $postBodyString = '{}';
+                    break;
                 }
                 if("@" != @substr($v, 0, 1)) { // 判断是不是文件上传
                     $postBodyString = json_encode($postFields, JSON_UNESCAPED_UNICODE);
@@ -66,14 +66,12 @@ class RequestClient
             }
             unset($k, $v);
             curl_setopt($ch, CURLOPT_POST, true);
-            if(count($postFields)){
-                if($postMultipart) {
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
-                }else {
-                    //curl_setopt($ch, CURLOPT_POSTFIELDS, substr($postBodyString, 0, -1));
-                    // 发送模版消息时，对转换为json后的数据，不能截取掉最后一个字符
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $postBodyString);
-                }
+            if($postMultipart) {
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+            }else {
+                //curl_setopt($ch, CURLOPT_POSTFIELDS, substr($postBodyString, 0, -1));
+                // 发送模版消息时，对转换为json后的数据，不能截取掉最后一个字符
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $postBodyString);
             }
         }
 
