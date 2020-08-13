@@ -224,8 +224,8 @@
         //点击体验码
         $('.js-view-demo').on('click', function () {
 
-            var src = $(this).data('src');
-            console.log(src);
+            var src = $(this).data('src')
+            ,id = parseInt($(this).data('src'));
             if(src === ''){
                 var loadingIndex = layer.load(1);
                 $.post("{:url('getTestQrCode')}", {id: id}, function (res) {
