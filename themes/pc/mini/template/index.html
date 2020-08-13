@@ -186,7 +186,9 @@
                 $.post("{:url('releasePost')}", {id: $(this).data('id')}, function (res) {
                     layer.close(loadingIndex);
                     if(res.code === 1){
-                        location.reload();
+                        layer.msg(res.msg, {time: 1500}, function () {
+                            location.reload();
+                        });
                     }else{
                         layer.alert(res.msg);
                     }
