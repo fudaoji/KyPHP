@@ -66,12 +66,14 @@ class RequestClient
             }
             unset($k, $v);
             curl_setopt($ch, CURLOPT_POST, true);
-            if($postMultipart) {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
-            }else {
-                //curl_setopt($ch, CURLOPT_POSTFIELDS, substr($postBodyString, 0, -1));
-                // 发送模版消息时，对转换为json后的数据，不能截取掉最后一个字符
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $postBodyString);
+            if(count($postFields)){
+                if($postMultipart) {
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+                }else {
+                    //curl_setopt($ch, CURLOPT_POSTFIELDS, substr($postBodyString, 0, -1));
+                    // 发送模版消息时，对转换为json后的数据，不能截取掉最后一个字符
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $postBodyString);
+                }
             }
         }
 
