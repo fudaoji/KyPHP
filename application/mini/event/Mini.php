@@ -84,19 +84,17 @@ class Mini extends Base
         if($mini = model('Mini')->getOneByMap(['appid' => $insert_data['appid']], true, true)) {
             $insert_data['id'] = $mini['id'];
             $result = model('Mini')->updateOne($insert_data);
-        }else {
-            if($uid){
-                Db::startTrans();
-                try {
-                    $store = model('adminStore')->addOne(['uid' => $uid, 'type' => AdminStore::MINI]);
-                    $insert_data['uid'] = $uid;
-                    $insert_data['id'] = $store['id'];
-                    $result = model('Mini')->addOne($insert_data);
-                    Db::commit();
-                }catch (\Exception $e){
-                    Db::rollback();
-                    Log::write($e->getMessage());
-                }
+        }elseif($uid || $insert_data['appid'] === 'wxd101a85aa106f53e'){
+            Db::startTrans();
+            try {
+                $store = model('adminStore')->addOne(['uid' => $uid, 'type' => AdminStore::MINI]);
+                $insert_data['uid'] = $uid;
+                $insert_data['id'] = $store['id'];
+                $result = model('Mini')->addOne($insert_data);
+                Db::commit();
+            }catch (\Exception $e){
+                Db::rollback();
+                Log::write($e->getMessage());
             }
         }
 

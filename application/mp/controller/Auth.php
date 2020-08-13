@@ -53,7 +53,7 @@ class Auth extends Base
             $authorizer_info = $this->openPlatform->getAuthorizer($appId);
             $result = controller('mp', 'event')->updateAuthInfo($authorizer_info, $this->adminId);
         } catch (\Exception $e){
-            Log::write(json_encode($e->getMessage()));
+            Log::error(json_encode($e->getMessage()));
             $result = false;
         }
 

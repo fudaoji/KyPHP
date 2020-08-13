@@ -17,6 +17,8 @@
 namespace app\mp\controller;
 
 
+use EasyWeChat\Kernel\Messages\Text;
+
 class Index extends Base
 {
     /**

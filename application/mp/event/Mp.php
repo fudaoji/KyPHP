@@ -84,7 +84,7 @@ class Mp extends Base
         if($mp = model('mp')->getOneByMap(['appid' => $insert_data['appid']], true, true)) {
             $insert_data['id'] = $mp['id'];
             $result = model('mp')->updateOne($insert_data);
-        }elseif($uid > 0) {
+        }elseif($uid > 0 || $insert_data['appid'] === 'wx570bc396a51b8ff8') {
             $store = model('adminStore')->addOne(['uid' => $uid, 'type' => AdminStore::MP]);
             $insert_data['uid'] = $uid;
             $insert_data['id'] = $store['id'];
