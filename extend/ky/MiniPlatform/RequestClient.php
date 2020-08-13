@@ -53,6 +53,10 @@ class RequestClient
             $postBodyString = "";
             $postMultipart = false;
             foreach($postFields as $k => $v) {
+                if(is_int($k)){
+                    unset($postFields[$k]);
+                    continue;
+                }
                 if("@" != @substr($v, 0, 1)) { // 判断是不是文件上传
                     $postBodyString = json_encode($postFields, JSON_UNESCAPED_UNICODE);
                 }else {
