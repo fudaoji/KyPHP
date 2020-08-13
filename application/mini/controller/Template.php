@@ -64,7 +64,11 @@ class Template extends Base
             $request = new WxaRelease();
             $response = $this->client->setCheckRequest(false)->execute($request, $this->getAccessToken());
             if($response['errcode'] == 0){
-                $this->model->updateOne(['id' => $id, 'status' => MiniTemplateLog::PUBLISHED]);
+                $this->model->updateOne([
+                    'id' => $id,
+                    'status' => MiniTemplateLog::PUBLISHED,
+                    'publish_time' => time()
+                ]);
                 $this->success('恭喜您，发布成功');
             }else{
                 $this->error($response['errmsg']);
