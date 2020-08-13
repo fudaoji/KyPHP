@@ -4,6 +4,7 @@
  * Script Name: WxaRelease.php
  * Create: 2018/9/4 14:16
  * Description: 发布已通过审核的小程序
+ * @link https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/release.html
  * Author: Jason<dcq@kuryun.cn>
  */
 namespace ky\MiniPlatform\Request;
@@ -12,7 +13,7 @@ class WxaRelease
 {
     private $url = "https://api.weixin.qq.com/wxa/release";
     private $getParams = array();
-    private $postParams = array('{}');
+    private $postParams = array();
 
     /**
      * 获取请求url
