@@ -43,11 +43,11 @@
                         </p>
                         <p class="info-item">
                             <span class="label">发布时间：</span>
-                            <span class="value">{:date('Y-m-d H:i:s', $verify.publish_time)}</span>
+                            <span class="value">{:date('Y-m-d H:i:s', $publish.publish_time)}</span>
                         </p>
                     </div>
                     <div class="layui-col-xs3">
-                        <button class="layui-btn layui-btn-sm layui-btn-normal js-revert" data-id="{$current.id}">版本回退</button>
+                        <button class="layui-btn layui-btn-sm layui-btn-normal js-revert" data-id="{$publish.id}">版本回退</button>
                     </div>
                 </div>
                 <?php else:?>
