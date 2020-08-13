@@ -115,7 +115,7 @@ class Api
         try {
             $result = PayResults::Init($xml, $this->config['key']);
         } catch (\Exception $e){
-            Logger::setMsgAndCode(json_encode($e->getMessage()), ErrorCode::WxpayException);
+            Logger::setMsgAndCode(json_encode($e->getMessage(), JSON_UNESCAPED_UNICODE), ErrorCode::WxpayException);
         }
 
         $data = $result;

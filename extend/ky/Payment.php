@@ -4,7 +4,7 @@
 // +----------------------------------------------------------------------
 // | [KyPHP] 并不是自由软件,你可免费使用,未经许可不能去掉KyPHP相关版权
 // +----------------------------------------------------------------------
-// | Author: fudaoji <fdj@kuryun.cn>
+// | License  https://gitee.com/fudaoji/KyPHP/blob/master/LICENSE
 // +----------------------------------------------------------------------
 
 /**
@@ -12,7 +12,7 @@
  * Script Name: Payment.php
  * Create: 2017/06/15 下午3:19
  * Description: 各渠道支付
- * Author: Doogie<461960962@qq.com>
+ * Author: fudaoji<fdj@kuryun.cn>
  */
 
 namespace ky;

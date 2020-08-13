@@ -1,10 +1,17 @@
 <?php
+// +----------------------------------------------------------------------
+// | [KyPHP System] Copyright (c) 2020 http://www.kuryun.com/
+// +----------------------------------------------------------------------
+// | [KyPHP] 并不是自由软件,你可免费使用,未经许可不能去掉KyPHP相关版权
+// +----------------------------------------------------------------------
+// | License  https://gitee.com/fudaoji/KyPHP/blob/master/LICENSE
+// +----------------------------------------------------------------------
 /**
  * Script name: Logger.php
  * Created by PhpStorm.
  * Create: 2016/6/14 15:31
  * Description: 日志
- * Author: Doogie<461960962@qq.com>
+ * Author: fudaoji<fdj@kuryun.cn>
  */
 
 namespace ky;
@@ -14,7 +21,7 @@ use think\facade\Log;
 class Logger extends Log
 {
     /**
-     * 抛出异常, 记录错误日志
+     * 抛出异常, 记录错误日志,不直接用tp的abort是因为输出内容太多了，难以错误定位
      * @param string $msg
      * @param int $code
      * @throws \Exception
