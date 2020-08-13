@@ -77,11 +77,12 @@ class Setting extends Base
         }else{
             $data = json_decode($setting['value'], true);
         }
+        $data['appid'] = $this->miniInfo['appid'];
         $builder = new FormBuilder();
         switch ($current_name){
             case 'wxpay':
                 $builder->setTemplate('common/form')
-                    ->addFormItem('appid', 'text', 'AppId', 'AppId', [], 'required maxlength=150')
+                    ->addFormItem('appid', 'text', 'AppId', 'AppId', [], 'required maxlength=150 readonly')
                     ->addFormItem('secret', 'text', 'Secret', 'Secret', [], 'required maxlength=150')
                     ->addFormItem('merchant_id', 'text', '商户ID', '商户ID', [], 'required maxlength=100')
                     ->addFormItem('key', 'text', '支付秘钥', '支付秘钥', [], 'required maxlength=32 minlength=32')
