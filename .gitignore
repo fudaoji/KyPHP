@@ -8,3 +8,4 @@ thinkphp
 *.txt
 favicon.ico
 composer.lock
+/addons/*

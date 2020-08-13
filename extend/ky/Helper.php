@@ -52,7 +52,7 @@ class Helper
      */
     public static function checkTel($tel='', $type='')
     {
-        $isMob="/^1[3-5,7,8,9]{1}[0-9]{9}$/"; // 手机号码
+        $isMob="/^1[3-9]{1}[0-9]{9}$/"; // 手机号码
         $isTel="/^([0-9]{3,4}-?)?[0-9]{7,8}$/"; // 固定电话
 		switch($type){
 			case 'mobile':
