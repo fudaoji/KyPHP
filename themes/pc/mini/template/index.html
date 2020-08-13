@@ -109,7 +109,7 @@
                         <?php if($verify['status'] == 1):?>
                         <button class="layui-btn layui-btn-sm layui-btn-normal js-cancel-audit" data-id="{$verify.id}">撤回</button>
                         <?php elseif($verify['status'] == 2):?>
-                        <button class="layui-btn layui-btn-sm js-publish">提交发布</button>
+                        <button class="layui-btn layui-btn-sm js-publish" data-id="{$verify.id}">提交发布</button>
                         <?php endif;?>
                     </div>
                 </div>

@@ -59,7 +59,7 @@ class Template extends Base
      * Author: fudaoji<fdj@kuryun.cn>
      */
     public function releasePost(){
-        if(request()->isPost() || 1){
+        if(request()->isPost()){
             $id = input('post.id');
             $request = new WxaRelease();
             $response = $this->client->setCheckRequest(false)->execute($request, $this->getAccessToken());
