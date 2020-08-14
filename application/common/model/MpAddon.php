@@ -21,7 +21,7 @@ use ky\BaseModel;
 class MpAddon extends BaseModel
 {
     protected $isCache = true;
-    
+
     /**
      * 插件信息
      * Author: fudaoji<fdj@kuryun.cn>

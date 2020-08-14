@@ -6,7 +6,7 @@
         <div class="layui-col-xs2">
             <div class="layui-form-item">
                 <select name="type2" lay-filter="types">
-                    <option {if $app_type==''} selected {/if} value="">所有</option>
+                    <option {if $app_type=='all'} selected {/if} value="all">所有</option>
                     <option {if $app_type=='mp'} selected {/if} value="mp">公众号</option>
                     <option {if $app_type=='mini'} selected {/if} value="mini">小程序</option>
                 </select>
