@@ -17,6 +17,8 @@ namespace app\common\controller;
 
 use ky\ErrorCode;
 use ky\Helper;
+use ky\Logger;
+use think\facade\Log;
 
 class AddonMiniApi extends BaseCtl
 {
@@ -104,7 +106,7 @@ class AddonMiniApi extends BaseCtl
             $appid = $header['appid'];
         }
         if(empty($appid)){
-            abort(ErrorCode::CatchException, 'appid参数丢失');
+             Logger::setMsgAndCode('appid参数丢失', ErrorCode::CatchException);
         }
 
         $this->miniInfo = $this->miniM->getOneByMap(['appid' => $appid]);

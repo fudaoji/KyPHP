@@ -13,6 +13,8 @@ use ky\BaseModel;
 
 class Addons extends BaseModel
 {
+    protected $isCache = true;
+
     /**
      * 获取应用的配置文件信息
      * @param string $name

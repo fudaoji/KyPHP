@@ -19,5 +19,5 @@ use ky\BaseModel;
 
 class MiniAddon extends BaseModel
 {
-
+    protected $isCache = true;
 }

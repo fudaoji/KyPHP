@@ -28,8 +28,8 @@ class Logger extends Log
      * @author: Doogie<461960962@qq.com>
      */
     public static  function setMsgAndCode($msg='', $code = ErrorCode::CatchException){
-        Log::error('ErrorCode: ' . $code . '; ErrorMsg: ' . $msg);
-        Log::error('StackInfo:' . self::getStackInfo());
+        Log::write('ErrorCode: ' . $code . '; ErrorMsg: ' . $msg);
+        Log::write('StackInfo:' . self::getStackInfo());
         throw new \Exception($msg, $code);
     }
 

@@ -20,6 +20,8 @@ use ky\BaseModel;
 
 class Mini extends BaseModel
 {
+    protected $isCache = true;
+
     /**
      * 认证类型
      * @param null $id
