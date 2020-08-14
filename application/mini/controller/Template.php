@@ -255,7 +255,7 @@ class Template extends Base
             ],
             'limit' => [0, 1],
             'order' => ['id' => 'desc'],
-            'where' => ['mini_id' => $this->miniId, 'mtl.status' => 4],
+            'where' => ['mini_id' => $this->miniId, 'mtl.status' => MiniTemplateLog::PUBLISHED],
             'field' => 'a.logo,a.name,mtl.*',
             'refresh' => true
         ]);
@@ -268,7 +268,9 @@ class Template extends Base
             ],
             'limit' => [0, 1],
             'order' => ['id' => 'desc'],
-            'where' => ['mini_id' => $this->miniId,'mtl.status' => ['in', [1,2,3,6]]],
+            'where' => [
+                'mini_id' => $this->miniId,
+                'mtl.status' => ['in', [MiniTemplateLog::VERIFYING, MiniTemplateLog::SUCCESS, MiniTemplateLog::FAIL, MiniTemplateLog::DELAY]]],
             'field' => 'a.logo,a.name,mtl.*',
             'refresh' => true
         ]);
@@ -388,7 +390,7 @@ class Template extends Base
             }
 
             //3.上传代码
-            $addon_template = model('addonsTemplate')->getOneByMap(['addon' => $post_data['addon']]);
+            $addon_template = model('addonsTemplate')->getOneByMap(['addon' => $post_data['addon']], true, true);
             $request = new WxaCommit();
             $request->setTemplateId($addon_template['template_id']);
             $ext_json = json_encode([
