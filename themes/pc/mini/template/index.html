@@ -181,9 +181,10 @@
          * 点击发布
          */
         $('.js-publish').on('click', function () {
+            var id = parseInt($(this).data('id'));
             layer.confirm('你确定发布吗？', {}, function () {
                 var loadingIndex = layer.load(1);
-                $.post("{:url('releasePost')}", {id: $(this).data('id')}, function (res) {
+                $.post("{:url('releasePost')}", {id: id}, function (res) {
                     layer.close(loadingIndex);
                     if(res.code === 1){
                         layer.msg(res.msg, {time: 1500}, function () {
