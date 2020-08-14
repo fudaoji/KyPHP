@@ -48,7 +48,6 @@ class TaskQueue extends Base
      */
     public function testTask($data){
         echo '测试任务队列执行';
-        Log::error('测试任务队列执行');
         $job = $data['job'];
         if ($job->attempts() > 2) {
             echo '我要删除任务了';
