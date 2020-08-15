@@ -312,7 +312,7 @@ class App extends Base
         $data = array_merge($data, $this->addonInfoM->getOne($data['id']));
         $data['cates'] = empty($data['cates']) ? [] : explode(',', $data['cates']);
 
-        $cates = array_values(model('addonsCate')->getField('title', ['status' => 1]));
+        $cates = array_values(model('addonsCate')->getField('title', ['status' => 1], true));
         $builder = new FormBuilder();
         $builder->addFormItem('id', 'hidden', 'id', 'id')
             ->addFormItem('cates', 'chosen_multi', '分类标签', '可多选', array_combine($cates, $cates), 'required')
