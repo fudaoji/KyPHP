@@ -151,7 +151,7 @@
                         </p>
                     </div>
                     <div class="layui-col-xs3">
-                        <?php if($current.status == 0):?>
+                        <?php if($current['status'] == 0):?>
                         <button class="layui-btn layui-btn-sm layui-btn-normal js-audit" data-id="{$current.id}">提交审核</button>
                         <?php else:?>
                         <button class="layui-btn layui-btn-sm layui-btn-disabled">提交审核</button>
