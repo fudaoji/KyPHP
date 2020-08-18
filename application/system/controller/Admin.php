@@ -120,9 +120,9 @@ class Admin extends Base
 
             $admin = model('admin')->getOne($post_data['id']);
             if ($admin) {
-                if ($admin['admin_id'] != $this->adminId && $this->adminId != 1) {
+                /*if ($admin['admin_id'] != $this->adminId && $this->adminId != 1) {
                     $this->error('你无权操作', '', ['token' => request()->token()]);//禁用成员不属于当前管理员
-                }
+                }*/
 
                 if (model('admin')->updateOne([
                     'id' => $post_data['id'],
@@ -156,9 +156,9 @@ class Admin extends Base
         }
         if (request()->isPost()) {
             $post_data = input('post.');
-            if ($post_data['admin_id'] != $this->adminId) {
+            /*if ($post_data['admin_id'] != $this->adminId) {
                 $this->error('你无权操作', '', ['token' => request()->token()]);//禁用成员不属于当前管理员
-            }
+            }*/
             $res = $this->validate($post_data,'Admin.edit');
             if($res !== true){
                 $this->error($res, '', ['token' => request()->token()]);
