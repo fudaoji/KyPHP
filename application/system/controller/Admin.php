@@ -120,7 +120,7 @@ class Admin extends Base
 
             $admin = model('admin')->getOne($post_data['id']);
             if ($admin) {
-                if ($admin['admin_id'] != $this->adminId) {
+                if ($admin['admin_id'] != $this->adminId && $this->adminId != 1) {
                     $this->error('你无权操作', '', ['token' => request()->token()]);//禁用成员不属于当前管理员
                 }
 
