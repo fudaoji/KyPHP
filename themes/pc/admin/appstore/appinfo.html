@@ -1,47 +1,37 @@
-{include file="../layout/header" /}
+{extend name="../layout/inline_page_base"/}
 
-<body style="background: #ffffff;">
+{block name="body"}
 <div class="layui-row" id="apps-info">
     <div class="layui-col-xs2 pd">
         <div class="apps-info-logo">
             <img src="{$info.logo}" style="width: 100%;" />
         </div>
     </div>
-    <div class="layui-col-xs8 pd">
+    <div class="layui-col-xs10 pd">
         <div class="layui-row">
-            <div class="layui-col-xs10">
+            <div class="layui-col-xs9">
                 <span class="apps-info-title">{$info.title}
-                    <span class="layui-badge layui-bg-gray">{$info.type}</span>
-                    <span class="layui-badge layui-bg-blue">{if($info.money>0)}
-                                        {$info.money} 元
-                                        {else /}
-                                        免费
-                                        {/if}</span>
+                    <span class="layui-badge layui-bg-gray">{$types[$info.type]}</span>
+                    <span class="layui-badge layui-bg-blue">{$info.price>0 ? ('￥' . $info.price) : '免费'}</span>
                 </span>
                 <div class="apps-info-desc">
-                    <p>作者：{$info.author}</p>
                     <p>版本：{$info.version}</p>
-                    <p>分类：{$info.cate}</p>
-                    <p>创建时间：{$info.create_time}</p>
-                    <p>更新时间：{$info.update_time}</p>
+                    <p>作者：{$info.author}，分类：{:implode('|', explode(',', $info['cates']))}</p>
+                    <p>发布时间：{$info.create_time|date="Y-m-d"}，更新时间：{$info.update_time|date="Y-m-d"}</p>
+                    <div class="install-btn">
+                        <button onclick="downloadApp('{$info.id}')" class="layui-btn layui-btn-sm">
+                            <i class="layui-icon">&#xe601;</i>立即下载
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="layui-col-xs2">
-                <div class="apps-into-install">
-                    <button onclick="downloadApp('{$info.id}')" class="layui-btn layui-btn-sm layui-btn-normal">
-                        <i class="layui-icon">&#xe601;</i>立即下载
-                    </button>
-                </div>
+            <div class="layui-col-xs3 preview-qrcode tc">
+                {if $info.demo_qrcode != ''}
+                <img style="width: 120px;margin: 0 auto 5px;" src="{$info.demo_qrcode}">
+                <p class="apps-info-preview_text">扫码预览</p>
+                {/if}
             </div>
         </div>
-    </div>
-    <div class="layui-col-xs2 pd preview-qrcode">
-        {if $info.preview_url != ''}
-        <img style="width: 100%;margin-top: 0;" src="http://qr.topscan.com/api.php?bg=ffffff&gc=222222&el=q&w=300&m=10&text={:urlencode($info.preview_url)}">
-        <span class="apps-info-preview_text">扫码预览</span>
-        {else/}
-
-        {/if}
     </div>
 </div>
 <hr>
@@ -51,7 +41,7 @@
     <blockquote style="border-left:5px solid  #ea6e0c;" class="layui-elem-quote">{$info.warning|raw}</blockquote>
     应用简介
     <hr>
-    <blockquote class="layui-elem-quote">{$info.description|raw}</blockquote>
+    <blockquote class="layui-elem-quote">{$info.desc|raw}</blockquote>
     <div class="layui-tab layui-tab-card">
         <ul class="layui-tab-title">
             <li class="layui-this">应用详情</li>
@@ -60,7 +50,7 @@
         <div class="layui-tab-content" style="height: auto;">
             <div class="layui-tab-item layui-show">
                 <div class="apps-info-content">
-                    {$info.content|raw}
+                    {$info.detail|raw}
                 </div>
             </div>
             <div class="layui-tab-item">
@@ -85,6 +75,9 @@
     <br>
     <br>
 </div>
+{/block}
+
+{block name="js"}
 <script>
     var layer, form, element;
 
@@ -96,8 +89,20 @@
 
     var window_index = parent.layer.getFrameIndex(window.name);
 
+    /**
+     * 下载应用
+     * @param id
+     * @returns {boolean}
+     */
     function downloadApp(id) {
-        var tip = '{if($info.money>0)}你确定付费{$info.money}元下载使用此应用吗？{else /}此应用是免费的，你确定要下载使用吗？{/if}';
+        var isLogin = parseInt("{:!empty($token)}");
+        if(! isLogin){
+            layer.msg('请先登录', {time:1500}, function () {
+                parent.location.href = "{:url('login')}";
+            });
+            return false;
+        }
+        var tip = '{if($info.price>0)}你确定付费{$info.price}元下载使用此应用吗？{else /}此应用是免费的，你确定要下载使用吗？{/if}';
         layer.confirm(tip, {
             btn: ['是的','不的']
         }, function(){
@@ -105,21 +110,31 @@
             $.post("{:url('download')}", {app_id:id}, function (res) {
                 if(res.code === 1){
                     layer.msg(res.msg, {time:3000}, function () {
-                        parent.parent.redirect(res.data.type);
                         parent.layer.close(index);
+                        parent.parent.redirect(res.data.type);
                     });
                 }else{
                     layer.close(index);
                     layer.alert(res.msg);
                 }
             }).error(function (error) {
+                layer.close(index);
                 layer.alert('500 Internal Server Error');
-                layer.close(index)
             })
         }, function(){});
         return false;
     }
 </script>
-</body>
-
-{include file="../layout/footer" /}
+{/block}
+{block name="css"}
+<style>
+    #apps-info .pd{padding: 10px 0px 0px 10px;}
+    .apps-info-title{font-size: 22px;}
+    .apps-info-title span{ margin-left:5px;font-size: 12px;bottom: 3px;}
+    .apps-info-desc{font-size: 12px;color: #787878;}
+    .preview-qrcode{text-align: center;}
+    .preview-qrcode img{margin-top: -19px;}
+    .apps-info-preview_text {text-align: center; top: -5px;position: relative;}
+    .install-btn{margin-top: 5px;}
+</style>
+{/block}

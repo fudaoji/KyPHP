@@ -25,17 +25,17 @@ class Api
      * @var array
      */
     public $config = [
-       	'appid'             => 'wx80a31b73e1a7e7ca',
-        'appsecret'         => '394a4a39672774417f66b54bb733d174',
-        'mchid'             => '1465001002', //商户号
-        'key'               => 'Tm44FMGt484Y44TjV34V3VG2ZEG4pf4f', //API秘钥
+       	'appid'             => '',
+        'appsecret'         => '',
+        'mchid'             => '', //商户号
+        'key'               => '', //API秘钥
         'sslcert_path'      => 'cert/apiclient_cert.pem', //证书路径,注意应该填写绝对路径（仅退款、撤销订单时需要，可登录商户平台下载
         'sslkey_path'       => 'cert/apiclient_key.pem', //证书路径,注意应该填写绝对路径（仅退款、撤销订单时需要，可登录商户平台下载
         'curl_proxy_host'   => '0.0.0.0', //这里设置代理机器，只有需要代理的时候才设置，不需要代理，请设置为0.0.0.0
         'curl_proxy_port'   => 0, //代理机器端口
         'report_level'      => 1, //信息上报等级，0.关闭上报; 1.仅错误出错上报; 2.全量上报
         'notify_url'        => 'NOTIFY_URL',
-		'rsa_path'          => '/mydata/www/kyframework/extend/ky/Payment/Wx/cert/public.pem', //RSA加密公钥路径
+		'rsa_path'          => '', //RSA加密公钥路径
     ];
 
     /**

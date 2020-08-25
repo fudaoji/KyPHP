@@ -1,65 +1,68 @@
-{extend name="common/base" /}
+{extend name="../layout/base"}
+{block name="tool_bar"}
+<form class="layui-form search-form" action="">
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-xs2">
+            <div class="layui-form-item">
+                <select name="type" lay-filter="types">
+                    {volist name="types" id="vo"}
+                    <option {if $type==$key} selected {/if} value="{$key}">{$vo}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <div class="layui-col-xs7">
+            <div class="layui-col-xs5" style="margin-left: 5px; line-height: 38px;">
+                <div class="layui-form-item">
+                    <input name="search_key"
+                           placeholder="请输入关键词"
+                           value="{$search_key}"
+                           class="layui-input"
+                           type="text">
+                </div>
+            </div>
+            <div class="layui-col-xs4" style="margin-left: 5px; line-height: 38px;">
+                <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="formDemo">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
 
-{block name="css"}
-<style>
-    .app_nav > * {
-        font-size: 15px;
-    }
-</style>
-{/block}
+<div class="layui-row">
+    <div class="layui-col-xs8">
+        <span class="layui-breadcrumb" lay-separator="|">
+            {volist name="cates" id="c"}
+            <a href="{:url('index', ['cate' => $c, 'type' => $type])}"
+                    {if $cate == $c}class="layui-this"{/if}
+            >{$c}</a>
+            {/volist}
+        </span>
+    </div>
 
-{block name="body"}
-<div >
-    <div class="layui-row">
-        <div class="hreader">
-            <form class="layui-form" action="">
-                <div class="layui-col-md2">
-                    <div class="layui-form-item">
-                        <select name="type2" lay-filter="types" lay-verify="required">
-                            <option {if $type==1} selected {/if} value="1">公众号</option>
-                            <option {if $type==2} selected {/if} value="2">小程序</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-col-md4" style="margin-left: 5px;">
-                    <div class="layui-form-item">
-                        <input type="text" name="title" placeholder="请输入应用名称"
-                               value="{$title}" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-col-md1" style="margin-left: 5px;">
-                    <button class="layui-btn layui-btn-primary" lay-submit lay-filter="formDemo">搜索应用</button>
-                </div>
-            </form>
-            <div class="layui-row" style="background: #ffffff;">
-                <div class="layui-col-md8">
-                    <span id="apps-cate-lists" class="layui-breadcrumb app_nav" lay-separator="|">
-                        <a href="{:url('index',['type'=>$type,'cate'=>0])}">{if $cate_id == 0} <span class="cite">全部</span>{else /}全部{/if}</a>
-                        {volist name="cate" id="v"}
-                      <a href="{:url('index',['type'=>$type,'cate'=>$v.cid])}">
-                          {if $cate_id == $v.cid} <span class="cite">{$v.cate_name}</span>{else /}{$v.cate_name}{/if}
-                          </a>
-                        {/volist}
-                    </span>
-                </div>
-                <div class="layui-col-md4" id="account">
-                    {if !empty($user)}
-                    <span class="layui-breadcrumb" lay-separator="|">
+    <div class="layui-col-xs4" id="account">
+        {if !empty($user)}
+        <span class="layui-breadcrumb" lay-separator="|">
                       <a>{$user.nickname}</a>
                       <a>{$user.balance}元</a>
                       <a href="javascript:deposit();">充值</a>
                       <a href="{:url('logout')}">退出</a>
                     </span>
-                    {else/}
-                    <span class="layui-breadcrumb" lay-separator="|">
+        {else/}
+        <span class="layui-breadcrumb" lay-separator="|">
                       <a href="{:url('register')}">注册</a>
                       <a href="{:url('login')}">登录</a>
                     </span>
-                    {/if}
-                </div>
-            </div>
-        </div>
-        <hr>
+        {/if}
+    </div>
+    <hr>
+</div>
+{/block}
+
+{block name="body"}
+<div>
+    <div class="layui-row">
         <div id="app-body">
             <div id="apps">
                 <div class="layui-row">
@@ -72,66 +75,60 @@
                             <div class="app-desc">
                                 <h2>{$v.title}
                                     <span class="apps-money layui-badge layui-bg-blue">
-                                        {if($v.money>0)}
-                                        {$v.money}
-                                        {else /}
-                                        免费
-                                        {/if}
+                                        {$v.price>0 ? ('￥' . $v.price) : '免费'}
                                     </span>
                                 </h2>
                                 <div class="app-desc-body">
-                                    <span>分类：{if $v.type ==1}公众号{else /}小程序{/if}</span>
-                                    <div class="description">{:mb_substr($v.description,0,16)}</div>
+                                    <span class="type">{if $v.type =='mp'}公众号{else /}小程序{/if}</span>
+                                    <div class="description">{:mb_substr($v.desc,0,16)}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     {/volist}
                 </div>
             </div>
-            <div class="layui-row">
-                <div class="layui-col-md3 layui-col-md-offset9">
-                    <div class="apps-page">
-                        <a href="{:url('index',['type'=>$type,'cate'=>$cate_id,'page'=>$page-1])}" class="layui-btn layui-btn-sm bg-success">
-                            <i class="layui-icon">&#xe603;</i>
-                            上一页
-                        </a>
-                        <a href="{:url('index',['type'=>$type,'cate'=>$cate_id,'page'=>$page+1])}" class="layui-btn layui-btn-sm bg-success">
-                            下一页
-                            <i class="layui-icon">&#xe602;</i>
-                        </a>
-                    </div>
-
+        </div>
+        {if $total>0}
+        <div class="layui-row">
+            <div class="layui-col-md3 layui-col-md-offset9">
+                <div class="apps-page">
+                    <a href="{if $page > 1}{:url('index', array_merge(input(), ['page' => $page - 1]))}{else/}javascript:;{/if}" class="layui-btn layui-btn-sm {if $page <= 1}layui-btn-disabled{/if}" >
+                        <i class="layui-icon">&#xe603;</i>
+                        上一页
+                    </a>
+                    <a href="{if $page * $page_size < $total}{:url('index', array_merge(input(), ['page' => $page + 1]))}{else/}javascript:;{/if}" class="layui-btn layui-btn-sm {if $page * $page_size >= $total}layui-btn-disabled{/if}">
+                        <i class="layui-icon">&#xe602;</i>
+                        下一页
+                    </a>
                 </div>
             </div>
         </div>
-
+        {/if}
     </div>
 </div>
 {/block}
 
 {block name="js"}
 <script>
-    var layer;
-    var form;
+    layui.use(['layer','form', 'jquery'], function() {
+        var layer = layui.layer
+        ,form = layui.form
+        ,$ = layui.jquery;
 
-    layui.use(['layer','form'], function() {
-        layer = layui.layer;
-        form = layui.form;
         form.on('select(types)', function(data){
-            window.location.href="{:url('index','','')}/type/"+data.value
+            $('.search-form').submit();
         });
     });
 
     function openAppWin(id,title) {
         layer.open({
             type: 2,
-            title:title,
+            title: title,
             area: ['800px', '650px'],
             fixed: false,
             maxmin: true,
-            content: "{:url('appInfo','','')}/id/"+id
+            content: "{:url('appinfo', '', '')}/id/"+id
         });
     }
 
@@ -154,4 +151,28 @@
         });
     }
 </script>
+{/block}
+
+{block name="css"}
+<style>
+    .type{font-size: 12px;}
+    .layui-breadcrumb .layui-this {
+        color: var(--main-color) !important;
+    }
+
+    #account a:hover{text-decoration: none;}
+    #account{text-align: right; font-size: 14px;}
+    #apps{margin-top: 10px; display:block; }
+    .apps-money{float: right;}
+    .app-desc-body{color: #707070;font-size: 14px;}
+    .app-desc-body .description{font-size: 14px;}
+    .apps-volists {border:1px  solid rgb(231, 231, 235);margin: 0px 5px 5px 0px;padding: 5px;overflow: hidden;}
+    .apps-volists:hover{border-color: var(--main-color);}
+    .apps-volist{cursor: pointer}
+    .apps-icon{float: left;margin-right: 10px;}
+    .apps-icon img{ width: 68px;height: 68px;border-radius:8px; }
+
+    .apps-page{margin-top: 15px;}
+    .apps-page a:hover{text-decoration: none;}
+</style>
 {/block}
