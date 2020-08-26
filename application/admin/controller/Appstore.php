@@ -35,8 +35,10 @@ class Appstore extends Base
             'getApps'       => 'app/listPost',
             'getAppInfo'    => 'app/getPost',
             'getCates'      => 'app/getCatesPost',
-            'refreshToken'  => 'user/refreshTokenPost',
+            'getUser'       => 'user/getPost',
+            'register'      => 'auth/registerPost',
             'login'         => 'auth/loginPost',
+            'download'      => 'app/downloadPost',
         ];
         $this->setClient();
         $this->getUserInfo();
@@ -49,13 +51,13 @@ class Appstore extends Base
      */
     public function getUserInfo(){
         if (!empty($token = session('kyphpToken'))) {
-            $params = ['token' => $token];
-            $res = $this->doRequest(['uri' => self::$apis['refreshToken'], 'data' => $params]);
+            $this->token = $token;
+            $res = $this->doRequest(['uri' => self::$apis['getUser']]);
             if($res['code'] == 1){
                 $this->user = $res['data']['user'];
-                $this->token = $this->user['token'];
+                session('kyphpToken', $token);
             }else{
-                $this->error($res['msg']);
+                session('kyphpToken', null);
             }
         }
         $this->assign['user'] = $this->user;
@@ -229,42 +231,62 @@ class Appstore extends Base
      */
     public function download()
     {
-        $data = input();
-        $url = self::$baseUrl . "publics/getAppInfo";
-        $result = json_decode(http_post($url, ['id' => $data['app_id']]), true);
-        if (empty($result))
-            $this->error('没有找到此应用');
-
-        if (!isset($result['type_id']) && empty($result['type_id']))
-            $this->error('类型不符，无法继续完成');
-
-        if ($result['type_id'] == 1) {
-            $install_path = ADDON_PATH;
-        } elseif ($result['type_id'] == 2) {
-            $install_path = MINIAPP_PATH;
+        $post_data = input('post.');
+        $params = [
+            'id' => $post_data['app_id']
+        ];
+        $res = $this->doRequest(['uri' => self::$apis['download'], 'data' => $params]);
+        if($res['code'] == 1){
+            $app = $res['data']['app'];
+        }else{
+            $this->error($res['msg']);
         }
-        $app_install_path = $install_path . $result['name'] . DS;
+        $app_install_path = ADDON_PATH . $app['name'] . DS;
+
         if (file_exists($app_install_path))
-            $this->error($result['name'] . '目录已经存在或者您已经安装过【' . $result['title'] . '】，如果您要重新安装，请先卸载此应用');
+            $this->error($app['name'] . '目录已经存在或者您已经安装过【' . $app['title'] . '】，如果您要重新安装，请先卸载此应用');
 
-        $url = self::$baseUrl . 'Business/download';
-        $data['token'] = $this->token;
-        $result2 = http_post($url, $data);
-        if ($result2 == false)
-            $this->error('服务出错，请稍后再试');
+        $app['package'] = http_post($app['package'], []);
 
-        $tem_file = env('runtime_path') . $result['name'].$result['version'].'-'.time(). '.tmp';
-        file_put_contents($tem_file, $result2);
+        $tem_file = env('runtime_path') . $app['name'].$app['version'].'-'.time(). '.tmp';
+        file_put_contents($tem_file, $app['package']);
         $zip = new \ZipArchive;
         $res = $zip->open($tem_file);
         if ($res === TRUE) {
-            $zip->extractTo($install_path);
+            $zip->extractTo(ADDON_PATH);
             $zip->close();
             @unlink($tem_file); //删除临时压缩包
-            $this->success('下载成功，正在跳转安装界面。。。', '', ['type' => $result['type_id']]);
+            $this->success('下载成功，正在跳转安装界面。。。', url('admin/app/index', ['type' => 'notinstall']));
         } else {
             $this->error('解压失败，请检查是否有写入权限');
         }
+    }
+
+    /**
+     * 注册
+     * @return mixed
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function register()
+    {
+        if (request()->isPost()) {
+            $data = input('post.');
+            $params = [
+                'username' => $data['username'],
+                'password' => $data['password'],
+                'repeat_password' => $data['repeat_password'],
+                'name' => $data['name'],
+                'domain' => $data['domain']
+            ];
+            $res = $this->doRequest(['uri' => self::$apis['register'], 'data' => $params]);
+            if($res['code'] == 1){
+                session('kyphpToken', $res['data']['token']);
+                $this->success($res['msg']);
+            }else{
+                $this->error($res['msg']);
+            }
+        }
+        return $this->show();
     }
 
     /**
@@ -282,13 +304,13 @@ class Appstore extends Base
             ];
             $res = $this->doRequest(['uri' => self::$apis['login'], 'data' => $params]);
             if($res['code'] == 1){
+                session('kyphpToken', $res['data']['token']);
                 $this->success($res['msg']);
             }else{
                 $this->error($res['msg']);
             }
-        } else {
-            return $this->show();
         }
+        return $this->show();
     }
 
     /**
@@ -297,7 +319,7 @@ class Appstore extends Base
      */
     public function logout()
     {
-        cookie('official_user', null);
+        session('kyphpToken', null);
         $this->redirect('index');
     }
 
@@ -315,6 +337,7 @@ class Appstore extends Base
         if($res['code'] == 1){
             $this->getAppCates();
             $this->assign['info'] = $res['data']['info'];
+            $this->assign['upgrade_list'] = $res['data']['upgrade_list'];
         }else{
             $this->error($res['msg']);
         }
@@ -345,6 +368,7 @@ class Appstore extends Base
             $this->getAppCates();
             $this->assign['total'] = $res['data']['total'];
             $this->assign['apps'] = $res['data']['list'];
+            $this->assign['user_addon'] = $res['data']['user_addon'];
         }else{
             $this->error($res['msg']);
         }

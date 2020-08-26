@@ -55,19 +55,15 @@
             </div>
             <div class="layui-tab-item">
                 <ul class="layui-timeline">
-                    {if isset($info['upgrade'])}
-                    {volist name="$info.upgrade" id="v"}
+                    {volist name="upgrade_list" id="v"}
                     <li class="layui-timeline-item">
                         <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
                         <div class="layui-timeline-content layui-text">
-                            <h3 class="layui-timeline-title">{$v.create_time|date="Y-m-d H:i"}</h3>
-                            <p>
-                                {$v.description|raw}
-                            </p>
+                            <h3 class="layui-timeline-title">V{$v.version}({$v.create_time|date="Y-m-d H:i"})</h3>
+                            <div>{$v.desc|raw}</div>
                         </div>
                     </li>
                     {/volist}
-                    {/if}
                 </ul>
             </div>
         </div>
@@ -87,34 +83,38 @@
         form = layui.form;
     });
 
-    var window_index = parent.layer.getFrameIndex(window.name);
-
     /**
      * 下载应用
      * @param id
      * @returns {boolean}
      */
     function downloadApp(id) {
-        var isLogin = parseInt("{:!empty($token)}");
+        var isLogin = parseInt("{$token ? 1 : 0}");
         if(! isLogin){
             layer.msg('请先登录', {time:1500}, function () {
                 parent.location.href = "{:url('login')}";
             });
             return false;
         }
+
         var tip = '{if($info.price>0)}你确定付费{$info.price}元下载使用此应用吗？{else /}此应用是免费的，你确定要下载使用吗？{/if}';
         layer.confirm(tip, {
             btn: ['是的','不的']
         }, function(){
+            var userInfo = {:json_encode($user)}
+                ,appInfo = {:json_encode($info)};
+            if(userInfo.money < appInfo.price){
+                layer.alert('余额不足，请先充值！');
+                return;
+            }
             var index = layer.load(1);
             $.post("{:url('download')}", {app_id:id}, function (res) {
+                layer.close(index);
                 if(res.code === 1){
                     layer.msg(res.msg, {time:3000}, function () {
-                        parent.layer.close(index);
-                        parent.parent.redirect(res.data.type);
+                        parent.location.href = res.url;
                     });
                 }else{
-                    layer.close(index);
                     layer.alert(res.msg);
                 }
             }).error(function (error) {

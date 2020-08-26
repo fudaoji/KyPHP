@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50620
 File Encoding         : 65001
 
-Date: 2020-07-31 18:59:34
+Date: 2020-08-26 14:59:13
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -23,7 +23,7 @@ CREATE TABLE `ky_addons` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
   `name` varchar(50) NOT NULL COMMENT '插件名称',
   `addon` varchar(50) NOT NULL COMMENT '标识名',
-  `desc` text COMMENT '描述',
+  `desc` varchar(200) NOT NULL DEFAULT '' COMMENT '简介',
   `version` varchar(10) NOT NULL COMMENT '版本号',
   `author` varchar(50) NOT NULL COMMENT '作者姓名',
   `logo` varchar(255) NOT NULL DEFAULT '' COMMENT 'LOGO',
@@ -59,7 +59,7 @@ CREATE TABLE `ky_addons_cate` (
   `update_time` int(10) unsigned NOT NULL DEFAULT '0',
   `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='应用分类表';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COMMENT='应用分类表';
 
 -- ----------------------------
 -- Records of ky_addons_cate
@@ -69,6 +69,7 @@ INSERT INTO `ky_addons_cate` VALUES ('2', '营销', '3', '1594997967', '15949980
 INSERT INTO `ky_addons_cate` VALUES ('3', '商城', '0', '1594997977', '1594998035', '1');
 INSERT INTO `ky_addons_cate` VALUES ('4', '游戏', '10', '1594997996', '1594998035', '1');
 INSERT INTO `ky_addons_cate` VALUES ('5', '节日', '5', '1594998006', '1594998035', '1');
+INSERT INTO `ky_addons_cate` VALUES ('6', '共享', '0', '1597459141', '1597459141', '1');
 
 -- ----------------------------
 -- Table structure for ky_addons_info
@@ -91,7 +92,7 @@ CREATE TABLE `ky_addons_info` (
 -- ----------------------------
 INSERT INTO `ky_addons_info` VALUES ('10', '<p>应用介绍</p><p>adfadf</p><p>到发疯</p><p>阿道夫<img src=\"http://devhhb.images.huihuiba.net/1-5ed603542b0f4.jpg\" alt=\"1-5ed603542b0f4.jpg\"/></p>', '4', '112', '0.01', '0.00', '涨粉,营销,商城', 'http://devhhb.images.huihuiba.net/1-5f1582f10db72.jpg,http://devhhb.images.huihuiba.net/1-5f1582f0b24e6.jpg');
 INSERT INTO `ky_addons_info` VALUES ('11', '<p>详细介绍小程序介绍</p>', '2', '103', '0.00', '398.00', '营销', 'http://devhhb.images.huihuiba.net/1-5f1582f10db72.jpg,http://devhhb.images.huihuiba.net/1-5f1582f0b24e6.jpg');
-INSERT INTO `ky_addons_info` VALUES ('12', '<p>详细介绍</p>', '2', '22', '0.00', '0.00', '营销', 'http://devhhb.images.huihuiba.net/1-5f1582f10db72.jpg,http://devhhb.images.huihuiba.net/1-5f1582f0b24e6.jpg');
+INSERT INTO `ky_addons_info` VALUES ('12', '<p>详细介绍</p>', '2', '22', '0.00', '0.00', '营销,共享', 'http://devhhb.images.huihuiba.net/1-5f1582f10db72.jpg,http://devhhb.images.huihuiba.net/1-5f1582f0b24e6.jpg');
 
 -- ----------------------------
 -- Table structure for ky_addons_template
@@ -136,8 +137,8 @@ CREATE TABLE `ky_admin` (
 -- ----------------------------
 -- Records of ky_admin
 -- ----------------------------
-INSERT INTO `ky_admin` VALUES ('1', 'admin', '$2y$10$fjDgmWJXFml9Flb3fuygA.EUjVl1hqoMoU8Dwn8J.tn8p1x/X8tXu', '461960962@qq.com', '15659827559', '0', '1596179589', '1', '1', '傅道集', '1596179589', '183.17.231.199', '0');
-INSERT INTO `ky_admin` VALUES ('2', 'test1', '$2y$10$lSnmo7isc6Y7X1trZ/YeH.WirmUAC3TG8JpEkloRODCO1nHXYFnFm', '', '15659827559', '1590227330', '1595341851', '1', '2', '张三', '1595341851', '211.97.128.54', '1');
+INSERT INTO `ky_admin` VALUES ('1', 'admin', '$2y$10$8e/WKStcGxWexB/kfmbQre6uCtMRjpXZB4RH4u70ZKfkScIx.kfCy', '461960962@qq.com', '15659827559', '0', '1598405327', '1', '1', '傅道集', '1598405327', '106.122.215.248', '0');
+INSERT INTO `ky_admin` VALUES ('2', 'test1', '$2y$10$lSnmo7isc6Y7X1trZ/YeH.WirmUAC3TG8JpEkloRODCO1nHXYFnFm', '', '15659827559', '1590227330', '1596812118', '1', '2', '张三', '1596812118', '211.97.130.225', '1');
 INSERT INTO `ky_admin` VALUES ('3', 'test2', '$2y$10$VI/NBVVik3YRAjnrZIgAQeKZ2rKJtY01mGnRwLQ1Saoy956vwOVXC', '', '', '1594977794', '1594977794', '1', '2', '', '1594977794', '106.122.215.27', '0');
 INSERT INTO `ky_admin` VALUES ('4', 'test3', '$2y$10$//5v/B9XdvlS5pIgEjZ2Juw9I.RN82BLE652b50evmjxIwFzYv.U6', '', '', '1594978590', '1594978876', '1', '2', 'test3', '1594978876', '106.122.215.27', '0');
 
@@ -201,7 +202,7 @@ CREATE TABLE `ky_admin_store` (
   `create_time` int(10) unsigned NOT NULL DEFAULT '0',
   `update_time` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='用户店铺';
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COMMENT='用户店铺';
 
 -- ----------------------------
 -- Records of ky_admin_store
@@ -210,6 +211,8 @@ INSERT INTO `ky_admin_store` VALUES ('1', '1', 'mp', '1', '0', '0');
 INSERT INTO `ky_admin_store` VALUES ('2', '2', 'mp', '0', '1590592849', '1590593695');
 INSERT INTO `ky_admin_store` VALUES ('3', '1', 'mp', '1', '0', '0');
 INSERT INTO `ky_admin_store` VALUES ('10', '1', 'mini', '1', '1595557998', '1595557998');
+INSERT INTO `ky_admin_store` VALUES ('11', '1', 'mini', '1', '1596536174', '1596786901');
+INSERT INTO `ky_admin_store` VALUES ('12', '0', 'mp', '1', '1597328829', '1597328829');
 
 -- ----------------------------
 -- Table structure for ky_demo_article
@@ -230,7 +233,7 @@ CREATE TABLE `ky_demo_article` (
 -- ----------------------------
 -- Records of ky_demo_article
 -- ----------------------------
-INSERT INTO `ky_demo_article` VALUES ('1', '文章1', '打发斯蒂芬', '是打发撒的发生的发打算', '2', '1', '1593686937', '1595991808');
+INSERT INTO `ky_demo_article` VALUES ('1', '文章1', '打发斯蒂芬', '是打发撒的发生的发打算', '3', '1', '1593686937', '1598258695');
 
 -- ----------------------------
 -- Table structure for ky_demo_order
@@ -4276,11 +4279,207 @@ INSERT INTO `ky_district` VALUES ('442000116', '大涌镇', '442000');
 INSERT INTO `ky_district` VALUES ('442000117', '神湾镇', '442000');
 
 -- ----------------------------
+-- Table structure for ky_friend_link
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_friend_link`;
+CREATE TABLE `ky_friend_link` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '名称',
+  `link` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '链接',
+  `sort` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '数字越小越靠前',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='友链';
+
+-- ----------------------------
+-- Records of ky_friend_link
+-- ----------------------------
+INSERT INTO `ky_friend_link` VALUES ('1', '酷云科技', 'http://www.kuryun.com/', '0', '1596273399', '1596273399', '1');
+INSERT INTO `ky_friend_link` VALUES ('2', 'ThinkPHP', 'https://www.thinkphp.cn/', '1', '1596273469', '1596273548', '1');
+
+-- ----------------------------
+-- Table structure for ky_gxtea_activity
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_gxtea_activity`;
+CREATE TABLE `ky_gxtea_activity` (
+  `id` bigint(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mini_id` int(10) NOT NULL DEFAULT '0' COMMENT '小程序ID',
+  `name` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT ' 活动标识',
+  `title` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '活动主题',
+  `begin_time` int(10) NOT NULL DEFAULT '0' COMMENT '开始时间',
+  `end_time` int(10) NOT NULL DEFAULT '0' COMMENT '结束时间',
+  `join_num` int(10) NOT NULL DEFAULT '0' COMMENT '报名人数',
+  `view_num` int(20) NOT NULL DEFAULT '0' COMMENT '查看人数',
+  `share_num` int(20) unsigned NOT NULL DEFAULT '0' COMMENT '分享人数',
+  `create_time` int(10) NOT NULL,
+  `update_time` int(10) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态1上架  2下架  0禁用',
+  `extend_info` longtext CHARACTER SET utf8mb4 COMMENT '扩展信息',
+  `qrcode` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '活动二维码',
+  `cover` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '活动封面图',
+  `coupon_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '关联的优惠券',
+  `rule` text COLLATE utf8mb4_unicode_ci COMMENT '活动规则',
+  PRIMARY KEY (`id`),
+  KEY `mini_id` (`mini_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='活动表';
+
+-- ----------------------------
+-- Records of ky_gxtea_activity
+-- ----------------------------
+INSERT INTO `ky_gxtea_activity` VALUES ('1', '11', 'invite', '邀请好友免费喝茶', '1597075200', '1598716800', '2', '268', '0', '1597114876', '1597201790', '1', null, '', 'http://devhhb.images.huihuiba.net/1-5f2232d6c5fac.png', '1', '<p>活动规则啊</p><p><br/></p>');
+
+-- ----------------------------
+-- Table structure for ky_gxtea_activity_signer
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_gxtea_activity_signer`;
+CREATE TABLE `ky_gxtea_activity_signer` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mini_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `activity_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `user_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
+  `openid` varchar(64) NOT NULL DEFAULT '' COMMENT 'openid',
+  `nickname` varchar(60) NOT NULL DEFAULT '' COMMENT '昵称',
+  `headimgurl` varchar(200) NOT NULL DEFAULT '',
+  `mobile` varchar(15) NOT NULL DEFAULT '',
+  `gain` varchar(20) NOT NULL DEFAULT '0' COMMENT '助力数、战绩等，不同活动可能有不同含义',
+  `complete_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT ' 完成时间',
+  `mark` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否核销',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '报名时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mini_id_2` (`mini_id`,`activity_id`,`openid`),
+  KEY `mini_id` (`mini_id`,`activity_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='报名表';
+
+-- ----------------------------
+-- Records of ky_gxtea_activity_signer
+-- ----------------------------
+INSERT INTO `ky_gxtea_activity_signer` VALUES ('5', '11', '1', '6', 'oUcHy5F7WcJp14Ivfd3wJrOKH6m4', '丁昌乾-Jason', 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJJOlibibPFEWO9qcXhCJltwPHsOgzAzS0ibtjpmbefwdibupgy4ibF2tOeKOCu18vLrzOUvYibXujosiaeg/132', '13275008183', '1', '0', '0', '1', '1597316811');
+
+-- ----------------------------
+-- Table structure for ky_gxtea_activity_support_1
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_gxtea_activity_support_1`;
+CREATE TABLE `ky_gxtea_activity_support_1` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mini_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '小程序ID，分表键',
+  `activity_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `signer_id` int(10) NOT NULL,
+  `nickname` varchar(60) NOT NULL DEFAULT '' COMMENT '昵称',
+  `openid` varchar(64) NOT NULL DEFAULT '' COMMENT 'openid',
+  `headimgurl` varchar(200) NOT NULL DEFAULT '',
+  `mobile` varchar(15) NOT NULL DEFAULT '',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '报名时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mini_id_2` (`mini_id`,`activity_id`,`openid`,`signer_id`) USING BTREE,
+  KEY `mini_id` (`mini_id`,`activity_id`,`signer_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='报名表';
+
+-- ----------------------------
+-- Records of ky_gxtea_activity_support_1
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for ky_gxtea_activity_support_2
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_gxtea_activity_support_2`;
+CREATE TABLE `ky_gxtea_activity_support_2` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mini_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '小程序ID，分表键',
+  `activity_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `signer_id` int(10) NOT NULL,
+  `nickname` varchar(60) NOT NULL DEFAULT '' COMMENT '昵称',
+  `openid` varchar(64) NOT NULL DEFAULT '' COMMENT 'openid',
+  `headimgurl` varchar(200) NOT NULL DEFAULT '',
+  `mobile` varchar(15) NOT NULL DEFAULT '',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '报名时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mini_id_2` (`mini_id`,`activity_id`,`openid`,`signer_id`) USING BTREE,
+  KEY `mini_id` (`mini_id`,`activity_id`,`signer_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COMMENT='报名表';
+
+-- ----------------------------
+-- Records of ky_gxtea_activity_support_2
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for ky_gxtea_activity_support_3
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_gxtea_activity_support_3`;
+CREATE TABLE `ky_gxtea_activity_support_3` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mini_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '小程序ID，分表键',
+  `activity_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `signer_id` int(10) NOT NULL,
+  `nickname` varchar(60) NOT NULL DEFAULT '' COMMENT '昵称',
+  `openid` varchar(64) NOT NULL DEFAULT '' COMMENT 'openid',
+  `headimgurl` varchar(200) NOT NULL DEFAULT '',
+  `mobile` varchar(15) NOT NULL DEFAULT '',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '报名时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mini_id_2` (`mini_id`,`activity_id`,`openid`,`signer_id`) USING BTREE,
+  KEY `mini_id` (`mini_id`,`activity_id`,`signer_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='报名表';
+
+-- ----------------------------
+-- Records of ky_gxtea_activity_support_3
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for ky_gxtea_activity_support_4
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_gxtea_activity_support_4`;
+CREATE TABLE `ky_gxtea_activity_support_4` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mini_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '小程序ID，分表键',
+  `activity_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `signer_id` int(10) NOT NULL,
+  `nickname` varchar(60) NOT NULL DEFAULT '' COMMENT '昵称',
+  `openid` varchar(64) NOT NULL DEFAULT '' COMMENT 'openid',
+  `headimgurl` varchar(200) NOT NULL DEFAULT '',
+  `mobile` varchar(15) NOT NULL DEFAULT '',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '报名时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mini_id_2` (`mini_id`,`activity_id`,`openid`,`signer_id`) USING BTREE,
+  KEY `mini_id` (`mini_id`,`activity_id`,`signer_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='报名表';
+
+-- ----------------------------
+-- Records of ky_gxtea_activity_support_4
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for ky_gxtea_activity_support_5
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_gxtea_activity_support_5`;
+CREATE TABLE `ky_gxtea_activity_support_5` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mini_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '小程序ID，分表键',
+  `activity_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `signer_id` int(10) NOT NULL,
+  `nickname` varchar(60) NOT NULL DEFAULT '' COMMENT '昵称',
+  `openid` varchar(64) NOT NULL DEFAULT '' COMMENT 'openid',
+  `headimgurl` varchar(200) NOT NULL DEFAULT '',
+  `mobile` varchar(15) NOT NULL DEFAULT '',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '报名时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mini_id_2` (`mini_id`,`activity_id`,`openid`,`signer_id`) USING BTREE,
+  KEY `mini_id` (`mini_id`,`activity_id`,`signer_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='报名表';
+
+-- ----------------------------
+-- Records of ky_gxtea_activity_support_5
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for ky_gxtea_city
 -- ----------------------------
 DROP TABLE IF EXISTS `ky_gxtea_city`;
 CREATE TABLE `ky_gxtea_city` (
-  `id` int(6) unsigned NOT NULL DEFAULT '0' COMMENT '城市id',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `city` int(6) unsigned NOT NULL DEFAULT '0' COMMENT '城市id',
   `mini_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '小程序id',
   `title` varchar(30) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '城市名称',
   `province` int(6) unsigned NOT NULL DEFAULT '0' COMMENT '省',
@@ -4288,13 +4487,167 @@ CREATE TABLE `ky_gxtea_city` (
   `status` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '状态',
   `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='站点';
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `city` (`city`,`mini_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='站点';
 
 -- ----------------------------
 -- Records of ky_gxtea_city
 -- ----------------------------
-INSERT INTO `ky_gxtea_city` VALUES ('350200', '10', '厦门市', '350000', '1', '1', '1596181893', '1596183069');
+INSERT INTO `ky_gxtea_city` VALUES ('1', '350200', '11', '厦门市', '350000', '1', '1', '1596181893', '1597297133');
+INSERT INTO `ky_gxtea_city` VALUES ('2', '350100', '11', '福州市', '350000', '2', '0', '1597297153', '1597297153');
+
+-- ----------------------------
+-- Table structure for ky_gxtea_coupon
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_gxtea_coupon`;
+CREATE TABLE `ky_gxtea_coupon` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mini_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '小程序ID',
+  `title` varchar(40) NOT NULL DEFAULT '' COMMENT '名称',
+  `deadline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '截止日期',
+  `type` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '类型： 1金额抵扣  2时间抵扣 ',
+  `worth` varchar(4) NOT NULL DEFAULT '0' COMMENT '抵扣额度，小时或金额（元）',
+  `limit` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '每个人限领次数0为不限',
+  `num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '总张数',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '时间',
+  `update_time` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='优惠券';
+
+-- ----------------------------
+-- Records of ky_gxtea_coupon
+-- ----------------------------
+INSERT INTO `ky_gxtea_coupon` VALUES ('1', '11', '1小时免单券', '0', '2', '1', '1', '10', '1', '1596467940', '1597195678');
+INSERT INTO `ky_gxtea_coupon` VALUES ('2', '11', '20元券', '1598803200', '1', '20', '1', '10', '1', '1596677224', '1597195911');
+
+-- ----------------------------
+-- Table structure for ky_gxtea_coupon_user
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_gxtea_coupon_user`;
+CREATE TABLE `ky_gxtea_coupon_user` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mini_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '小程序ID',
+  `user_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
+  `openid` varchar(64) NOT NULL DEFAULT '' COMMENT '用户',
+  `coupon_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '优惠券ID',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态0 待使用 1已使用',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '时间',
+  `update_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `activity_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '关联的活动',
+  PRIMARY KEY (`id`),
+  KEY `mini_id` (`mini_id`,`openid`,`coupon_id`,`activity_id`) USING BTREE,
+  KEY `mini_id_2` (`mini_id`,`openid`,`coupon_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='优惠券';
+
+-- ----------------------------
+-- Records of ky_gxtea_coupon_user
+-- ----------------------------
+INSERT INTO `ky_gxtea_coupon_user` VALUES ('1', '11', '6', 'oUcHy5F7WcJp14Ivfd3wJrOKH6m4', '1', '0', '0', '1597398293', '0');
+INSERT INTO `ky_gxtea_coupon_user` VALUES ('2', '11', '6', 'oUcHy5F7WcJp14Ivfd3wJrOKH6m4', '2', '1', '0', '0', '0');
+INSERT INTO `ky_gxtea_coupon_user` VALUES ('3', '11', '6', 'oUcHy5F7WcJp14Ivfd3wJrOKH6m4', '1', '1', '1597226047', '1597226047', '1');
+
+-- ----------------------------
+-- Table structure for ky_gxtea_help
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_gxtea_help`;
+CREATE TABLE `ky_gxtea_help` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mini_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '小程序id',
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '标题',
+  `content` text COLLATE utf8mb4_unicode_ci COMMENT '内容',
+  `sort` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '排序，数字越小越靠前',
+  `view_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '查看量',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否显示',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='帮助文章';
+
+-- ----------------------------
+-- Records of ky_gxtea_help
+-- ----------------------------
+INSERT INTO `ky_gxtea_help` VALUES ('1', '11', '可以延时吗？', '<p>三大发送发送法萨芬的</p>', '1', '4', '1');
+INSERT INTO `ky_gxtea_help` VALUES ('2', '11', '账户余额全国通用吗', '<p>账户余额全国通用吗</p>', '0', '3', '1');
+
+-- ----------------------------
+-- Table structure for ky_gxtea_order_recharge
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_gxtea_order_recharge`;
+CREATE TABLE `ky_gxtea_order_recharge` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mini_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '小程序id',
+  `city_id` int(7) unsigned NOT NULL DEFAULT '350200' COMMENT '站点id',
+  `order_no` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '交易单号',
+  `user_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
+  `openid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '会员openid',
+  `username` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '用户名',
+  `mobile` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '手机号',
+  `subject` varchar(250) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '购买主题',
+  `body` varchar(200) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '购买详情',
+  `total` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '订单总额（单位：分）',
+  `amount` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '订单实付金额',
+  `award` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '赠送额度',
+  `currency` varchar(10) CHARACTER SET utf8 NOT NULL DEFAULT 'cny' COMMENT '汇率类型',
+  `channel` varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT 'WX_JSAPI' COMMENT '支付类型,默认微信支付',
+  `client_ip` char(15) CHARACTER SET utf8 NOT NULL DEFAULT '127.0.0.1' COMMENT '客户端ip',
+  `paid` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '1:支付成功 0：待支付 ； 3已过期   ',
+  `transaction_id` varchar(100) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '支付平台订单号',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
+  `pay_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '支付时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `order_no` (`order_no`) USING BTREE,
+  KEY `user_id` (`openid`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='钱包充值';
+
+-- ----------------------------
+-- Records of ky_gxtea_order_recharge
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for ky_gxtea_order_room
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_gxtea_order_room`;
+CREATE TABLE `ky_gxtea_order_room` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `city_id` int(7) unsigned NOT NULL DEFAULT '350200' COMMENT '站点id',
+  `mini_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '小程序id',
+  `order_no` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '交易单号',
+  `room_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '茶室id',
+  `user_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
+  `openid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '会员openid',
+  `username` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '用户名',
+  `mobile` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '手机号',
+  `subject` varchar(250) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '购买主题',
+  `body` varchar(200) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '购买详情',
+  `total` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '订单总额（单位：分）',
+  `amount` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '订单实付金额',
+  `coupon_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '优惠券id',
+  `level_discount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '会员等级折扣',
+  `wallet` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '钱包抵扣',
+  `currency` varchar(10) CHARACTER SET utf8 NOT NULL DEFAULT 'cny' COMMENT '汇率类型',
+  `channel` varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT 'WX_JSAPI' COMMENT '支付类型,默认微信支付',
+  `client_ip` char(15) CHARACTER SET utf8 NOT NULL DEFAULT '127.0.0.1' COMMENT '客户端ip',
+  `begin_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '开始时间',
+  `end_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '结束时间',
+  `paid` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '0：待支付 ；1:支付成功 2：已使用; 3已过期;   4订单超时',
+  `transaction_id` varchar(100) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '支付平台订单号',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
+  `pay_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '支付时间',
+  `qrcode` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '验证二维码',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `order_no` (`order_no`) USING BTREE,
+  KEY `user_id` (`openid`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='应用采购订单';
+
+-- ----------------------------
+-- Records of ky_gxtea_order_room
+-- ----------------------------
+INSERT INTO `ky_gxtea_order_room` VALUES ('26', '350200', '11', 'gxtea159731759497101571', '1', '6', 'oUcHy5F7WcJp14Ivfd3wJrOKH6m4', '丁昌乾-Jason', '13275008183', '预约订单', '预约茶室，服务时间2020-08-13 19:30:00 ~ 2020-08-13 20:30:00', '2', '2', '0', '0.00', '0.00', 'cny', 'WX_JSAPI', '106.122.212.110', '1597318200', '1597321800', '2', '4200000723202008134267532440', '1', '1597317594', '1597317739', '1597317608', 'http://devhhb.images.huihuiba.net/qrcode_ordergxtea1597317594971015711597317598');
+INSERT INTO `ky_gxtea_order_room` VALUES ('29', '350200', '11', 'gxtea159739829353100519', '1', '6', 'oUcHy5F7WcJp14Ivfd3wJrOKH6m4', '丁昌乾-Jason', '13275008183', '预约订单', '预约茶室，服务时间2020-08-14 18:00:00 ~ 2020-08-14 19:00:00', '2', '0', '1', '0.00', '0.00', 'cny', 'WX_JSAPI', '106.122.212.110', '1597399200', '1597402800', '1', '', '1', '1597398293', '1597398300', '0', 'http://devhhb.images.huihuiba.net/qrcode_ordergxtea1597398293531005191597398295');
 
 -- ----------------------------
 -- Table structure for ky_gxtea_room
@@ -4312,10 +4665,12 @@ CREATE TABLE `ky_gxtea_room` (
   `tip` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '推荐合适人数提示语',
   `star` decimal(2,1) unsigned NOT NULL DEFAULT '5.0' COMMENT '评星数',
   `price` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '价格/小时',
-  `sale_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '已售数量',
+  `sale_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '实际已售数量',
+  `sale_num_show` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '前台显示的销量',
   `pictures` text COLLATE utf8mb4_unicode_ci COMMENT '室内拍摄图',
   `desc` text COLLATE utf8mb4_unicode_ci COMMENT '使用说明',
   `hour_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '共享总时长',
+  `min_hour` decimal(2,1) unsigned NOT NULL DEFAULT '1.0' COMMENT '最小时间起订量',
   PRIMARY KEY (`id`),
   KEY `shop_id` (`shop_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='茶室表';
@@ -4323,7 +4678,28 @@ CREATE TABLE `ky_gxtea_room` (
 -- ----------------------------
 -- Records of ky_gxtea_room
 -- ----------------------------
-INSERT INTO `ky_gxtea_room` VALUES ('1', '10', '1', '茗香阁', 'http://devhhb.images.huihuiba.net/1-5ed9ef3be7526.jpg', '1596076278', '1596076785', '1', '推荐4-6人', '5.0', '68.00', '0', 'http://devhhb.images.huihuiba.net/1-5f2232d6c5fac.png,http://devhhb.images.huihuiba.net/1-5f2232d6244a0.png', '<p><img src=\"http://devhhb.images.huihuiba.net/1-5f2230f0bcf86.png\" title=\"1-5f2230f0bcf86.png\" alt=\"image.png\"/></p>', '0');
+INSERT INTO `ky_gxtea_room` VALUES ('1', '11', '1', '茗香阁', 'http://devhhb.images.huihuiba.net/1-5ed9ef3be7526.jpg', '1596076278', '1597317608', '1', '推荐4-6人', '5.0', '0.01', '3', '3', 'http://devhhb.images.huihuiba.net/1-5f2232d6c5fac.png,http://devhhb.images.huihuiba.net/1-5f2232d6244a0.png', '<p><img src=\"http://devhhb.images.huihuiba.net/1-5f2230f0bcf86.png\" title=\"1-5f2230f0bcf86.png\" alt=\"image.png\"/></p>', '0', '1.0');
+
+-- ----------------------------
+-- Table structure for ky_gxtea_setting
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_gxtea_setting`;
+CREATE TABLE `ky_gxtea_setting` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mini_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '公众号ID，大于0表示附属公众号的配置',
+  `name` varchar(30) NOT NULL DEFAULT '' COMMENT '标识',
+  `title` varchar(30) NOT NULL DEFAULT '' COMMENT '名称',
+  `value` text COMMENT '配置值',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `update_time` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='配置';
+
+-- ----------------------------
+-- Records of ky_gxtea_setting
+-- ----------------------------
+INSERT INTO `ky_gxtea_setting` VALUES ('2', '11', 'vip', '会员等级', '{\"desc\":\"\\u4f1a\\u5458\\u7b49\\u7ea7\\u662f\\u57fa\\u4e8e\\u7528\\u6237\\u4f7f\\u7528\\u201c\\u7ea6\\u5c0f\\u8317\\u201d\\u5171\\u4eab\\u8336\\u5ba4\\u4e1a\\u52a1\\u7d2f\\u79ef\\u6d88\\u8d39\\u91d1\\u989d\\u6240\\u51b3\\u5b9a\\uff0c\\u7528\\u6237\\u8fbe\\u5230\\u76f8\\u5e94\\u7684\\u7b49\\u7ea7\\u95e8\\u69db\\u5373\\u53ef\\u81ea\\u52a8\\u5347\\u7ea7\\u3002\\u4e0d\\u540c\\u7b49\\u7ea7\\u4f1a\\u5458\\u4eab\\u53d7\\u4e0d\\u540c\\u7b49\\u7ea7\\u6298\\u6263\\u3002\",\"rule\":\"V1(\\u666e\\u901a\\u4f1a\\u5458)|0|10\\r\\nV2(\\u9ec4\\u91d1\\u4f1a\\u5458)|1000|9.0\\r\\nV3(\\u94c2\\u91d1\\u4f1a\\u5458)|2000|8.5\\r\\nV4(\\u94bb\\u77f3\\u4f1a\\u5458)|3000|8.0\"}', '1596547704', '1597385385');
+INSERT INTO `ky_gxtea_setting` VALUES ('3', '11', 'order', '订单', '{\"expire\":\"1.5\",\"options\":\"1000|1100\\r\\n2000|2200\\r\\n3000|3300\"}', '1596616989', '1596679844');
 
 -- ----------------------------
 -- Table structure for ky_gxtea_shop
@@ -4351,8 +4727,95 @@ CREATE TABLE `ky_gxtea_shop` (
 -- ----------------------------
 -- Records of ky_gxtea_shop
 -- ----------------------------
-INSERT INTO `ky_gxtea_shop` VALUES ('1', '10', '350200', '集美泉水湾2期店', 'http://devhhb.images.huihuiba.net/1-5f2223dd6539f.jpg', '118.110703', '24.586458', '1596124800', '1596211198', '15611111112', '集美泉水湾2期店', '1596037424', '1596190981', '1');
-INSERT INTO `ky_gxtea_shop` VALUES ('2', '10', '350200', '集美万达店', 'http://devhhb.images.huihuiba.net/1-5f2232d6c5fac.png', '118.092590', '24.573357', '1596124800', '1596207600', '13411111111', '集美区万达广场', '1596080935', '1596191085', '1');
+INSERT INTO `ky_gxtea_shop` VALUES ('1', '11', '350200', '集美泉水湾2期店', 'http://devhhb.images.huihuiba.net/1-5f2223dd6539f.jpg', '118.110703', '24.586458', '1596124800', '1596211198', '15611111112', '集美泉水湾2期店', '1596037424', '1596190981', '1');
+INSERT INTO `ky_gxtea_shop` VALUES ('2', '11', '350200', '集美万达店', 'http://devhhb.images.huihuiba.net/1-5f2232d6c5fac.png', '118.092590', '24.573357', '1596124800', '1596207600', '13411111111', '集美区万达广场', '1596080935', '1596191085', '1');
+
+-- ----------------------------
+-- Table structure for ky_gxtea_staff
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_gxtea_staff`;
+CREATE TABLE `ky_gxtea_staff` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mini_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '小程序id',
+  `name` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '姓名',
+  `mobile` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '手机账号',
+  `password` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '密码',
+  `shop_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '店铺id',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `update_time` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='店铺核销员';
+
+-- ----------------------------
+-- Records of ky_gxtea_staff
+-- ----------------------------
+INSERT INTO `ky_gxtea_staff` VALUES ('1', '11', '张三', '15659827559', '$2y$10$1VT7rNRQBz6rh5O8I0LRLOM22H8JZtUcrdhFTmoT7fVad7pWFXnpi', '1', '1', '1597211038', '1597211263');
+
+-- ----------------------------
+-- Table structure for ky_gxtea_user
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_gxtea_user`;
+CREATE TABLE `ky_gxtea_user` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mini_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '小程序id',
+  `openid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'openid ',
+  `realname` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '真实姓名',
+  `level` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '会员等级 0',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `update_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
+  PRIMARY KEY (`id`),
+  KEY `mini_id` (`mini_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户表';
+
+-- ----------------------------
+-- Records of ky_gxtea_user
+-- ----------------------------
+INSERT INTO `ky_gxtea_user` VALUES ('6', '11', 'oUcHy5F7WcJp14Ivfd3wJrOKH6m4', '', '0', '1597312895', '1597312895', '1');
+
+-- ----------------------------
+-- Table structure for ky_gxtea_user_wallet
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_gxtea_user_wallet`;
+CREATE TABLE `ky_gxtea_user_wallet` (
+  `id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
+  `mini_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '小程序id',
+  `money` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '可用余额',
+  `total_recharge` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '历史总充值额度',
+  `total_order_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '订单支付总金额',
+  `used_money` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '已使用额度',
+  PRIMARY KEY (`id`),
+  KEY `mini_id` (`mini_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户钱包';
+
+-- ----------------------------
+-- Records of ky_gxtea_user_wallet
+-- ----------------------------
+INSERT INTO `ky_gxtea_user_wallet` VALUES ('5', '11', '0.00', '0.00', '0.00', '0.00');
+INSERT INTO `ky_gxtea_user_wallet` VALUES ('6', '11', '0.00', '0.00', '200.00', '0.00');
+
+-- ----------------------------
+-- Table structure for ky_gxtea_wallet_log
+-- ----------------------------
+DROP TABLE IF EXISTS `ky_gxtea_wallet_log`;
+CREATE TABLE `ky_gxtea_wallet_log` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mini_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '小程序id',
+  `user_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
+  `type` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '0支出  1收入',
+  `money` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '金额',
+  `desc` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '说明',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '发生时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='钱包明细';
+
+-- ----------------------------
+-- Records of ky_gxtea_wallet_log
+-- ----------------------------
+INSERT INTO `ky_gxtea_wallet_log` VALUES ('1', '11', '2', '1', '10.00', '充值10元', '0');
+INSERT INTO `ky_gxtea_wallet_log` VALUES ('2', '11', '2', '1', '1100.00', '充值1000元，实到1100', '1596685442');
+INSERT INTO `ky_gxtea_wallet_log` VALUES ('3', '11', '2', '1', '1100.00', '充值1000元，实到1100', '1596685565');
 
 -- ----------------------------
 -- Table structure for ky_media_image_1
@@ -4398,7 +4861,7 @@ CREATE TABLE `ky_media_image_2` (
   `location` varchar(50) NOT NULL DEFAULT '' COMMENT '位置Local，Qiniu',
   PRIMARY KEY (`id`),
   KEY `media_id` (`media_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of ky_media_image_2
@@ -4423,6 +4886,10 @@ INSERT INTO `ky_media_image_2` VALUES ('23', '1', '1', '10元红包.jpg', '/publ
 INSERT INTO `ky_media_image_2` VALUES ('24', '1', '1', '家电小.jpg', 'http://devhhb.images.huihuiba.net/1-5f2223dd6539f.jpg', '1596072925', '1596072925', '1', '', '111848', 'jpg', 'Qiniu');
 INSERT INTO `ky_media_image_2` VALUES ('25', '1', '1', '2.png', 'http://devhhb.images.huihuiba.net/1-5f2232d6244a0.png', '1596076758', '1596076758', '1', '', '169743', 'png', 'Qiniu');
 INSERT INTO `ky_media_image_2` VALUES ('26', '1', '1', '1.png', 'http://devhhb.images.huihuiba.net/1-5f2232d6c5fac.png', '1596076760', '1596076760', '1', '', '214342', 'png', 'Qiniu');
+INSERT INTO `ky_media_image_2` VALUES ('28', '1', '1', 'logo.png', 'http://devhhb.images.huihuiba.net/1-5f25196521913.png', '1596266853', '1596266853', '1', '', '9576', 'png', 'Qiniu');
+INSERT INTO `ky_media_image_2` VALUES ('29', '1', '1', 'logo.png', 'http://devhhb.images.huihuiba.net/1-5f27af582cf0d.png', '1596436312', '1596436312', '1', '', '9902', 'png', 'Qiniu');
+INSERT INTO `ky_media_image_2` VALUES ('30', '1', '1', 'logo.png', 'http://devhhb.images.huihuiba.net/1-5f27aff29f820.png', '1596436466', '1596708994', '1', 'JW8XS34h_ISSqHFm_g1Wsb42ymhiNocn6sD4gQFbloQ', '4950', 'png', 'Qiniu');
+INSERT INTO `ky_media_image_2` VALUES ('31', '1', '1', '微信图片_20200812120423.jpg', 'http://devhhb.images.huihuiba.net/1-5f336a7d80daf.jpg', '1597205117', '1597205117', '1', '', '40519', 'jpg', 'Qiniu');
 
 -- ----------------------------
 -- Table structure for ky_media_image_3
@@ -5037,107 +5504,112 @@ CREATE TABLE `ky_menu` (
   `update_time` int(10) unsigned NOT NULL DEFAULT '0',
   `type` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '1菜单 2权限',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of ky_menu
 -- ----------------------------
-INSERT INTO `ky_menu` VALUES ('1', '0', '公众号', 'mp/index/index', '1', '&#xe63a;', '', '1', '0', '1595660681', '1');
-INSERT INTO `ky_menu` VALUES ('2', '0', '站点', 'system/admin/index', '10', '&#xe620;', '', '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('13', '1', '增强功能', 'null', '0', 'fa fa-briefcase', '', '1', '0', '1595660681', '1');
-INSERT INTO `ky_menu` VALUES ('14', '13', '自动回复', 'mp/reply/index', '0', '', '', '1', '0', '1595660681', '1');
-INSERT INTO `ky_menu` VALUES ('15', '13', '自定义菜单', 'mp/menu/index', '1', '', '', '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('16', '13', '功能配置', 'mp/setting/index', '10', '', '', '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('17', '13', '二维码/转化链接 ', 'mp/qrcode/index', '4', '', '', '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('18', '13', '素材管理', 'mp/material/index', '5', '', '', '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('19', '1', '粉丝', 'null', '2', 'fa fa-users', '', '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('20', '19', '粉丝管理', 'mp/follow/index', '0', '', '', '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('21', '80', '微信平台', '', '0', 'fa fa-wechat', '', '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('22', '21', '微信公众号', 'system/mp/index', '1', '', '', '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('23', '22', '手动接入', 'system/mp/add', '3', '', '', '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('25', '2', '设置', '', '10', 'fa fa-cogs', '', '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('26', '25', '菜单设置', 'admin/menu/index', '1', '', '', '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('27', '26', '增加菜单', 'admin/menu/add', '2', '', '', '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('28', '22', '编辑公众号', 'system/mp/edit', '5', '', '', '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('29', '22', '管理设置', 'system/mp/info', '3', '', '', '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('30', '17', '增加二维码', 'mp/qrcode/add', '0', '', '', '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('32', '14', '增加关键词', 'mp/reply/add', '0', '', '', '1', '0', '1595660681', '2');
-INSERT INTO `ky_menu` VALUES ('41', '14', '特殊消息', 'mp/reply/special', '0', '', '', '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('43', '0', '应用', 'system/store/myapps', '4', '&#xe635;', '', '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('45', '2', '应用管理', 'null', '1', 'fa fa-cubes', '', '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('46', '61', '已过期', 'system/store/overtime', '3', '', null, '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('47', '13', '消息管理', 'mp/msg/index', '1', '', null, '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('48', '47', '回复消息', 'mp/msg/detail', '0', '', null, '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('50', '26', '修改菜单', 'admin/menu/edit', '0', '', null, '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('51', '25', '微信开放平台', 'system/mp/platform', '3', '', null, '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('52', '80', '用户/权限', '', '5', 'fa fa-users', null, '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('53', '67', '注册会员', 'system/admin/index', '0', '', null, '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('54', '53', '更改密码', 'system/admin/updatepwd', '0', '', null, '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('55', '53', '增加成员', 'system/admin/add', '0', '', null, '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('56', '45', '应用管理', 'admin/app/index', '0', '', null, '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('57', '81', '系统公告', 'admin/notice/index', '1', '', null, '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('58', '60', '编辑应用分类', 'admin/addoncate/edit', '3', '', null, '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('59', '60', '新增应用分类', 'admin/addoncate/add', '0', '', null, '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('60', '45', '应用分类', 'admin/addoncate/index', '5', '', null, '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('61', '43', '我的应用', '', '1', 'fa fa-cubes', null, '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('62', '43', '应用市场', '', '4', 'fa fa-cubes', null, '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('63', '62', '应用采购', 'system/store/apps', '0', '', null, '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('64', '61', '正常应用', 'system/store/myapps', '0', '', null, '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('65', '22', '选择接入方式', 'system/mp/choose', '0', '', null, '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('66', '69', '编辑用户组', 'admin/admingroup/edit', '2', '', null, '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('67', '2', '用户管理', 'NULL', '5', 'fa fa-bars', null, '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('68', '1', '数据统计', 'mp/index/index', '0', '', null, '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('69', '67', '用户组', 'admin/admingroup/index', '3', '&#xe68b;', null, '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('70', '69', '新增用户组', 'admin/admingroup/add', '1', '', null, '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('71', '17', '二维码统计', 'mp/qrcode/log', '2', '', null, '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('72', '80', '欢迎回来', 'system/index/index', '0', '', null, '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('73', '74', '应用商店', 'admin/appstore/index', '2', '', null, '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('74', '2', '官方市场', 'NULL', '2', 'fa fa-cart-plus', null, '0', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('75', '73', '应用中心-注册', 'admin/appstore/register', '0', '', null, '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('76', '73', '用户登录', 'admin/appstore/login', '0', '', null, '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('77', '56', '编辑应用信息', 'admin/app/edit', '3', '', null, '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('80', '0', '系统', 'system/index/index', '5', '', '', '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('81', '2', '消息管理', '', '15', 'fa fa-bullhorn', '', '1', '0', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('82', '53', '编辑信息', 'system/admin/edit', '3', '', '', '1', '0', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('83', '25', '站点设置', 'admin/setting/index', '0', '', '', '1', '1590246581', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('84', '52', '我的账号', 'system/admin/myinfo', '0', '', '', '1', '1590410830', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('85', '84', '重置密码', 'system/admin/updatemypwd', '1', '', '', '1', '1590411654', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('86', '57', '发布公告', 'admin/notice/add', '1', 'fa fa-plus', '', '1', '1590593322', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('87', '22', '授权接入', 'mp/auth/index', '5', '', '', '1', '1590654308', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('88', '14', ' 编辑关键词', 'mp/reply/edit', '1', '', '', '1', '1591021404', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('89', '67', '用户应用', 'admin/adminaddon/index', '5', '', '', '1', '1594806392', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('90', '89', '开通应用', 'admin/adminaddon/add', '0', '', '', '1', '1594812008', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('91', '89', '编辑用户应用', 'admin/adminaddon/edit', '2', '', '', '1', '1594812032', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('92', '57', '编辑公告', 'admin/notice/edit', '5', '', '', '1', '1594896676', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('93', '80', '系统通知', 'system/notice/index', '0', '', '', '1', '1594900050', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('94', '80', '切换平台', 'system/store/index', '0', '', '', '1', '1594970326', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('95', '63', '应用下单', 'system/store/appdetail', '0', '', '', '1', '1595247406', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('96', '43', '订单支付', 'system/payment/orderaddon', '0', '', '', '1', '1595307609', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('97', '2', '财务管理', '', '0', 'fa fa-money', '', '1', '1595314612', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('98', '97', '应用订单', 'admin/orderaddon/index', '0', '', '', '1', '1595314675', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('99', '98', '修改订单', 'admin/orderaddon/edit', '0', '', '', '1', '1595324991', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('100', '80', '财务管理', '', '0', 'fa fa-money', '', '1', '1595327151', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('101', '100', '应用订单', 'system/orderaddon/index', '0', '', '', '1', '1595327214', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('102', '21', '微信小程序', 'system/mini/index', '3', 'fa fa-weixin', '', '1', '1595416032', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('103', '102', '选择接入方式', 'system/mini/choose', '0', '', '', '1', '1595471638', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('104', '102', '手动添加小程序', 'system/mini/add', '0', '', '', '1', '1595471732', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('105', '102', '管理设置', 'system/mini/info', '0', '', '', '1', '1595485512', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('106', '102', '编辑小程序', 'system/mini/edit', '0', '', '', '1', '1595485527', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('107', '102', '授权失败', 'mini/auth/fail', '0', '', '', '1', '1595494584', '1595660682', '2');
-INSERT INTO `ky_menu` VALUES ('108', '111', '管理', '', '0', 'fa fa-th-list', '', '1', '1595561919', '1595660720', '1');
-INSERT INTO `ky_menu` VALUES ('109', '115', '用户管理', 'mini/follow/index', '3', '', '', '1', '1595562103', '1595900388', '1');
-INSERT INTO `ky_menu` VALUES ('110', '115', '数据统计与分析', 'mini/index/index', '0', '', '', '1', '1595562456', '1595660849', '1');
-INSERT INTO `ky_menu` VALUES ('111', '0', '小程序', 'mini/index/index', '0', '', '', '1', '1595563196', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('112', '115', '配置', 'mini/setting/index', '10', '', '', '1', '1595571661', '1595660863', '1');
-INSERT INTO `ky_menu` VALUES ('113', '45', '小程序模板', 'admin/minitemplate/index', '10', '', '', '1', '1595578963', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('114', '108', '版本管理', 'mini/template/index', '0', '', '', '1', '1595660483', '1595660682', '1');
-INSERT INTO `ky_menu` VALUES ('115', '111', '功能', '', '3', 'fa fa-list', '', '1', '1595660750', '1595660795', '1');
-INSERT INTO `ky_menu` VALUES ('116', '56', '设置模版', 'admin/app/settemplate', '0', '', '', '1', '1595681557', '1595681557', '2');
-INSERT INTO `ky_menu` VALUES ('117', '114', '新建版本', 'mini/template/choose', '0', '', '', '1', '1595772252', '1595772398', '2');
-INSERT INTO `ky_menu` VALUES ('118', '114', '历史版本', 'mini/template/log', '0', '', '', '1', '1595843089', '1595843089', '2');
-INSERT INTO `ky_menu` VALUES ('119', '108', '体验者管理', 'mini/tester/index', '3', '', '', '1', '1595900462', '1595900462', '1');
-INSERT INTO `ky_menu` VALUES ('120', '119', '新增体验者', 'mini/tester/add', '0', '', '', '1', '1595902322', '1595902322', '2');
-INSERT INTO `ky_menu` VALUES ('121', '115', '小程序码', 'mini/qrcode/index', '7', '', '', '0', '1595935890', '1595993663', '1');
+INSERT INTO `ky_menu` VALUES ('1', '0', '公众号', 'mp/index/index', '1', '&#xe63a;', '', '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('2', '0', '站点', 'system/admin/index', '10', '&#xe620;', '', '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('13', '1', '增强功能', 'null', '0', 'fa fa-briefcase', '', '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('14', '13', '自动回复', 'mp/reply/index', '0', '', '', '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('15', '13', '自定义菜单', 'mp/menu/index', '1', '', '', '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('16', '13', '功能配置', 'mp/setting/index', '10', '', '', '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('17', '13', '二维码/转化链接 ', 'mp/qrcode/index', '4', '', '', '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('18', '13', '素材管理', 'mp/material/index', '5', '', '', '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('19', '1', '粉丝', 'null', '2', 'fa fa-users', '', '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('20', '19', '粉丝管理', 'mp/follow/index', '0', '', '', '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('21', '80', '微信平台', '', '0', 'fa fa-wechat', '', '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('22', '21', '微信公众号', 'system/mp/index', '1', '', '', '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('23', '22', '手动接入', 'system/mp/add', '3', '', '', '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('25', '2', '设置', '', '20', 'fa fa-cogs', '', '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('26', '25', '菜单设置', 'admin/menu/index', '1', '', '', '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('27', '26', '增加菜单', 'admin/menu/add', '2', '', '', '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('28', '22', '编辑公众号', 'system/mp/edit', '5', '', '', '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('29', '22', '管理设置', 'system/mp/info', '3', '', '', '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('30', '17', '增加二维码', 'mp/qrcode/add', '0', '', '', '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('32', '14', '增加关键词', 'mp/reply/add', '0', '', '', '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('41', '14', '特殊消息', 'mp/reply/special', '0', '', '', '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('43', '0', '应用', 'system/store/myapps', '4', '&#xe635;', '', '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('45', '2', '应用管理', 'null', '1', 'fa fa-cubes', '', '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('46', '61', '已过期', 'system/store/overtime', '3', '', null, '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('47', '13', '消息管理', 'mp/msg/index', '1', '', null, '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('48', '47', '回复消息', 'mp/msg/detail', '0', '', null, '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('50', '26', '修改菜单', 'admin/menu/edit', '0', '', null, '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('51', '25', '微信开放平台', 'system/mp/platform', '3', '', null, '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('52', '80', '用户/权限', '', '5', 'fa fa-users', null, '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('53', '67', '注册会员', 'system/admin/index', '0', '', null, '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('54', '53', '更改密码', 'system/admin/updatepwd', '0', '', null, '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('55', '53', '增加成员', 'system/admin/add', '0', '', null, '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('56', '45', '应用管理', 'admin/app/index', '0', '', null, '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('57', '81', '系统公告', 'admin/notice/index', '1', '', null, '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('58', '60', '编辑应用分类', 'admin/addoncate/edit', '3', '', null, '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('59', '60', '新增应用分类', 'admin/addoncate/add', '0', '', null, '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('60', '45', '应用分类', 'admin/addoncate/index', '5', '', null, '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('61', '43', '我的应用', '', '1', 'fa fa-cubes', null, '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('62', '43', '应用市场', '', '4', 'fa fa-cubes', null, '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('63', '62', '应用采购', 'system/store/apps', '0', '', null, '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('64', '61', '正常应用', 'system/store/myapps', '0', '', null, '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('65', '22', '选择接入方式', 'system/mp/choose', '0', '', null, '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('66', '69', '编辑用户组', 'admin/admingroup/edit', '2', '', null, '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('67', '2', '用户管理', 'NULL', '5', 'fa fa-bars', null, '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('68', '1', '数据统计', 'mp/index/index', '0', '', null, '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('69', '67', '用户组', 'admin/admingroup/index', '3', '&#xe68b;', null, '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('70', '69', '新增用户组', 'admin/admingroup/add', '1', '', null, '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('71', '17', '二维码统计', 'mp/qrcode/log', '2', '', null, '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('72', '80', '欢迎回来', 'system/index/index', '0', '', null, '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('73', '74', '应用商店', 'admin/appstore/index', '2', '', null, '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('74', '2', '官方市场', 'NULL', '2', 'fa fa-cart-plus', null, '1', '0', '1597831820', '1');
+INSERT INTO `ky_menu` VALUES ('75', '73', '官方市场注册', 'admin/appstore/register', '0', '', null, '1', '0', '1598262621', '2');
+INSERT INTO `ky_menu` VALUES ('76', '73', '官方市场登录', 'admin/appstore/login', '0', '', null, '1', '0', '1598262646', '2');
+INSERT INTO `ky_menu` VALUES ('77', '56', '编辑应用信息', 'admin/app/edit', '3', '', null, '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('80', '0', '系统', 'system/index/index', '5', '', '', '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('81', '2', '消息管理', '', '15', 'fa fa-bullhorn', '', '1', '0', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('82', '53', '编辑信息', 'system/admin/edit', '3', '', '', '1', '0', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('83', '25', '站点设置', 'admin/setting/index', '0', '', '', '1', '1590246581', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('84', '52', '我的账号', 'system/admin/myinfo', '0', '', '', '1', '1590410830', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('85', '84', '重置密码', 'system/admin/updatemypwd', '1', '', '', '1', '1590411654', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('86', '57', '发布公告', 'admin/notice/add', '1', 'fa fa-plus', '', '1', '1590593322', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('87', '22', '授权接入', 'mp/auth/index', '5', '', '', '1', '1590654308', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('88', '14', ' 编辑关键词', 'mp/reply/edit', '1', '', '', '1', '1591021404', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('89', '67', '用户应用', 'admin/adminaddon/index', '5', '', '', '1', '1594806392', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('90', '89', '开通应用', 'admin/adminaddon/add', '0', '', '', '1', '1594812008', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('91', '89', '编辑用户应用', 'admin/adminaddon/edit', '2', '', '', '1', '1594812032', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('92', '57', '编辑公告', 'admin/notice/edit', '5', '', '', '1', '1594896676', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('93', '80', '系统通知', 'system/notice/index', '0', '', '', '1', '1594900050', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('94', '80', '切换平台', 'system/store/index', '0', '', '', '1', '1594970326', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('95', '63', '应用下单', 'system/store/appdetail', '0', '', '', '1', '1595247406', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('96', '43', '订单支付', 'system/payment/orderaddon', '0', '', '', '1', '1595307609', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('97', '2', '财务管理', '', '0', 'fa fa-money', '', '1', '1595314612', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('98', '97', '应用订单', 'admin/orderaddon/index', '0', '', '', '1', '1595314675', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('99', '98', '修改订单', 'admin/orderaddon/edit', '0', '', '', '1', '1595324991', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('100', '80', '财务管理', '', '0', 'fa fa-money', '', '1', '1595327151', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('101', '100', '应用订单', 'system/orderaddon/index', '0', '', '', '1', '1595327214', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('102', '21', '微信小程序', 'system/mini/index', '3', 'fa fa-weixin', '', '1', '1595416032', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('103', '102', '添加小程序', 'system/mini/choose', '0', '', '', '1', '1595471638', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('104', '102', '手动添加小程序', 'system/mini/add', '0', '', '', '1', '1595471732', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('105', '102', '管理设置', 'system/mini/info', '0', '', '', '1', '1595485512', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('106', '102', '编辑小程序', 'system/mini/edit', '0', '', '', '1', '1595485527', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('107', '102', '授权失败', 'mini/auth/fail', '0', '', '', '1', '1595494584', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('108', '111', '管理', '', '0', 'fa fa-th-list', '', '1', '1595561919', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('109', '115', '用户管理', 'mini/follow/index', '3', '', '', '1', '1595562103', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('110', '115', '数据统计与分析', 'mini/index/index', '0', '', '', '1', '1595562456', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('111', '0', '小程序', 'mini/index/index', '0', '', '', '1', '1595563196', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('112', '115', '配置', 'mini/setting/index', '10', '', '', '1', '1595571661', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('113', '45', '小程序模板', 'admin/minitemplate/index', '10', '', '', '1', '1595578963', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('114', '108', '版本管理', 'mini/template/index', '0', '', '', '1', '1595660483', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('115', '111', '功能', '', '3', 'fa fa-list', '', '1', '1595660750', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('116', '56', '设置模版', 'admin/app/settemplate', '0', '', '', '1', '1595681557', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('117', '114', '新建版本', 'mini/template/choose', '0', '', '', '1', '1595772252', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('118', '114', '历史版本', 'mini/template/log', '0', '', '', '1', '1595843089', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('119', '108', '体验者管理', 'mini/tester/index', '3', '', '', '1', '1595900462', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('120', '119', '新增体验者', 'mini/tester/add', '0', '', '', '1', '1595902322', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('121', '115', '小程序码', 'mini/qrcode/index', '7', '', '', '0', '1595935890', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('122', '2', '运营管理', '', '0', 'fa fa-bar-chart', '', '1', '1596271318', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('123', '122', '友情链接', 'admin/friendlink/index', '0', '', '', '1', '1596271404', '1596273651', '1');
+INSERT INTO `ky_menu` VALUES ('124', '123', '新增友链', 'admin/friendlink/add', '0', '', '', '1', '1596273508', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('125', '123', '编辑友链', 'admin/friendlink/edit', '0', '', '', '1', '1596273522', '1596273651', '2');
+INSERT INTO `ky_menu` VALUES ('126', '73', '登录应用市场', 'admin/appstore/detail', '0', '', '', '1', '1598262355', '1598262493', '2');
 
 -- ----------------------------
 -- Table structure for ky_mini
@@ -5174,7 +5646,8 @@ CREATE TABLE `ky_mini` (
 -- ----------------------------
 -- Records of ky_mini
 -- ----------------------------
-INSERT INTO `ky_mini` VALUES ('10', '1', 'wx85a60c8853fa7d49', '', 'refreshtoken@@@ecVWsgVFRjHrCWdswv7JDA7Anqz4w-u58GUdHBQvAFs', '占卜手', 'http://wx.qlogo.cn/mmopen/icU3wjyUPLMsTMc8ApkQS8pTns0QBtSPQFSx4cz9JMXNAPLGCDvgXwwA32VLGXZw9fEPYQwdzia8JFm6JS2ZSVZUge25p7KIZ4/0', '0', '-1', 'gh_811a6be57067', '厦门酷云网络科技有限公司', '', '{\"open_pay\":0,\"open_shake\":0,\"open_scan\":0,\"open_card\":0,\"open_store\":0}', 'http://devhhb.images.huihuiba.net/c59227b6ffd3648a062c4f98750e2099', '1', '研究易经，免费算命的应用,提供八字算命婚姻,化煞解灾改运,八卦六爻择日预测,企业风水,周公解梦十二生肖运势等命理类服务。', '[{\"funcscope_category\":{\"id\":17}},{\"funcscope_category\":{\"id\":18},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":19}},{\"funcscope_category\":{\"id\":25},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":30},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":31},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":36}},{\"funcscope_category\":{\"id\":37}},{\"funcscope_category\":{\"id\":40}},{\"funcscope_category\":{\"id\":41},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":45}},{\"funcscope_category\":{\"id\":48}},{\"funcscope_category\":{\"id\":49},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":51}},{\"funcscope_category\":{\"id\":57}},{\"funcscope_category\":{\"id\":65}},{\"funcscope_category\":{\"id\":67}}]', '{\"network\":{\"RequestDomain\":[\"https:\\/\\/kyphp.fdj.kuryun.cn\"],\"WsRequestDomain\":[\"wss:\\/\\/kyphp.fdj.kuryun.cn\"],\"UploadDomain\":[\"https:\\/\\/kyphp.fdj.kuryun.cn\"],\"DownloadDomain\":[\"https:\\/\\/kyphp.fdj.kuryun.cn\"],\"BizDomain\":[\"https:\\/\\/kyphp.fdj.kuryun.cn\"],\"UDPDomain\":[]},\"categories\":[{\"first\":\"\\u5de5\\u5177\",\"second\":\"\\u4fe1\\u606f\\u67e5\\u8be2\"},{\"first\":\"\\u751f\\u6d3b\\u670d\\u52a1\",\"second\":\"\\u4f11\\u95f2\\u5a31\\u4e50\"}],\"visit_status\":0}', '1', '1', '1595557998', '1595944458', '');
+INSERT INTO `ky_mini` VALUES ('10', '1', 'wx85a60c8853fa7d49', '', 'refreshtoken@@@jAaSgPRUJT28mYinBSa2PR6teSV0yegrQbZ1VKDCiPA', '占卜手', 'http://wx.qlogo.cn/mmopen/icU3wjyUPLMsTMc8ApkQS8pTns0QBtSPQFSx4cz9JMXNAPLGCDvgXwwA32VLGXZw9fEPYQwdzia8JFm6JS2ZSVZUge25p7KIZ4/0', '0', '-1', 'gh_811a6be57067', '厦门酷云网络科技有限公司', '', '{\"open_pay\":0,\"open_shake\":0,\"open_scan\":0,\"open_card\":0,\"open_store\":0}', 'http://devhhb.images.huihuiba.net/c59227b6ffd3648a062c4f98750e2099', '1', '研究易经，免费算命的应用,提供八字算命婚姻,化煞解灾改运,八卦六爻择日预测,企业风水,周公解梦十二生肖运势等命理类服务。', '[{\"funcscope_category\":{\"id\":17}},{\"funcscope_category\":{\"id\":18},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":19}},{\"funcscope_category\":{\"id\":25},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":30},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":31},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":36}},{\"funcscope_category\":{\"id\":37}},{\"funcscope_category\":{\"id\":40}},{\"funcscope_category\":{\"id\":41},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":45}},{\"funcscope_category\":{\"id\":48}},{\"funcscope_category\":{\"id\":49},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":51}},{\"funcscope_category\":{\"id\":57}},{\"funcscope_category\":{\"id\":65}},{\"funcscope_category\":{\"id\":67}}]', '{\"network\":{\"RequestDomain\":[\"https:\\/\\/kyphp.fdj.kuryun.cn\"],\"WsRequestDomain\":[\"wss:\\/\\/kyphp.fdj.kuryun.cn\"],\"UploadDomain\":[\"https:\\/\\/kyphp.fdj.kuryun.cn\"],\"DownloadDomain\":[\"https:\\/\\/kyphp.fdj.kuryun.cn\"],\"BizDomain\":[\"https:\\/\\/kyphp.fdj.kuryun.cn\"],\"UDPDomain\":[]},\"categories\":[{\"first\":\"\\u5de5\\u5177\",\"second\":\"\\u4fe1\\u606f\\u67e5\\u8be2\"},{\"first\":\"\\u751f\\u6d3b\\u670d\\u52a1\",\"second\":\"\\u4f11\\u95f2\\u5a31\\u4e50\"}],\"visit_status\":0}', '1', '1', '1595557998', '1596513074', '');
+INSERT INTO `ky_mini` VALUES ('11', '1', 'wx7f61eafb0a0f3c77', '', 'refreshtoken@@@vZFzZNff61bi8bxrIpi5l7f-X1nZUf921o9o6_I67Dc', '爱儿本', 'http://wx.qlogo.cn/mmopen/icU3wjyUPLMsTMc8ApkQS8iaVnSsD0V7zVDfkicOL96aMSwibnmnNpIFZHh5gK8ibN7mJdlia7z9AapN1eiajawNeJAkw2QsXTdibBH9/0', '0', '0', 'gh_b778980b9522', '厦门酷云网络科技有限公司', '', '{\"open_pay\":0,\"open_shake\":0,\"open_scan\":0,\"open_card\":0,\"open_store\":0}', 'http://devhhb.images.huihuiba.net/06190c9e80184308a077292c19ec0bfc', '1', '儿童相册、成长日记、育儿知识分享', '[{\"funcscope_category\":{\"id\":17}},{\"funcscope_category\":{\"id\":18},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":19}},{\"funcscope_category\":{\"id\":25},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":30},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":31},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":36}},{\"funcscope_category\":{\"id\":37}},{\"funcscope_category\":{\"id\":40}},{\"funcscope_category\":{\"id\":41},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":45}},{\"funcscope_category\":{\"id\":48}},{\"funcscope_category\":{\"id\":49},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":51}},{\"funcscope_category\":{\"id\":57}},{\"funcscope_category\":{\"id\":65}},{\"funcscope_category\":{\"id\":67}}]', '{\"network\":{\"RequestDomain\":[\"https:\\/\\/weixin.open.huihuiba.net\"],\"WsRequestDomain\":[\"wss:\\/\\/weixin.open.huihuiba.net\"],\"UploadDomain\":[\"https:\\/\\/weixin.open.huihuiba.net\"],\"DownloadDomain\":[\"https:\\/\\/weixin.open.huihuiba.net\"],\"BizDomain\":[\"https:\\/\\/www.huihuiba.net\"],\"UDPDomain\":[]},\"categories\":[{\"first\":\"\\u5de5\\u5177\",\"second\":\"\\u5907\\u5fd8\\u5f55\"},{\"first\":\"\\u5de5\\u5177\",\"second\":\"\\u56fe\\u7247\"},{\"first\":\"\\u5de5\\u5177\",\"second\":\"\\u9884\\u7ea6\\/\\u62a5\\u540d\"},{\"first\":\"\\u751f\\u6d3b\\u670d\\u52a1\",\"second\":\"\\u4f11\\u95f2\\u5a31\\u4e50\"}],\"visit_status\":0}', '1', '1', '1596536174', '1596786901', '');
 
 -- ----------------------------
 -- Table structure for ky_mini_addon
@@ -5190,13 +5663,14 @@ CREATE TABLE `ky_mini_addon` (
   `status` tinyint(1) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `mpid_addon` (`mini_id`,`addon`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='小程序-插件关联表';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='小程序-插件关联表';
 
 -- ----------------------------
 -- Records of ky_mini_addon
 -- ----------------------------
 INSERT INTO `ky_mini_addon` VALUES ('1', '10', 'mini_demo', '{\"title\":\"\\u6d4b\\u8bd5\\u503c\",\"app_key\":\"9eT8gFN2J1efa5e8fadfegas1DDewrqw\"}', '1595932225', '1595947318', '1');
 INSERT INTO `ky_mini_addon` VALUES ('8', '10', 'gxtea', '{\"app_key\":\"123456\"}', '1595988929', '1596186644', '1');
+INSERT INTO `ky_mini_addon` VALUES ('9', '11', 'gxtea', '{\"kefu_tel\":\"15659827559\"}', '1596536891', '1596695344', '1');
 
 -- ----------------------------
 -- Table structure for ky_mini_follow_1
@@ -5226,7 +5700,7 @@ CREATE TABLE `ky_mini_follow_1` (
 -- Records of ky_mini_follow_1
 -- ----------------------------
 INSERT INTO `ky_mini_follow_1` VALUES ('1', '10', '', '888888', '', '', '中国', '', '', 'zh_CN', '1', '', '0', '0', '');
-INSERT INTO `ky_mini_follow_1` VALUES ('2', '10', '', 'oq-q-4ptVVjB5AtO2Lt5zzUcmt2I', '', '', '中国', '', '', 'zh_CN', '1', '', '1596160012', '1596160012', '');
+INSERT INTO `ky_mini_follow_1` VALUES ('2', '10', '', 'oq-q-4ptVVjB5AtO2Lt5zzUcmt2I', '丁昌乾-Jason', 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKSOvNVhIS4YJ3TZ25uN9s95cGXRQA8j49gfUf9hMDFmDk68fUeth7ppbCaficBWtibLxvrpBrvvialg/132', 'China', 'Fujian', 'Xiamen', 'zh_CN', '1', '', '1596160012', '1596354513', '');
 
 -- ----------------------------
 -- Table structure for ky_mini_follow_2
@@ -5250,11 +5724,12 @@ CREATE TABLE `ky_mini_follow_2` (
   `unionid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'unionid',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `openid` (`mini_id`,`openid`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='小程序微信用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='小程序微信用户表';
 
 -- ----------------------------
 -- Records of ky_mini_follow_2
 -- ----------------------------
+INSERT INTO `ky_mini_follow_2` VALUES ('6', '11', '13275008183', 'oUcHy5F7WcJp14Ivfd3wJrOKH6m4', '丁昌乾-Jason', 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJJOlibibPFEWO9qcXhCJltwPHsOgzAzS0ibtjpmbefwdibupgy4ibF2tOeKOCu18vLrzOUvYibXujosiaeg/132', 'China', 'Fujian', 'Xiamen', 'zh_CN', '1', '', '1597312814', '1597312898', '');
 
 -- ----------------------------
 -- Table structure for ky_mini_follow_3
@@ -5353,12 +5828,13 @@ CREATE TABLE `ky_mini_setting` (
   `create_time` int(10) unsigned NOT NULL DEFAULT '0',
   `update_time` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='小程序配置';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='小程序配置';
 
 -- ----------------------------
 -- Records of ky_mini_setting
 -- ----------------------------
 INSERT INTO `ky_mini_setting` VALUES ('1', '10', 'wxpay', '微信支付', '{\"appid\":\"wxe1b7737e3a0c7153\",\"secret\":\"887bb389abbe27e69982576a96a515b3\",\"merchant_id\":\"1449332102\",\"key\":\"Tm44FMGt484Y44TjV34V3VG2ZEG4pf4f\",\"cert_path\":\"\",\"key_path\":\"\",\"rsa_path\":\"\"}', '1591886422', '1596031924');
+INSERT INTO `ky_mini_setting` VALUES ('2', '11', 'wxpay', '微信支付', '{\"appid\":\"wx7f61eafb0a0f3c77\",\"secret\":\"2c7fb3e2183d0ba784501ce7c834d594\",\"merchant_id\":\"1449332102\",\"key\":\"Tm44FMGt484Y44TjV34V3VG2ZEG4pf4f\",\"cert_path\":\"\",\"key_path\":\"\",\"rsa_path\":\"\"}', '1591886422', '1596693708');
 
 -- ----------------------------
 -- Table structure for ky_mini_template
@@ -5378,13 +5854,14 @@ CREATE TABLE `ky_mini_template` (
   `source_miniprogram` varchar(64) NOT NULL DEFAULT '' COMMENT '来自小程序名称',
   `developer` varchar(50) NOT NULL DEFAULT '' COMMENT '开发者',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='小程序模板库';
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='小程序模板库';
 
 -- ----------------------------
 -- Records of ky_mini_template
 -- ----------------------------
 INSERT INTO `ky_mini_template` VALUES ('69', '1', '占卜手1.0', 'zbs1.0', '1595589040', '1', '1', '1595589584', '1595589584', 'wx85a60c8853fa7d49', '占卜手', '傅道集');
 INSERT INTO `ky_mini_template` VALUES ('70', '0', '占卜手1.0', 'zbs1.0', '1595576319', '2', '1', '1595590347', '1595590347', 'wx85a60c8853fa7d49', '占卜手', '傅道集');
+INSERT INTO `ky_mini_template` VALUES ('71', '1', '丁昌乾-Jason 在 2020年8月10日上午9点32分 提交上传', '1.0.0', '1597023161', '2', '1', '1597326484', '1597326484', 'wx7f61eafb0a0f3c77', '爱儿本', '丁昌乾-Jason');
 
 -- ----------------------------
 -- Table structure for ky_mini_template_log
@@ -5412,7 +5889,7 @@ CREATE TABLE `ky_mini_template_log` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `uid` (`uid`) USING BTREE,
   KEY `mini_id_status` (`mini_id`,`status`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='小程序模版记录';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='小程序模版记录';
 
 -- ----------------------------
 -- Records of ky_mini_template_log
@@ -5420,6 +5897,7 @@ CREATE TABLE `ky_mini_template_log` (
 INSERT INTO `ky_mini_template_log` VALUES ('1', '1', '10', '1', 'mini_demo', '{\"ext\":{\"appId\":\"wx85a60c8853fa7d49\"}}', '1.0', '第一版', '', null, '0', '', '0', '0', '0', '1595777043', '1595850926', '0');
 INSERT INTO `ky_mini_template_log` VALUES ('3', '1', '10', '1', 'mini_demo', '{\"ext\":{\"appId\":\"wx85a60c8853fa7d49\"}}', '2.0', '更新个人中心', 'http://devhhb.images.huihuiba.net/mini_qrcode_test_10_1595863113.png', '[{\"first_id\":\"287\",\"first_class\":\"\\u5de5\\u5177\",\"address\":\"pages\\/index\\/index\",\"tag\":\"\\u5de5\\u5177 \\u5a31\\u4e50\",\"second_id\":\"612\",\"second_class\":\"\\u4fe1\\u606f\\u67e5\\u8be2\"}]', '520692775', '1:小程序内容不符合规则:<br>(1):你好，小程序所实际提供的服务和内容，必须是正式的，不能以Demo形式提交。<br>', '1595918042', '0', '3', '1595850926', '1595995083', '0');
 INSERT INTO `ky_mini_template_log` VALUES ('4', '1', '10', '1', 'gxtea', '{\"ext\":{\"appId\":\"wx85a60c8853fa7d49\"}}', '1.0', '2.1', '', null, '0', '', '0', '0', '0', '1595988892', '1595995083', '1');
+INSERT INTO `ky_mini_template_log` VALUES ('5', '1', '11', '1', 'gxtea', '{\"ext\":{\"appId\":\"wx7f61eafb0a0f3c77\",\"env\":{\"restUrl\":\"https:\\/\\/kyphp.fdj.kuryun.cn\\/app\\/gxtea\\/api\\/\",\"qiniuDomain\":\"http:\\/\\/devhhb.images.huihuiba.net\",\"appKey\":\"123456\",\"mapKey\":\"3EOBZ-JDO3O-N4UWO-SSK7I-OSQHJ-NHF4J\",\"version\":\"1.0\"}}}', '1.0', '1.0', '', null, '0', '', '0', '0', '0', '1596536868', '1596536868', '1');
 
 -- ----------------------------
 -- Table structure for ky_mini_tester
@@ -5435,12 +5913,13 @@ CREATE TABLE `ky_mini_tester` (
   `update_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `mini_id` (`mini_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of ky_mini_tester
 -- ----------------------------
 INSERT INTO `ky_mini_tester` VALUES ('1', '10', 'zgdian2', '至高点测试2', '1', '1595902513', '1595903725');
+INSERT INTO `ky_mini_tester` VALUES ('2', '11', 'djf951212', '111', '0', '1597994819', '1597994902');
 
 -- ----------------------------
 -- Table structure for ky_mp
@@ -5481,6 +5960,7 @@ CREATE TABLE `ky_mp` (
 INSERT INTO `ky_mp` VALUES ('1', '1', 'wx10ddcef6537dd78c', '26a4eb806b640ef07b08777c08fde731', 'MIL4umO8pWIkfNhvNx01uBDupfUqS7J4', '测试号', 'http://devhhb.images.huihuiba.net/1-5f18f12eab894.jpg', '2', '0', 'gh_96bd876da264', '', 'test1', null, 'http://devhhb.images.huihuiba.net/1-5ece7c72a8f5f.png', '1', '', null, '1', '1590324684', '1595470144', '1', null, '', '/1198741614.txt');
 INSERT INTO `ky_mp` VALUES ('2', '2', 'dsaas', 'asdfasdf', 'hwrPcgezvPSAuFRCMnlAVocARzOIbbWE', 'sssss', '', '0', '-1', 'asdafasdf', '', '', null, '', '1', '', null, '1', '1590592849', '1590593695', '1', null, '', '');
 INSERT INTO `ky_mp` VALUES ('3', '1', 'wx43df34a2cc394eb8', '', 'refreshtoken@@@8x14HncR97pzmXXRg1h_vaZjyY6AdsHmIJCRGCMIlyA', '苟哥', 'http://wx.qlogo.cn/mmopen/icU3wjyUPLMsTMc8ApkQS8ogWbMzUa6gKW3eVCPw5OWvhbSe3TpZ55F4DTA8T9F5D5lq0pcxDiaUxFtUic2Ob78yPAGRdfEiaTGf/0', '1', '-1', 'gh_d17efaa86a49', '个人', 'fdaoji', '{\"open_pay\":0,\"open_shake\":0,\"open_scan\":0,\"open_card\":0,\"open_store\":0}', 'http://mmbiz.qpic.cn/mmbiz_jpg/1cpRfYg4VdqSjtX9QpFL7z2qIF2ibib2GuEWeFh5SLY04Vf7YicNoAzQoTghBPFw9y3fx4na2h8VtIL1VF6kZgN5Q/0', '1', '记录学习笔记，探讨科技前沿，崇尚开放、分享、创新。', '[{\"funcscope_category\":{\"id\":1}},{\"funcscope_category\":{\"id\":15}},{\"funcscope_category\":{\"id\":4}},{\"funcscope_category\":{\"id\":7}},{\"funcscope_category\":{\"id\":2}},{\"funcscope_category\":{\"id\":3}},{\"funcscope_category\":{\"id\":11}},{\"funcscope_category\":{\"id\":6}},{\"funcscope_category\":{\"id\":5}},{\"funcscope_category\":{\"id\":8}},{\"funcscope_category\":{\"id\":13}},{\"funcscope_category\":{\"id\":9}},{\"funcscope_category\":{\"id\":10}},{\"funcscope_category\":{\"id\":12}},{\"funcscope_category\":{\"id\":22}},{\"funcscope_category\":{\"id\":23}},{\"funcscope_category\":{\"id\":26}},{\"funcscope_category\":{\"id\":27},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":33},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":34}},{\"funcscope_category\":{\"id\":35}},{\"funcscope_category\":{\"id\":44},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":46}},{\"funcscope_category\":{\"id\":47}},{\"funcscope_category\":{\"id\":54}},{\"funcscope_category\":{\"id\":66}}]', '1', '1590660532', '1590664040', '1', null, '', '');
+INSERT INTO `ky_mp` VALUES ('12', '0', 'wx570bc396a51b8ff8', '', 'refreshtoken@@@55456ocGjGsS-WpbpdbK7AkX3vI5W_wmDAjP69Wbmik', 'mpqinyetest001', 'http://wx.qlogo.cn/mmopen/jiavAo66h5f3iaTWhwbn2cElUQwg1kpUxHsNPeuib4gZXdCSWXia00S2fP7WoX0lBM60ypW34kmXeAM5tibkKwWYe6FyoKFMscXxO/0', '2', '-1', 'gh_3c884a361561', '3072995023', 'mpqinyetest001', '{\"open_pay\":0,\"open_shake\":0,\"open_scan\":0,\"open_card\":0,\"open_store\":0}', 'http://devhhb.images.huihuiba.net/48f65b0fd2f002d7d32b7eb4e2833c82', '3', '此账号用于授权组件入场检测用途', '[{\"funcscope_category\":{\"id\":1}},{\"funcscope_category\":{\"id\":15}},{\"funcscope_category\":{\"id\":4}},{\"funcscope_category\":{\"id\":7}},{\"funcscope_category\":{\"id\":2}},{\"funcscope_category\":{\"id\":3}},{\"funcscope_category\":{\"id\":11}},{\"funcscope_category\":{\"id\":6}},{\"funcscope_category\":{\"id\":5}},{\"funcscope_category\":{\"id\":8}},{\"funcscope_category\":{\"id\":13}},{\"funcscope_category\":{\"id\":9}},{\"funcscope_category\":{\"id\":10}},{\"funcscope_category\":{\"id\":12}},{\"funcscope_category\":{\"id\":17}},{\"funcscope_category\":{\"id\":18},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":19}},{\"funcscope_category\":{\"id\":22}},{\"funcscope_category\":{\"id\":23}},{\"funcscope_category\":{\"id\":24},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":25},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":26}},{\"funcscope_category\":{\"id\":27},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":30},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":31},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":33},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":34}},{\"funcscope_category\":{\"id\":35}},{\"funcscope_category\":{\"id\":36}},{\"funcscope_category\":{\"id\":37}},{\"funcscope_category\":{\"id\":40}},{\"funcscope_category\":{\"id\":41},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":44},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":45}},{\"funcscope_category\":{\"id\":46}},{\"funcscope_category\":{\"id\":47}},{\"funcscope_category\":{\"id\":48}},{\"funcscope_category\":{\"id\":49},\"confirm_info\":{\"need_confirm\":0,\"already_confirm\":0,\"can_confirm\":0}},{\"funcscope_category\":{\"id\":51}},{\"funcscope_category\":{\"id\":54}},{\"funcscope_category\":{\"id\":57}},{\"funcscope_category\":{\"id\":65}},{\"funcscope_category\":{\"id\":66}},{\"funcscope_category\":{\"id\":67}}]', '0', '1597328829', '1597331689', '1', null, '', '');
 
 -- ----------------------------
 -- Table structure for ky_mp_addon
@@ -5644,7 +6124,7 @@ CREATE TABLE `ky_mp_follow_4` (
 -- Records of ky_mp_follow_4
 -- ----------------------------
 INSERT INTO `ky_mp_follow_4` VALUES ('1', '3', 'oVTwBwQ4mQBMzON1pXo_WhJSmlyI', '', '1', '', '中国', '', '', '1590850559', '1590850780', '1', '', '0', '1590850780', '1590850771', '', '', 'zh_CN', '', '', '');
-INSERT INTO `ky_mp_follow_4` VALUES ('2', '3', 'oVTwBwQGvRd15VxgfIWfMTMjAOAE', '', '1', '', '中国', '', '', '1594891657', '1594891657', '1', '', '0', '1594891657', '0', '', '', 'zh_CN', '', '', '');
+INSERT INTO `ky_mp_follow_4` VALUES ('2', '3', 'oVTwBwQGvRd15VxgfIWfMTMjAOAE', '', '0', '', '中国', '', '', '1594891657', '1596293314', '1', '', '0', '1594891657', '1596293314', '', '', 'zh_CN', '', '', '');
 INSERT INTO `ky_mp_follow_4` VALUES ('3', '3', 'oVTwBwaByhDLgVaR1BBWfuHLUlHo', '', '1', '', '中国', '', '', '1594965138', '1594965138', '1', '', '0', '1594965138', '0', '', '', 'zh_CN', '', '', '');
 
 -- ----------------------------
@@ -5753,7 +6233,7 @@ CREATE TABLE `ky_mp_msg_2` (
   `create_time` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`),
   KEY `openid_mpid` (`openid`,`mpid`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of ky_mp_msg_2
@@ -5838,6 +6318,8 @@ INSERT INTO `ky_mp_msg_2` VALUES ('106', '1', '105', '测试号', 'http://devhhb
 INSERT INTO `ky_mp_msg_2` VALUES ('107', '1', '0', '傅道集', 'http://thirdwx.qlogo.cn/mmopen/XuuoWKYP66n7RHE98H4mgVW90ibAVJEVreTtyX5dIuSjiaKSzBMjC9hO9bBGOGUg700icQyFsibFjv8K1tHcRIicqBw/132', 'ogoRYuCp4BBGko7A-_s2weCjTJYQ', 'text', '{\"ToUserName\":\"gh_96bd876da264\",\"FromUserName\":\"ogoRYuCp4BBGko7A-_s2weCjTJYQ\",\"CreateTime\":\"1595919945\",\"MsgType\":\"text\",\"Content\":\"文本\",\"MsgId\":\"22848083533982898\"}', '1', '0', '1595919945');
 INSERT INTO `ky_mp_msg_2` VALUES ('108', '1', '107', '测试号', 'http://devhhb.images.huihuiba.net/1-5f18f12eab894.jpg', 'ogoRYuCp4BBGko7A-_s2weCjTJYQ', 'text', '{\"Content\":\"我是一段普通文本\"}', '0', '1', '1595919945');
 INSERT INTO `ky_mp_msg_2` VALUES ('109', '1', '0', '傅道集', 'http://thirdwx.qlogo.cn/mmopen/XuuoWKYP66n7RHE98H4mgVW90ibAVJEVreTtyX5dIuSjiaKSzBMjC9hO9bBGOGUg700icQyFsibFjv8K1tHcRIicqBw/132', 'ogoRYuCp4BBGko7A-_s2weCjTJYQ', 'text', '{\"ToUserName\":\"gh_96bd876da264\",\"FromUserName\":\"ogoRYuCp4BBGko7A-_s2weCjTJYQ\",\"CreateTime\":\"1595991286\",\"MsgType\":\"text\",\"Content\":\"demo1\",\"MsgId\":\"22849098015897750\"}', '0', '0', '1595991286');
+INSERT INTO `ky_mp_msg_2` VALUES ('110', '1', '0', '傅道集', 'http://thirdwx.qlogo.cn/mmopen/XuuoWKYP66n7RHE98H4mgVW90ibAVJEVreTtyX5dIuSjiaKSzBMjC9hO9bBGOGUg700icQyFsibFjv8K1tHcRIicqBw/132', 'ogoRYuCp4BBGko7A-_s2weCjTJYQ', 'text', '{\"ToUserName\":\"gh_96bd876da264\",\"FromUserName\":\"ogoRYuCp4BBGko7A-_s2weCjTJYQ\",\"CreateTime\":\"1597329834\",\"MsgType\":\"text\",\"Content\":\"齐\",\"MsgId\":\"22868262545563354\"}', '0', '0', '1597329835');
+INSERT INTO `ky_mp_msg_2` VALUES ('111', '1', '0', '傅道集', 'http://thirdwx.qlogo.cn/mmopen/XuuoWKYP66n7RHE98H4mgVW90ibAVJEVreTtyX5dIuSjiaKSzBMjC9hO9bBGOGUg700icQyFsibFjv8K1tHcRIicqBw/132', 'ogoRYuCp4BBGko7A-_s2weCjTJYQ', 'text', '{\"ToUserName\":\"gh_96bd876da264\",\"FromUserName\":\"ogoRYuCp4BBGko7A-_s2weCjTJYQ\",\"CreateTime\":\"1597329846\",\"MsgType\":\"text\",\"Content\":\"demo1\",\"MsgId\":\"22868261655728541\"}', '0', '0', '1597329846');
 
 -- ----------------------------
 -- Table structure for ky_mp_msg_3
@@ -5881,7 +6363,7 @@ CREATE TABLE `ky_mp_msg_4` (
   `create_time` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`),
   KEY `openid_mpid` (`openid`,`mpid`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of ky_mp_msg_4
@@ -5911,6 +6393,8 @@ INSERT INTO `ky_mp_msg_4` VALUES ('49', '3', '48', '苟哥', 'http://wx.qlogo.cn
 INSERT INTO `ky_mp_msg_4` VALUES ('50', '3', '0', '', '', 'oVTwBwQGvRd15VxgfIWfMTMjAOAE', 'text', '{\"ToUserName\":\"gh_d17efaa86a49\",\"FromUserName\":\"oVTwBwQGvRd15VxgfIWfMTMjAOAE\",\"CreateTime\":\"1594891667\",\"MsgType\":\"text\",\"Content\":\"张剑\",\"MsgId\":\"22833356281407188\"}', '0', '0', '1594891667');
 INSERT INTO `ky_mp_msg_4` VALUES ('51', '3', '0', '', '', 'oVTwBwQ4mQBMzON1pXo_WhJSmlyI', 'text', '{\"ToUserName\":\"gh_d17efaa86a49\",\"FromUserName\":\"oVTwBwQ4mQBMzON1pXo_WhJSmlyI\",\"CreateTime\":\"1595919769\",\"MsgType\":\"text\",\"Content\":\"文本\",\"MsgId\":\"22848075589395877\"}', '1', '0', '1595919770');
 INSERT INTO `ky_mp_msg_4` VALUES ('52', '3', '51', '苟哥', 'http://wx.qlogo.cn/mmopen/icU3wjyUPLMsTMc8ApkQS8ogWbMzUa6gKW3eVCPw5OWvhbSe3TpZ55F4DTA8T9F5D5lq0pcxDiaUxFtUic2Ob78yPAGRdfEiaTGf/0', 'oVTwBwQ4mQBMzON1pXo_WhJSmlyI', 'text', '{\"Content\":\"测试\"}', '0', '1', '1595919770');
+INSERT INTO `ky_mp_msg_4` VALUES ('53', '3', '0', '', '', 'oVTwBwQ4mQBMzON1pXo_WhJSmlyI', 'text', '{\"ToUserName\":\"gh_d17efaa86a49\",\"FromUserName\":\"oVTwBwQ4mQBMzON1pXo_WhJSmlyI\",\"CreateTime\":\"1596277794\",\"MsgType\":\"text\",\"Content\":\"测试\",\"MsgId\":\"22853200922407092\"}', '1', '0', '1596277794');
+INSERT INTO `ky_mp_msg_4` VALUES ('54', '3', '53', '苟哥', 'http://wx.qlogo.cn/mmopen/icU3wjyUPLMsTMc8ApkQS8ogWbMzUa6gKW3eVCPw5OWvhbSe3TpZ55F4DTA8T9F5D5lq0pcxDiaUxFtUic2Ob78yPAGRdfEiaTGf/0', 'oVTwBwQ4mQBMzON1pXo_WhJSmlyI', 'text', '{\"Content\":\"测试\"}', '0', '1', '1596277794');
 
 -- ----------------------------
 -- Table structure for ky_mp_msg_5
@@ -6240,7 +6724,7 @@ CREATE TABLE `ky_mp_setting` (
 -- ----------------------------
 -- Records of ky_mp_setting
 -- ----------------------------
-INSERT INTO `ky_mp_setting` VALUES ('4', '1', 'wxpay', '微信支付', '{\"appid\":\"wxe1b7737e3a0c7153\",\"secret\":\"887bb389abbe27e69982576a96a515b3\",\"merchant_id\":\"1449332102\",\"key\":\"Tm44FMGt484Y44TjV34V3VG2ZEG4pf4f\",\"cert_path\":\"\",\"key_path\":\"\",\"rsa_path\":\"\"}', '1591886422', '1596031951');
+INSERT INTO `ky_mp_setting` VALUES ('4', '1', 'wxpay', '微信支付', '{\"appid\":\"wxe1b7737e3a0c7153\",\"secret\":\"887bb389abbe27e69982576a96a515b3\",\"merchant_id\":\"1449332102\",\"key\":\"Tm44FMGt484Y44TjV34V3VG2ZEG4pf4f\",\"cert_path\":\"3241432332342432432432\",\"key_path\":\"3344334343434\",\"rsa_path\":\"\"}', '1591886422', '1596709233');
 
 -- ----------------------------
 -- Table structure for ky_mp_special
@@ -6303,7 +6787,7 @@ CREATE TABLE `ky_notice` (
 -- Records of ky_notice
 -- ----------------------------
 INSERT INTO `ky_notice` VALUES ('1', '公告1', '<p><img src=\"http://devhhb.images.huihuiba.net/1-5ed603542b0f4.jpg\" alt=\"1-5ed603542b0f4.jpg\"/></p><p>测试公告内容，修改了</p>', '1594896021', '1', '1594896100', '1594896426');
-INSERT INTO `ky_notice` VALUES ('2', '公告2', '<p>内容随时说</p>', '1594900011', '1', '1594900088', '1594900088');
+INSERT INTO `ky_notice` VALUES ('2', '公告2', '<p>内容随时说</p>', '1594900011', '1', '1594900088', '1596709482');
 
 -- ----------------------------
 -- Table structure for ky_notice_read
@@ -6382,8 +6866,8 @@ CREATE TABLE `ky_setting` (
 -- ----------------------------
 -- Records of ky_setting
 -- ----------------------------
-INSERT INTO `ky_setting` VALUES ('1', 'site', '站点信息', '{\"close\":\"0\",\"close_reason\":\"\\u7cfb\\u7edf\\u5347\\u7ea7\",\"icp\":\"\\u95fdICP\\u590717014461\\u53f7-1\",\"logo\":\"http:\\/\\/devhhb.images.huihuiba.net\\/1-5f1011aad2d7e.png\",\"kefu\":\"http:\\/\\/devhhb.images.huihuiba.net\\/1-5f156f510f649.jpg\",\"default_group_id\":\"2\",\"keywords\":\"\\u5fae\\u4fe1\\u8425\\u9500\\u7cfb\\u7edf\\uff0c\\u5168\\u884c\\u4e1a\",\"description\":\"\\u5fae\\u4fe1\\u8425\\u9500\\u7cfb\\u7edf\\uff0c\\u8986\\u76d6\\u5168\\u884c\\u4e1a\\u3002\"}', '1590290640', '1595240286');
-INSERT INTO `ky_setting` VALUES ('2', 'upload', '附件设置', '{\"driver\":\"qiniu\",\"qiniu_ak\":\"zn9rSy52CirW07siksxMsLBo8d_NJDTSb9vljGwT\",\"qiniu_sk\":\"GW-pwZlsL01Hvleiv9TmFIhaFNKKEIzYeNYGt_1P\",\"qiniu_bucket\":\"dev-hhb\",\"qiniu_domain\":\"http:\\/\\/devhhb.images.huihuiba.net\",\"image_size\":\"2048000\",\"image_ext\":\"jpg,gif,png,jpeg\",\"file_size\":\"53000000\",\"file_ext\":\"jpg,gif,png,jpeg,zip,rar,tar,gz,7z,doc,docx,txt,xml,mp3,mp4,xls,xlsx,pdf\",\"voice_size\":\"2048000\",\"voice_ext\":\"mp3,wma,wav,amr\",\"video_size\":\"50240000\",\"video_ext\":\"mp4,flv,mov\"}', '1590292316', '1596032186');
+INSERT INTO `ky_setting` VALUES ('1', 'site', '站点信息', '{\"close\":\"0\",\"close_reason\":\"\\u7cfb\\u7edf\\u5347\\u7ea7\",\"icp\":\"\\u95fdICP\\u590717014461\\u53f7-1\",\"logo\":\"http:\\/\\/devhhb.images.huihuiba.net\\/1-5f27aff29f820.png\",\"kefu\":\"http:\\/\\/devhhb.images.huihuiba.net\\/1-5f336a7d80daf.jpg\",\"default_group_id\":\"2\",\"keywords\":\"\\u5fae\\u4fe1\\u5173\\u7cfb\\u7ba1\\u7406\\u3001\\u5fae\\u4fe1\\u516c\\u4f17\\u53f7\\u3001\\u793e\\u4ea4\\u6570\\u636e\\u7ba1\\u7406\\u3001\\u5c0f\\u7a0b\\u5e8f\\u3001\\u5fae\\u4fe1\\u516c\\u4f17\\u5e73\\u53f0\\u3001\\u516c\\u4f17\\u53f7\\u5e94\\u7528\\u5546\\u5e97\\uff0c\\u516c\\u4f17\\u53f7\\u63d2\\u4ef6\\u5546\\u5e97\\u3001\\u516c\\u4f17\\u53f7\\u5f00\\u53d1\\u3001\\u5fae\\u4fe1CRM\\u3001\\u9910\\u996e\\u3001\\u65b0\\u96f6\\u552e\\u3001\\u5728\\u7ebf\\u6559\\u80b2\\u3001\\u667a\\u80fd\\u786c\\u4ef6\",\"description\":\"\\u9177\\u5728\\u4e91\\u7aef\\u662f\\u9886\\u5148\\u7684\\u5fae\\u4fe1\\u5168\\u884c\\u4e1a\\u8425\\u9500\\u5e73\\u53f0\\u3002\\u4e0d\\u4ec5\\u5e2e\\u52a9\\u54c1\\u724c\\u89e3\\u51b3\\u5fae\\u4fe1\\u516c\\u4f17\\u53f7\\u3001\\u5c0f\\u7a0b\\u5e8f\\u7684\\u5f00\\u53d1\\u95ee\\u9898\\uff0c\\u7ba1\\u7406\\u7c89\\u4e1dCRM\\u53ca\\u6570\\u636e\\uff0c\\u6839\\u636e\\u884c\\u4e3a\\u53ca\\u5c5e\\u6027\\u5c06\\u7c89\\u4e1d\\u81ea\\u52a8\\u6253\\u4e0a\\u6807\\u7b7e\\uff0c\\u501f\\u52a9\\u5fae\\u4fe1CRM\\u5b9e\\u73b0\\u7cbe\\u7ec6\\u5316\\u8425\\u9500\\u3002\\u4e5f\\u4e3a\\u4e2d\\u5c0f\\u4f01\\u4e1a\\u63d0\\u4f9b\\u5fae\\u5546\\u57ce\\u3001\\u667a\\u6167\\u96f6\\u552e\\u3001\\u9910\\u996eo2o\\u3001\\u5c0f\\u7a0b\\u5e8f\\u7b49\\u4e00\\u4f53\\u5316\\u89e3\\u51b3\\u65b9\\u6848\\uff0c\\u4ee5\\u66f4\\u5f00\\u653e\\u7684\\u670d\\u52a1\\u751f\\u6001\\u4e3a\\u7528\\u6237\\u63d0\\u4f9b\\u4ea7\\u54c1\\u548c\\u670d\\u52a1\\uff0c\\u6784\\u5efa\\u7ebf\\u4e0a\\u7ebf\\u4e0b\\u878d\\u5408\\u3001 \\u591a\\u6e20\\u9053\\u8425\\u9500\\u3001\\u5f00\\u653e\\u4e92\\u901a\\u7684\\u667a\\u80fd\\u5546\\u4e1a\\u670d\\u52a1\\u751f\\u6001\\u4f53\\u7cfb\\uff0c\\u5e2e\\u52a9\\u66f4\\u591a\\u4e2d\\u5c0f\\u4f01\\u4e1a\\u5411\\u667a\\u80fd\\u5546\\u4e1a\\u8f6c\\u578b\\u5347\\u7ea7\\u3002\"}', '1590290640', '1597205129');
+INSERT INTO `ky_setting` VALUES ('2', 'upload', '附件设置', '{\"driver\":\"local\",\"qiniu_ak\":\"\",\"qiniu_sk\":\"\",\"qiniu_bucket\":\"\",\"qiniu_domain\":\"\",\"image_size\":\"2048000\",\"image_ext\":\"jpg,gif,png,jpeg\",\"file_size\":\"53000000\",\"file_ext\":\"jpg,gif,png,jpeg,zip,rar,tar,gz,7z,doc,docx,txt,xml,mp3,mp4,xls,xlsx,pdf\",\"voice_size\":\"2048000\",\"voice_ext\":\"mp3,wma,wav,amr\",\"video_size\":\"50240000\",\"video_ext\":\"mp4,flv,mov\"}', '1590292316', '1598424996');
 INSERT INTO `ky_setting` VALUES ('3', 'weixin', '微信', '{\"platform\":{\"appid\":\"wxe801199e1be0e667\",\"appsecret\":\"b888af3de74a6b55de3d257ae7439a51\",\"token\":\"Ss6jcMRzWJr4eBIy43qAQMhbDQIgrIvy\",\"aes_key\":\"d7EDKAAJJowAsYnudcASzLjwBlJXXp3DOd4pvmRBR2L\",\"verify_file\":\"\\/9885899112.txt\"}}', '1590647777', '1590721768');
 INSERT INTO `ky_setting` VALUES ('5', 'pay', '支付设置', '{\"wx_appid\":\"wxe1b7737e3a0c7153\",\"wx_secret\":\"887bb389abbe27e69982576a96a515b3\",\"wx_merchant_id\":\"1449332102\",\"wx_key\":\"Tm44FMGt484Y44TjV34V3VG2ZEG4pf4f\",\"wx_cert_path\":\"\",\"wx_key_path\":\"\",\"wx_rsa_path\":\"\"}', '1595296451', '1596032218');
 INSERT INTO `ky_setting` VALUES ('6', 'common', '其他设置', '{\"map_qq_key\":\"3EOBZ-JDO3O-N4UWO-SSK7I-OSQHJ-NHF4J\"}', '1596186578', '1596186578');

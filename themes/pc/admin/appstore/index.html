@@ -44,9 +44,9 @@
     <div class="layui-col-xs4" id="account">
         {if !empty($user)}
         <span class="layui-breadcrumb" lay-separator="|">
-                      <a>{$user.nickname}</a>
-                      <a>{$user.balance}元</a>
-                      <a href="javascript:deposit();">充值</a>
+                      <a>{$user.name}</a>
+                      <a>{$user.money ?? 0.00}元</a>
+                      <a href="javascript:;">充值</a>
                       <a href="{:url('logout')}">退出</a>
                     </span>
         {else/}
@@ -129,25 +129,6 @@
             fixed: false,
             maxmin: true,
             content: "{:url('appinfo', '', '')}/id/"+id
-        });
-    }
-
-    /**
-     * 跳转安装
-     * @param type
-     */
-    function redirect(type) {
-        if(type == 1){
-            window.location.href="{:url('admin/app/index',['type'=>'notinstall'])}";
-        }else if(type == 2){
-            window.location.href="{:url('admin/miniapp/index',['type'=>'notinstall'])}";
-        }
-    }
-
-    function deposit() {
-        layer.prompt({title: '请输入充值金额：', formType: 0}, function(money, index){
-            layer.close(index);
-            window.open("https://user.rhaphp.com/alipay/pay/token/{$token}/money/"+money);
         });
     }
 </script>
