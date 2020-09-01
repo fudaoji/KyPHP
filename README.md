@@ -73,7 +73,7 @@
 4.  新建 Pull Request
 
 #### 交流
-加微信再拉入群：
+QQ交流群：
 
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0729/115112_ba997b9a_15303.png "屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0901/085152_09e14066_15303.png "KyPHP微信开发框架QQ群聊二维码.png")
 
