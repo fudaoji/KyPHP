@@ -39,6 +39,8 @@ class Appstore extends Base
             'register'      => 'auth/registerPost',
             'login'         => 'auth/loginPost',
             'download'      => 'app/downloadPost',
+            'listUpgradeApps' => 'app/listUpgradePost',
+            'getAppUpgradePackage' => 'app/getUpgradePost'
         ];
         $this->setClient();
         $this->getUserInfo();
@@ -55,9 +57,11 @@ class Appstore extends Base
             $res = $this->doRequest(['uri' => self::$apis['getUser']]);
             if($res['code'] == 1){
                 $this->user = $res['data']['user'];
-                session('kyphpToken', $token);
-            }else{
-                session('kyphpToken', null);
+                if($this->user){
+                    session('kyphpToken', $token);
+                }else{
+                    session('kyphpToken', null);
+                }
             }
         }
         $this->assign['user'] = $this->user;
@@ -99,13 +103,15 @@ class Appstore extends Base
 
     /**
      * 升级应用
+     * @throws \think\db\exception\BindParamException
+     * @throws \think\exception\PDOException
      * @return mixed|\think\response\Json
      * Author: fudaoji<fdj@kuryun.cn>
      */
     public function upgrade()
     {
         if (!$this->token)
-            $this->error('你还没有登录应用商店', url('login'));
+            $this->error('请先登录应用商店', url('login'));
 
         if (request()->isPost()) {
             $post_data = input('post.');
@@ -113,27 +119,27 @@ class Appstore extends Base
             if (!file_exists($addon_path))
                 $this->error($post_data['addon'] . '目录不存在');
 
-            $url = self::$baseUrl . "Upgrade/getAppUpgradePack";
-            $param = array_merge(['token' => $this->token], input());
-            $result = json_decode($res = http_post($url, $param), true);
-            if ($res == false)
-                $this->error('服务出错，请稍后再试');
+            $addon = model('addons')->getOneByMap(['addon' => $post_data['addon']], true, true);
 
-            if (isset($result['errcode']) && $result['errcode'] == -1) {
-                $this->error($result['errmsg']);
+            $res = $this->doRequest(['uri' => self::$apis['getAppUpgradePackage'], 'data' => ['addon' => $post_data['addon'], 'version' => $addon['version']]]);
+            if($res['code'] == 1){
+                $upgrade = $res['data']['upgrade'];
+            }else{
+                $this->error($res['msg']);
             }
 
             $zip = new \ZipArchive;
             //备份
-            $back_zip_name = env('runtime_path') . $result['name'] . input('version') . '-backup.zip';
+            $back_zip_name = env('runtime_path') . $post_data['addon'] . $addon['version'] . '-backup.zip';
             if (!$zip->open($back_zip_name, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
                 $this->error('无法创建备份压缩包');
             }
             $this->addFileToZip($addon_path, $zip);
             $zip->close();
 
-            $tem_file = env('runtime_path') . $result['name'].$result['version'].'-'.time() . '.tmp';
-            file_put_contents($tem_file, $res);
+            $tem_file = env('runtime_path') . $post_data['addon'].$upgrade['version'].'-'.time() . '.tmp';
+            $package = http_post($upgrade['upgrade_url'], []);
+            file_put_contents($tem_file, $package);
 
             $res = $zip->open($tem_file);
             if ($res === TRUE) {
@@ -144,63 +150,35 @@ class Appstore extends Base
             }
 
             if (is_file($addon_path . 'upgrade.sql')) {
-                $sql = file_get_contents($addon_path . 'upgrade.sql');
-                $sql = str_replace("\r", "\n", $sql);
-                $sql = explode(";\n", $sql);
-                $prefix = config('database.prefix');
-                $orginal = 'rh_';
-                $sql = str_replace(" `{$orginal}", " `{$prefix}", $sql);
-                foreach ($sql as $value) {
-                    $value = trim($value);
-                    if (empty($value)) continue;
-                    if (substr($value, 0, 12) == 'CREATE TABLE') {
-                        try {
-                            model('addons')->execute($value);
-                        } catch (\Exception $e) {
-                            $res = $zip->open($back_zip_name);
-                            if ($res === TRUE) {
-                                $zip->extractTo(ADDON_PATH);
-                                $zip->close();
-                            }
-                            $this->error($e->getMessage());
-                        }
-                    } else {
-                        try {
-                            model('addons')->query($value);
-                        } catch (\Exception $e) {
-                            $res = $zip->open($back_zip_name);
-                            if ($res === TRUE) {
-                                $zip->extractTo(ADDON_PATH);
-                                $zip->close();
-                            }
-                            $this->error($e->getMessage());
-                        }
-                    }
-                }
+                execute_addon_upgrade_sql($addon_path . 'upgrade.sql');
+
                 @unlink($addon_path . 'upgrade.sql');
             }
-
-            model('addons')->save(['status' => 0], ['addon' => $post_data['addon']]);
-            $this->success('升级成功，应用正在重新启用...');
+            @unlink($tem_file);
+            model('addons')->updateOne(['id' => $addon['id'], 'version' => $upgrade['version']]);
+            $this->success('恭喜您，升级成功');
         }
-        $url = self::$baseUrl . "Upgrade/getUpgradeApp";
-        $ads = json_decode(http_post($url, ['token' => $this->token]), true);
-        $lists = [];
-        if (!empty($ads)) {
-            foreach ($ads as $v) {
-                $addon = model('addons')->getOneByMap(['addon' => $v['name']], 'name,addon,version,author,logo');
-                if(!empty($addon)){
-                    if ($v['version'] > $addon['version']) {
-                        $addon['new_version'] = $v['version'];
-                        $addon['update_time'] = $v['update_time'];
-                        $addon['app_id'] = $v['app_id'];
-                        $lists[] = $addon;
-                    }
+
+        $res = $this->doRequest(['uri' => self::$apis['listUpgradeApps']]);
+        if($res['code'] == 1){
+            $list = $res['data']['list'];
+        }else{
+            $this->error($res['msg']);
+        }
+
+        $data_list = [];
+        if (!empty($list)) {
+            foreach ($list as $v) {
+                $addon = model('addons')->getOneByMap(['addon' => $v['name']], 'name,addon,version,author,logo', true);
+                if(!empty($addon) && $v['version'] > $addon['version']){
+                    $addon['new_version'] = $v['version'];
+                    $addon['update_time'] = $v['update_time'];
+                    $data_list[] = $addon;
                 }
             }
         }
 
-        return $this->show(['lists' => $lists]);
+        return $this->show(['lists' => $data_list]);
     }
 
     /**
@@ -209,7 +187,7 @@ class Appstore extends Base
      * @param $zip
      * Author: fudaoji<fdj@kuryun.cn>
      */
-    private function addFileToZip($path, $zip)
+    private function addFileToZip($path, \ZipArchive $zip)
     {
         $handler = opendir($path);
         while (($filename = readdir($handler)) !== false) {
@@ -269,6 +247,9 @@ class Appstore extends Base
      */
     public function register()
     {
+        if($this->user){
+            $this->redirect(url('index'));
+        }
         if (request()->isPost()) {
             $data = input('post.');
             $params = [
@@ -296,6 +277,9 @@ class Appstore extends Base
      */
     public function login()
     {
+        if($this->user){
+            $this->redirect(url('index'));
+        }
         if (request()->isPost()) {
             $data = input('post.');
             $params = [
