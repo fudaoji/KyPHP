@@ -6724,7 +6724,7 @@ CREATE TABLE `ky_mp_setting` (
 -- ----------------------------
 -- Records of ky_mp_setting
 -- ----------------------------
-INSERT INTO `ky_mp_setting` VALUES ('4', '1', 'wxpay', '微信支付', '{\"appid\":\"wxe1b7737e3a0c7153\",\"secret\":\"887bb389abbe27e69982576a96a515b3\",\"merchant_id\":\"1449332102\",\"key\":\"Tm44FMGt484Y44TjV34V3VG2ZEG4pf4f\",\"cert_path\":\"3241432332342432432432\",\"key_path\":\"3344334343434\",\"rsa_path\":\"\"}', '1591886422', '1596709233');
+INSERT INTO `ky_mp_setting` VALUES ('4', '1', 'wxpay', '微信支付', '{\"appid\":\"wxe1b7737e3a0c7153\",\"secret\":\"887bb389abbe27e69982576a96a515b3\",\"merchant_id\":\"1449332102\",\"key\":\"\",\"cert_path\":\"3241432332342432432432\",\"key_path\":\"3344334343434\",\"rsa_path\":\"\"}', '1591886422', '1596709233');
 
 -- ----------------------------
 -- Table structure for ky_mp_special
