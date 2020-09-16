@@ -126,7 +126,7 @@ class App extends Base
         $mp_addon = $this->miniAddonM->getOneByMap([
             'mini_id' => $this->miniId,
             'addon' => $this->addonName
-        ]);
+        ], true, true);
 
         if (request()->isPost()) {
             $input = input('post.');

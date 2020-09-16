@@ -347,7 +347,7 @@ class BaseModel extends Model
         $refresh && cache($cache_key, null);
         $selector = $this->getBuilder($where)->field($field);
         if($this->isCache){
-            $selector->cache($cache_key, $this->expire);
+            $selector->cache($cache_key, $this->expire, $this->getTrueTable($where));
         }
         $this->_where($selector, $where);
         return $selector->order($order)->page($limit[0], $limit[1])->select();
@@ -385,7 +385,7 @@ class BaseModel extends Model
         $selector = $this->getBuilder($query);
         $this->_where($selector, $query);
         if($this->isCache){
-            $selector->cache($cache_key, $this->expire);
+            $selector->cache($cache_key, $this->expire, $this->getTrueTable($query));
         }
         return $selector->column($field);
     }
@@ -504,7 +504,7 @@ class BaseModel extends Model
         $selector = $this->getBuilder($where)->field($field);
         $this->_where($selector, $where);
         if($this->isCache){
-            $selector->cache($cache_key, $this->expire, $this->cacheTag);
+            $selector->cache($cache_key, $this->expire, $this->getTrueTable($where));
         }
         return $selector->order($order)->select();
     }
@@ -523,7 +523,7 @@ class BaseModel extends Model
         $selector = $this->getBuilder($where);
         $this->_where($selector, $where);
         if($this->isCache){
-            $selector->cache($cache_key, $this->expire);
+            $selector->cache($cache_key, $this->expire, $this->getTrueTable($where));
         }
         return $selector->distinct(true)->column($field);
     }

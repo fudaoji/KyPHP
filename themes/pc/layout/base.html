@@ -42,6 +42,15 @@
             </ul>
         </div>
         <ul class="layui-nav">
+            <li class="layui-nav-item" onclick="cacheClear();">
+                <a href="javascript:;">
+                    <i class="fa fa-trash-o" style="margin-right: 2px;"></i>
+                    <span
+                            class="layui-badge notice-badge hide"
+                            style="margin:0;margin-left: -5px;top: 22%;border-radius: 50%;"
+                    ></span>
+                </a>
+            </li>
             <li class="layui-nav-item ">
                 <a href="{:url('system/notice/index')}">
                     <i class="fa fa-bullhorn" style="margin-right: 2px;"></i>
@@ -171,9 +180,11 @@
     //清空缓存
     function cacheClear() {
         var index = layer.load(1);
-        $.post("{:url('admin/system/cacheClear')}",function (res) {
+        $.post("{:url('admin/index/clearcache')}",{refresh: 1},function (res) {
             layer.close(index);
-            layer.alert(res.msg);
+            layer.msg(res.msg, {time: 1500}, function () {
+                location.reload();
+            });
         })
     }
 

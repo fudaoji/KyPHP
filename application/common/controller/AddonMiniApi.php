@@ -79,7 +79,7 @@ class AddonMiniApi extends BaseCtl
         if ($this->miniAddonInfo && $this->miniAddonInfo['infos']) {
             $this->miniAddonInfo['infos'] = json_decode($this->miniAddonInfo['infos'], true);
         }else{
-            Helper::error(ErrorCode::BadParam, '请先在电脑端进行应用配置');
+            //Helper::error(ErrorCode::BadParam, '请先在电脑端进行应用配置');
         }
     }
 

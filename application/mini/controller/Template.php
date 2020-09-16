@@ -332,7 +332,7 @@ class Template extends Base
         $builder = new FormBuilder();
         $builder->setPostUrl(url('choosePost'))
             ->setTemplate('common/form')
-            ->setTip('此操作会耗时一段时间，请务关闭窗口')
+            ->setTip('此操作会耗时一段时间，请勿关闭窗口')
             //->addFormItem('user_version', 'text', '版本号', '支持数字和字母,长度不超过64个字符', [], 'required maxlength=64')
             ->addFormItem('user_desc', 'text', '版本描述', '版本描述', [], 'required maxlength=200')
             ->addFormItem('addon', 'choose_addon', '选择应用', '', [], 'required');
