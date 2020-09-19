@@ -107,6 +107,7 @@
                     </div>
                     <div class="layui-col-xs3">
                         <?php if($verify['status'] == 1):?>
+                        <button class="layui-btn layui-btn-sm js-speedup-audit" data-auditid="{$verify.audit_id}">加急审核</button>
                         <button class="layui-btn layui-btn-sm layui-btn-normal js-cancel-audit" data-id="{$verify.id}">撤回</button>
                         <?php elseif($verify['status'] == 2):?>
                         <button class="layui-btn layui-btn-sm js-publish" data-id="{$verify.id}">提交发布</button>
@@ -177,6 +178,20 @@
     }
 
     $(function () {
+        /**
+         * 加急审核
+         */
+        $('.js-speedup-audit').on('click', function () {
+            var loadingIndex = layer.load(1);
+            $.post("{:url('speedupAuditPost')}", {auditid: $(this).data('auditid')}, function (res) {
+                layer.close(loadingIndex);
+                if(res.code === 1){
+                    layer.msg(res.msg);
+                }else{
+                    layer.alert(res.msg);
+                }
+            })
+        });
         /**
          * 点击发布
          */
