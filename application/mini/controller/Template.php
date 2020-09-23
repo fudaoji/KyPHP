@@ -422,7 +422,7 @@ class Template extends Base
                 'ext' => [
                     'appId' => $this->miniInfo['appid'],
                     'env' => [
-                        //"restUrl" => "https://".$http_host."/app/".$post_data['addon']."/api/",
+                        "restUrl" => "https://".$http_host."/app/".$post_data['addon']."/",
                         //"qiniuRegion" => "SCN",
                         "qiniuDomain" => config('system.upload.qiniu_domain'),
                         "appKey" => config('app_key'),
