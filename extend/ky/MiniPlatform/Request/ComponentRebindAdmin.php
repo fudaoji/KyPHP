@@ -12,7 +12,7 @@ use ky\MiniPlatform\RequestCheckUtil;
 
 class ComponentRebindAdmin
 {
-    private $url = "https://api.weixin.qq.com/cgi- bin/account/componentrebindadmin";
+    private $url = "https://api.weixin.qq.com/cgi-bin/account/componentrebindadmin";
     private $taskId; //换绑管理员任务序列号(公众平台最终点击提交回跳到第三方平台时携带)
     private $getParams = array();
     private $postParams = array();
