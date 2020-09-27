@@ -40,10 +40,6 @@ class Index extends Base
      */
     public function index(){
         $yesterday_date = date('Ymd', strtotime('-1 days', time()));
-        $request = new DataCubeGetWeAnalysisAppidDailyVisitTrend();
-        $request->setBeginDate($yesterday_date);
-        $request->setEndDate($yesterday_date);
-        $response = $this->client->execute($request, $this->getAccessToken());
         $yesterday = [
             'session_cnt' => 0, //打开次数
             'visit_pv' => 0,  //访问次数
@@ -53,9 +49,17 @@ class Index extends Base
             'stay_time_session' => 0 //次均停留时长(秒)
         ];
 
-        if(isset($response['list'])){
-            if(count($response['list'])){
-                $yesterday = $response['list'][0];
+        if($this->miniInfo['is_auth']){
+            $request = new DataCubeGetWeAnalysisAppidDailyVisitTrend();
+            $request->setBeginDate($yesterday_date);
+            $request->setEndDate($yesterday_date);
+            $response = $this->client->execute($request, $this->getAccessToken());
+
+
+            if(isset($response['list'])){
+                if(count($response['list'])){
+                    $yesterday = $response['list'][0];
+                }
             }
         }
 

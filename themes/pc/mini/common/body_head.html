@@ -20,6 +20,9 @@
             <img src="{$mini_info.head_img}" alt="{$mini_info.nick_name}">
             <span>{$mini_info.nick_name}</span>
             <span class="layui-badge layui-bg-blue">{:controller('common/mini', 'event')->getTypeDesc($mini_info)}</span>
+            {if ! $mini_info.is_auth}
+            <span class="layui-badge layui-bg-danger">未授权</span>
+            {/if}
         </div>
         <div class="layui-col-sm6 layui-col-xs6">
             <a href="{:url('system/mini/info', ['store_id' => $mini_info['id']])}" class="set"><i class="fa fa-cog"></i>小程序设置</a>
