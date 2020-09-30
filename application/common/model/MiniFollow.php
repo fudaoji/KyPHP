@@ -17,9 +17,7 @@
 
 namespace app\common\model;
 
-use ky\BaseModel;
-
-class MiniFollow extends BaseModel
+class MiniFollow extends Base
 {
     protected $isCache = true;
 
