@@ -137,7 +137,7 @@ CREATE TABLE `ky_admin` (
 -- ----------------------------
 -- Records of ky_admin
 -- ----------------------------
-INSERT INTO `ky_admin` VALUES ('1', 'admin', '$2y$10$8e/WKStcGxWexB/kfmbQre6uCtMRjpXZB4RH4u70ZKfkScIx.kfCy', '461960962@qq.com', '15659827559', '0', '1598405327', '1', '1', '傅道集', '1598405327', '106.122.215.248', '0');
+INSERT INTO `ky_admin` VALUES ('1', 'admin', '$2y$10$lSnmo7isc6Y7X1trZ/YeH.WirmUAC3TG8JpEkloRODCO1nHXYFnFm', '461960962@qq.com', '15659827559', '0', '1598405327', '1', '1', '傅道集', '1598405327', '106.122.215.248', '0');
 INSERT INTO `ky_admin` VALUES ('2', 'test1', '$2y$10$lSnmo7isc6Y7X1trZ/YeH.WirmUAC3TG8JpEkloRODCO1nHXYFnFm', '', '15659827559', '1590227330', '1596812118', '1', '2', '张三', '1596812118', '211.97.130.225', '1');
 INSERT INTO `ky_admin` VALUES ('3', 'test2', '$2y$10$VI/NBVVik3YRAjnrZIgAQeKZ2rKJtY01mGnRwLQ1Saoy956vwOVXC', '', '', '1594977794', '1594977794', '1', '2', '', '1594977794', '106.122.215.27', '0');
 INSERT INTO `ky_admin` VALUES ('4', 'test3', '$2y$10$//5v/B9XdvlS5pIgEjZ2Juw9I.RN82BLE652b50evmjxIwFzYv.U6', '', '', '1594978590', '1594978876', '1', '2', 'test3', '1594978876', '106.122.215.27', '0');
