@@ -20,10 +20,10 @@ class Define
     {
 
         $module = strtolower(request()->module());
-        $Controller = strtolower(request()->controller());
+        $controller = strtolower(request()->controller());
         $action = strtolower(request()->action());
         define('MODULE_NAME', $module);
-        define('CONTROLLER_NAME', $Controller);
+        define('CONTROLLER_NAME', $controller);
         define('ACTION_NAME', $action);
     }
 }

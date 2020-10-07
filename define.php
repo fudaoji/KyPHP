@@ -17,7 +17,6 @@
 
 define('ROOT_PATH', __DIR__.'/');
 define('ADDON_PATH', ROOT_PATH . 'addons/');
-define('MINIAPP_PATH', ROOT_PATH . 'miniapp/');
 define('ADDON_ROUTE','/app/');
 define('ENTR_PATH','');
 define('RUNTIME_PATH', ROOT_PATH . 'runtime/');
