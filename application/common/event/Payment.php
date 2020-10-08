@@ -10,13 +10,14 @@
  * Created by PhpStorm.
  * Script Name: Payment.php
  * Create: 2020/7/21 9:54
- * Description: 支付相关
+ * Description: 平台支付相关
  * Author: fudaoji<fdj@kuryun.cn>
  */
 
 namespace app\common\event;
 
 use ky\ErrorCode;
+use ky\Logger;
 
 class Payment extends Base
 {
@@ -25,11 +26,12 @@ class Payment extends Base
      * @param string $type
      * Author: fudaoji<fdj@kuryun.cn>
      * @return array
+     * @throws \Exception
      */
     public function getPayConfig($type = ''){
         $config = config('system.pay');
         if(empty($config)){
-            abort(ErrorCode::ParamException, '请先配置支付参数');
+            Logger::setMsgAndCode('请先配置支付参数', ErrorCode::CatchException);
         }
         $return = [];
         switch ($type){
@@ -42,9 +44,9 @@ class Payment extends Base
                 $key_path = $base_path . md5('platform_apiclient_key.pem');
                 $rsa_path = $base_path . md5( 'platform_public_rsa.pem');
                 if(!file_exists($key_path) || !file_exists($cert_path) || !file_exists($rsa_path)){
-                    file_put_contents($cert_path, empty($config['wx_cert_path']) ? '' : $config['wx_cert_path']);
-                    file_put_contents($key_path, empty($config['wx_key_path']) ? '' : $config['wx_key_path']);
-                    file_put_contents($rsa_path, empty($config['wx_rsa_path']) ? '' : $config['wx_rsa_path']);
+                    !empty($config['wx_cert_path']) && file_put_contents($cert_path, $config['wx_cert_path']);
+                    !empty($config['wx_key_path']) && file_put_contents($key_path, $config['wx_key_path']);
+                    !empty($config['wx_rsa_path']) && file_put_contents($rsa_path, $config['wx_rsa_path']);
                 }
                 $return = [
                     'appid'     => $config['wx_appid'],
