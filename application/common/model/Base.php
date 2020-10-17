@@ -13,7 +13,7 @@ use ky\BaseModel;
 class Base extends BaseModel
 {
     /**
-     * 手动设置分表key，因为多表关联查询时会遇到
+     * 手动设置分表key，因为多表关联查询时会有表别名，因此需要临时修改分表key
      * Author: fudaoji<fdj@kuryun.cn>
      * @param string $key
      * @return \ky\BaseModel
@@ -24,12 +24,20 @@ class Base extends BaseModel
     }
 
     /**
-     * 获取所在表名称
+     * 获取实际表名，用于被关联表有多个分表的情况
      * @param $key_id
      * @return string
      * Author: fudaoji<fdj@kuryun.cn>
      */
     public function getRealTableName($key_id){
-        return $this->getTable() .'_' . ($key_id % $this->rule['num'] + 1);
+        switch ($this->rule['type']){
+            case 'year':
+                $table = $this->getTable() .'_' . ($key_id - $this->rule['expr'] + 1);
+                break;
+            default:
+                $table = $this->getTable() .'_' . ($key_id % $this->rule['num'] + 1);
+                break;
+        }
+        return $table;
     }
 }

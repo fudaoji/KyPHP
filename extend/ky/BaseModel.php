@@ -9,7 +9,7 @@
 
 /**
  * Created by PhpStorm.
- * Script Name: ${FILE_NAME}
+ * Script Name: BaseModel.php
  * Create: 2020/2/29 下午11:37
  * Description: 
  * Author: Doogie<461960962@qq.com>
@@ -794,5 +794,36 @@ class BaseModel extends Model
         }
         $this->_where($selector, $where);
         return $selector->find();
+    }
+
+    /**
+     * 获取分组统计数据
+     * @param array $params
+     * @return mixed
+     * e.g: model('activity')->totalGroup([
+    'where' => ['a.id' => ['gt', 300]],
+    'group' => 'activity.id',
+    'having' => 'activity.id > 100',
+    'refresh' => 1
+    ]);
+     * @author fudaoji<fdj@kuryun.cn>
+     */
+    public function totalGroup($params = []){
+        $where = empty($params['where']) ? [] : $params['where'];
+        $having = empty($params['having']) ? '' : $params['having'];
+        $group_field = empty($params['group']) ? '' : $params['group'];
+        $refresh = empty($params['refresh']) ? 0 : $params['refresh'];
+        unset($params['refresh']);
+        $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) . __FUNCTION__ . serialize($params));
+        $refresh && cache($cache_key, null);
+        $selector = $this->getBuilder($where);
+        if($this->isCache){
+            $selector->cache($cache_key, $this->expire);
+        }
+        if($having){
+            $selector->having($having);
+        }
+        $this->_where($selector, $where);
+        return $selector->group($group_field)->count();
     }
 }

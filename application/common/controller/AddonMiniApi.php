@@ -16,13 +16,10 @@
 namespace app\common\controller;
 
 use ky\ErrorCode;
-use ky\Helper;
 use ky\Logger;
-use think\facade\Log;
 
 class AddonMiniApi extends BaseCtl
 {
-    //protected $openPlatform;
     protected $miniApp;
     protected $miniInfo;
     protected $miniAddonInfo;
@@ -48,7 +45,6 @@ class AddonMiniApi extends BaseCtl
      * @var string
      */
     protected $addonAction;
-    protected $mpAddon;
 
     public function initialize()
     {
@@ -58,7 +54,6 @@ class AddonMiniApi extends BaseCtl
             $this->setMiniInfo();
             $this->setApp();
             $this->setAddonInfo();
-            $this->setMpAddon();
         }else{
             abort(ErrorCode::CatchException, '非法请求');
         }
@@ -78,18 +73,7 @@ class AddonMiniApi extends BaseCtl
         ]);
         if ($this->miniAddonInfo && $this->miniAddonInfo['infos']) {
             $this->miniAddonInfo['infos'] = json_decode($this->miniAddonInfo['infos'], true);
-        }else{
-            //Helper::error(ErrorCode::BadParam, '请先在电脑端进行应用配置');
         }
-    }
-
-    /**
-     * 设置小程序与应用关联信息
-     * Author: fudaoji<fdj@kuryun.cn>
-     */
-    protected function setMpAddon(){
-        $this->mpAddon = model('common/miniAddon')->getOneByMap(['mini_id' => $this->miniId, 'addon' => $this->addonName], 'infos');
-        $this->mpAddon && $this->mpAddon['infos'] = json_decode($this->mpAddon['infos'], true);
     }
 
     /**
@@ -111,7 +95,7 @@ class AddonMiniApi extends BaseCtl
 
         $this->miniInfo = $this->miniM->getOneByMap(['appid' => $appid]);
         if(empty($this->miniInfo)){
-            abort(ErrorCode::CatchException, '非法请求,小程序不存在');
+            Logger::setMsgAndCode('非法请求,小程序不存在', ErrorCode::CatchException);
         }
         $this->miniId = $this->miniInfo['id'];
     }
@@ -122,6 +106,5 @@ class AddonMiniApi extends BaseCtl
      */
     protected function setApp() {
         $this->miniApp = controller('mini/mini', 'event')->getApp($this->miniInfo);
-        //$this->openPlatform = controller('mp', 'event')->getOpenPlatform();
     }
 }

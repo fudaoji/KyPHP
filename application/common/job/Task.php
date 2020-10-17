@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 /**
  * Created by PhpStorm.
- * Script Name: Job.php
+ * Script Name: Task.php
  * Create: 2020/8/7 13:44
  * Description: 任务队列
  * Author: fudaoji<fdj@kuryun.cn>
