@@ -75,5 +75,5 @@
 #### 交流
 QQ交流群：
 
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0901/085152_09e14066_15303.png "KyPHP微信开发框架QQ群聊二维码.png")
+![输入图片说明](https://zyx.images.huihuiba.net/1-5f8afb8796b2f.png "KyPHP微信开发框架QQ群聊二维码.png")
 
