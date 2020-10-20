@@ -23,7 +23,7 @@ class Appstore extends Base
 {
     public $user = []; //开发者信息
     public $token = '';
-    static public $baseUrl = 'http://kyphp_official.fdj.kuryun.cn';
+    static public $baseUrl = 'https://kyphp.kuryun.com';
     static public $apis = [];
     private $client;
 
