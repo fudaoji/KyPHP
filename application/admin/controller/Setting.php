@@ -107,7 +107,8 @@ class Setting extends Base
                     ->addFormItem('default_group_id', 'number', '游客组id', '自主注册进来的用户组id')
                     ->addFormItem('seo_title', 'legend', '推广', '推广')
                     ->addFormItem('keywords', 'text', 'SEO关键词', 'head头部的keywords')
-                    ->addFormItem('description', 'textarea', 'SEO描述', 'head头部的description');
+                    ->addFormItem('description', 'textarea', 'SEO描述', 'head头部的description')
+                    ->addFormItem('tongji', 'textarea', '统计代码', '从第三方复制的统计代码');
                 break;
             case 'upload':
                 empty($data) && $data = [
