@@ -57,6 +57,28 @@
                             您的浏览器不支持 HTML5 video 标签。
                         </video>
                         {/case}
+                        {case news}
+                            <div style="width: 250px;overflow: hidden;border: 1px solid #e8e9eb;padding: 12px 14px;">
+                                <p>{$material.title}</p>
+                                <img style="width: 248px;height: 138px;" src="{$material.cover_url}?imageView2/2/w/248" alt="">
+                                {if count($material.children)}
+                                {volist name="material.children" id="c"}
+                                <div class="items">
+                                    <div class="layui-row" style="padding: 5px 0;">
+                                        <div class="layui-col-xs8">
+                                            <p>{$c.title}</p>
+                                        </div>
+                                        <div class="layui-col-xs4 tr">
+                                            <img style="width: 70px;height: 70px;" src="{$c.cover_url}?imageView2/2/w/70" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                                {/volist}
+                                {else /}
+                                <p>{$material.digest}</p>
+                                {/if}
+                            </div>
+                        {/case}
                         {/switch}
                         {/if}
                     </div>
@@ -79,6 +101,48 @@
     </div>
 
     <script>
+        if(typeof setNewsValue === 'undefined'){
+            var getContent = function (id) {
+                var html = '';
+                $.ajax({
+                    url: "{:url('mp/material/getNewsDetail')}",
+                    type: 'post',
+                    data: {id: id},
+                    async: false, // 同步
+                    success: function (res) {
+                        if(res.code === 1){
+                            var media = res.data.media;
+                            html = '<div style="width: 250px;overflow: hidden;border: 1px solid #e8e9eb;padding: 12px 14px;">\n' +
+                                    '                                <p>'+media.title+'</p>\n' +
+                                    '                                <img style="width: 248px;height: 138px;" src="'+media.cover_url+'?imageView2/2/w/248" alt="">\n';
+                            if(media.children.length > 0){
+                                for(var i=0;i < media.children.length; i++){
+                                    html = html + '<div class="items"><div class="layui-row" style="padding: 5px 0;">\n' +
+                                            '                                        <div class="layui-col-xs8">\n' +
+                                            '                                            <p>'+media.children[i].title+'</p>\n' +
+                                            '                                        </div>\n' +
+                                            '                                        <div class="layui-col-xs4 tr">\n' +
+                                            '                                            <img style="width: 70px;height: 70px;" src="'+media.children[i].cover_url+'?imageView2/2/w/70" alt="">\n' +
+                                            '                                        </div>\n' +
+                                            '                                    </div>\n' +
+                                            '                                </div>';
+                                }
+                            }else{
+                                html = html + '<p>'+media.digest+'</p>';
+                            }
+
+                        }
+                    }
+                });
+                return html;
+            };
+            var setNewsValue = function(res, field){
+                $("input[name={$form.name}_id]").val(res[0].id);
+                $("input[name={$form.name}_type]").val("news");
+                $("#media-box-{$form.name} .media-content").html(getContent(res[0].id));
+                $("#media-box-{$form.name} hr").show();
+            };
+        }
         if(typeof setAddonValue === 'undefined'){
             var setAddonValue = function(res, field){
                 $("input[name={$form.name}_id]").val(res.id);
@@ -146,13 +210,16 @@
         }
 
         $("#media-box-{$form.name}").on('click', '.box', function () {
+            var type = $(this).data('type');
+            var content = (type === 'news' ? ('/mp/material/handle?type=' + type +'&field=$form["name"]&needmp=1')
+                    : ['/mp/material/handle?type=' + type +'&field=$form["name"]&needmp=1', 'no']);
             layer.open({
                 type: 2,
                 title: $(this).data('type-title'),
                 shadeClose: false,
                 shade: 0.8,
-                area: ['900px', '576px'],
-                content: ['/mp/material/handle?type=' + $(this).data('type')+'&field=$form["name"]&controller={$controller}', 'no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                area: ['960px', '576px'],
+                content: content //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
             });
         });
     </script>

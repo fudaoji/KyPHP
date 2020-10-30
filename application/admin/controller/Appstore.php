@@ -44,6 +44,7 @@ class Appstore extends Base
         ];
         $this->setClient();
         $this->getUserInfo();
+        $this->assign('official_href', self::$baseUrl);
     }
 
     /**

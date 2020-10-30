@@ -1,0 +1,325 @@
+{extend name="../layout/inline_page_base"/}
+
+{block name="body"}
+
+
+<div class="layui-tab layui-tab-brief" lay-filter="tabBrief">
+    <div class="layui-tab-content">
+        <form class="layui-form" action="" method="post">
+            <div class="layui-row">
+                <div class="layui-col-sm7">
+                    <!--预留搜索-->
+                </div>
+                <div class="layui-col-sm5 layui-col-sm-offset7 tr">
+                    <input type="checkbox" lay-filter="ids" title="全选" id="ids">
+                    <div class="layui-btn-group">
+                        <a class="layui-btn  layui-btn-sm layui-btn-danger" onclick="clickDelBatch()">
+                            <i class="fa fa-trash-o"></i>批量删除
+                        </a>
+                        <button type="button" class="layui-btn  layui-btn-sm" id="picker">
+                            <i class="fa fa-upload"></i>新增图文
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-row">
+                <div class="material-appmsg-list">
+                    {volist name="data_list" id="item"}
+                    {if count($item.child)}
+                    <div class="material-appmsg-item multi" >
+                        <div class="check-btn">
+                            <input
+                                    type="checkbox"
+                                    class="id"
+                                    lay-filter="id"
+                                    value="{$item.id}"
+                                    lay-skin="primary"
+                                    data-cover_url="{$item.cover_url}"
+                            />
+                        </div>
+                        <div class="appmsg-content">
+                            <div class="cover-appmsg-item">
+                                <h4 class="appmsg-title">
+                                    <a target="blank">{$item.title}</a>
+                                </h4>
+                                <div class="appmsg-thumb" style="background-image:url('{$item.cover_url}?imageView2/2/w/150')">
+                                </div>
+                                <p class="appmsg-desc">{$item.digest}</p>
+                            </div>
+                            {volist name="item.child" id="c"}
+                            <div class="appmsg-item has-cover">
+                                <div class="appmsg-thumb" style="background-image:url('{$c.cover_url}?imageView2/2/w/80')">
+                                </div>
+                                <h4 class="appmsg-title">
+                                    <a target="_blank">{$c.title}</a>
+                                </h4>
+                            </div>
+                            {/volist}
+                        </div>
+                    </div>
+                    {else/}
+                    <div class="material-appmsg-item" >
+                        <div class="check-btn">
+                            <input
+                                    type="checkbox"
+                                    class="id"
+                                    lay-filter="id"
+                                    value="{$item.id}"
+                                    lay-skin="primary"
+                                    data-cover_url="{$item.cover_url}"
+                            />
+                        </div>
+                        <div class="appmsg-content">
+                            <div class="appmsg-item">
+                                <h4 class="appmsg-title">
+                                    <a target="blank">{$item.title}</a>
+                                </h4>
+                                <div class="appmsg-thumb" style="background-image:url('{$item.cover_url}?imageView2/2/w/150')">
+                                </div>
+                                <p class="appmsg-desc">{$item.digest}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {/if}
+                    {/volist}
+                </div>
+            </div>
+            <div id="page">
+                {$pager|raw}
+            </div>
+        </form>
+    </div>
+</div>
+<div class="bottom">
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn bg-success" onclick="clickSure();">确定</button>
+            <button class="layui-btn layui-btn-primary js-cancel-btn">取消</button>
+        </div>
+    </div>
+</div>
+
+{/block}
+
+{block name="js"}
+<script crossorigin="anonymous" integrity="sha384-dlapdy3xQpJZf6W4IkSoLiZesqt82H8EBX5zC2FA6/evcVdKA3H4na+9o2542KkF" src="https://lib.baomitu.com/jquery.wookmark/1.3.1/jquery.wookmark.min.js"></script>
+<script>
+    $(function () {
+        //瀑布流
+        $('.material-appmsg-list .material-appmsg-item').wookmark({
+            align: 'left',
+            autoResize: false,
+            container: $('.material-appmsg-list'),
+            itemWidth: 286,
+            offset: 30
+        });
+    });
+</script>
+<script>
+    var parent_index = parent.layer.getFrameIndex(window.name) //获取窗口索引
+        ,ids = []
+    ,$checkBoxes = []
+    ,dataLen = parseInt("{:count($data_list)}");
+
+    $(function () {
+        $checkBoxes = $('.id');
+        //点击取消
+        $('.js-cancel-btn').on('click', function () {
+            parent.layer.close(parent_index);
+        });
+    });
+
+    //点击删除单个
+    var clickDelOne = function (id) {
+        ids = [id];
+        delRequest()
+    };
+    //点击批量删除
+    var clickDelBatch = function (id) {
+        $.each($('.id:checked'), function(i, item){
+            ids.push($(item).val());
+        });
+        delRequest()
+    };
+
+    //请求服务端进行删除操作
+    var delRequest = function () {
+        if(ids.length < 1){
+            layer.alert('请选中要删除的数据');
+        }
+        layer.confirm('删除后无法恢复，你确定吗？', {
+            title: '提示',
+            btn: ['是','不'] //按钮
+        }, function(){
+            var loading_index = layer.load(1);
+            $.post("{:url('materialDelPost', ['from' => $from])}", {'ids': ids, 'type': 'news'}, function (res) {
+                if(res.code === 1){
+                    layer.msg(res.msg, {time: 1000}, function () {
+                        location.reload();
+                    });
+                }else{
+                    layer.alert(res.msg);
+                }
+                layer.close(loading_index);
+            })
+        });
+    };
+
+    layui.use(['form'],function(){
+        var form = layui.form;
+
+        //监听全选
+        form.on('checkbox(ids)', function(data){
+            $checkBoxes.prop('checked', data.elem.checked);
+            layui.form.render('checkbox');
+        });
+
+        //监听单个选中
+        form.on('checkbox(id)', function (data) {
+            $("#ids").prop('checked', $('.id:checked').length < dataLen ? false : true);
+            layui.form.render('checkbox');
+        });
+
+        $('#picker').on('click', function () {
+            parent.location.href = "{:url('mp/material/index', ['type' => 'news'])}";
+        });
+    });
+
+    //点击确认
+    function clickSure() {
+        var list = [];
+        $('.id:checked').each(function (i, item) {
+            list.push({id: $(item).val(), cover_url: $(this).data('cover_url')});
+        });
+        if(list.length < 1){
+            layer.alert("请选择图文");
+            return;
+        }
+        parent.setNewsValue(list, "{$field}");
+        parent.layer.close(parent_index);
+    }
+</script>
+{/block}
+
+{block name="css" /}
+<style>
+    body{background-color: #fff;}
+    .material-appmsg-list {
+        position: relative;
+        margin-top: 30px;
+    }
+    .material-appmsg-item {
+        width: 286px;
+        display: inline-block;
+        position: relative;
+        border: 1px solid #e8e9eb;
+    }
+    .material-appmsg-item .appmsg-content {
+        position: relative;
+    }
+    .material-appmsg-item .appmsg-item {
+        position: relative;
+        padding: 12px 14px;
+    }
+    .material-appmsg-item .appmsg-title {
+        font-weight: 400;
+        font-style: normal;
+        font-size: 14px;
+        line-height: 1.6;
+        overflow: hidden;
+        word-wrap: break-word;
+        color: #222;
+    }
+    .material-appmsg-item .appmsg-thumb {
+        height: 160px;
+        overflow: hidden;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: 100% 100%;
+    }
+    .material-appmsg-item .appmsg-desc {
+        padding: 5px 0 10px;
+        word-break: break-all;
+    }
+
+    .material-appmsg-item .appmsg-opr {
+        background-color: #f4f4f4;
+        border-top: 1px solid #e8e9eb;
+        margin-right: -1px;
+    }
+    .material-appmsg-item .appmsg-opr-item {
+        float: left;
+        line-height: 44px;
+        height: 44px;
+        background-color: #f4f4f4;
+    }
+    .material-appmsg-item .appmsg-opr li{
+        width: 49.99%;
+    }
+    .material-appmsg-item .appmsg-opr-item a {
+        display: block;
+        border-right: 1px solid #e8e9eb;
+        text-align: center;
+        text-decoration: none;
+        color: #999;
+    }
+
+    .multi .appmsg-item {
+        border-top: 1px solid #e8e9eb;
+        overflow: hidden;
+    }
+    .material-appmsg-item .cover-appmsg-item {
+        margin: 12px 14px 12px;
+        position: relative;
+    }
+    .material-appmsg-item .cover-appmsg-item .appmsg-title {
+        font-size: 14px;
+        padding-top: 0;
+        padding-bottom: 0;
+        margin-bottom: 0;
+        line-height: 28px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0,0,0,.6)!important;
+        filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr='#99000000', endcolorstr='#99000000');
+    }
+    .material-appmsg-item .cover-appmsg-item .appmsg-title a{color: #fff;padding-left: 10px;}
+    .material-appmsg-item .cover-appmsg-item .appmsg-desc {
+        display: none;
+    }
+    .multi .appmsg-item .appmsg-thumb {
+        float: right;
+        width: 78px;
+        height: 78px;
+        margin-left: 14px;
+    }
+    .multi .appmsg-item .appmsg-title {
+        line-height: 24px;
+        max-height: 48px;
+        overflow: hidden;
+        *zoom: 1;
+    }
+
+    .check-btn,.picture-title,.delete-btn{
+        position: absolute;bottom: 0;
+        line-height: 30px;
+        text-align: center;
+        color: #fff;
+    }
+    .check-btn{
+        width: 19px;height: 19px;left: 0;
+        z-index: 6;
+        top: 0;
+    }
+
+    .layui-card-body:hover .delete-btn,.layui-card-body:hover .check-btn{display: block;}
+    .layui-form-checkbox[lay-skin=primary]{height: 19px !important;margin-top: -12px;margin-left: -1px;}
+    .bottom{
+        background-color: #f8f8f8;line-height: 52px;height: 52px;position: fixed;text-align: center;
+        width: 100%; bottom: 0;
+    }
+</style>
+{/block}

@@ -129,21 +129,32 @@ class Reply extends Base
 
             $this->uploadMedia2Wx($data['media_type'], $data['media_id']);
             if($this->ruleM->updateOne($data)){
+                //refresh
+                model('media_' . $data['media_type'])->getOne(['id' => $data['media_id'], 'uid' => $this->adminId], true);
                 $this->success('保存成功');
             }else{
                 $this->error('保存失败，请刷新重试', '', ['token' => request()->token()]);
             }
         }
+
         $id = input('id');
-        $data = $this->ruleM->getOne(['rule_mpid' => $this->mpId, 'id' => $id]);
+        $data = $this->ruleM->getOne(['rule_mpid' => $this->mpId, 'id' => $id], true);
         if(empty($data)){
             $this->error('数据不存在');
         }
 
         if($data['media_type'] == 'addon'){
-            $material = model('addons')->getOne($data['media_id']);
+            $material = model('addons')->getOne($data['media_id'], true);
         }else{
-            $material = model('media_' . $data['media_type'])->getOne(['uid' => $this->adminId, 'id' => $data['media_id']]);
+            $material = model('media_' . $data['media_type'])->getOne(['uid' => $this->adminId, 'id' => $data['media_id']], true);
+            if($data['media_type'] == 'news'){
+                $material['children'] = model('mediaNews')->getAll([
+                    'where' => ['uid' => $this->adminId, 'pid' => $material['id']],
+                    'field' => 'cover_url,title',
+                    'order' => ['index' => 'asc'],
+                    'refresh' => true
+                ]);
+            }
         }
 
         $builder = new FormBuilder();
@@ -178,23 +189,26 @@ class Reply extends Base
             case 'image':
             case 'video':
             case 'music':
-
                 $fields = [
                     'text' => ['content'],
                     'image' => ['url'],
                     'voice' => ['url','title'],
                     'video' => ['url','title'],
-                    'music' => ['url','title','desc']
+                    'music' => ['url','title','desc'],
+                    'news' => ['title','cover_url','digest'],
                 ];
                 $data = $this->ruleM->pageJoin([
                     'alias' => 'ru',
-                    'join' => [[model('media_' . $type)->getTrueTable(['uid' => $this->adminId]).' m', 'm.id=ru.media_id']],
+                    'join' => [
+                        [model('media_' . $type)->getTrueTable(['uid' => $this->adminId]).' m', 'm.id=ru.media_id', 'left']
+                    ],
                     'page_size' => $this->pageSize,
                     'where' => $where,
                     'field' => array_merge($field, $fields[$type]),
                     'order' => ['ru.id' => 'desc'],
                     'refresh' => 1
                 ]);
+                //dump($data);exit;
                 break;
             case 'addon':
                 $data = $this->ruleM->pageJoin([

@@ -46,7 +46,7 @@ class MpRule extends BaseModel
         $list = [
             self::TEXT => '文本',
             self::IMAGE => '图片',
-            //self::NEWS => '图文',
+            self::NEWS => '图文',
             self::VOICE => '语音',
             self::MUSIC => '音乐',
             self::VIDEO => '视频',

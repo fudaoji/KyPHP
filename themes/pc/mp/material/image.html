@@ -3,8 +3,10 @@
 {block name="body"}
 <div class="layui-tab layui-tab-brief" lay-filter="tabBrief">
     <ul class="layui-tab-title" style="margin-bottom: 15px;">
-        <li class="<?=$from=='local' ? 'layui-this' : '';?>"><a href="{:url('image', ['from' => 'local'])}">本地</a></li>
-        <li class="<?=$from=='mp' ? 'layui-this' : '';?>"><a href="{:url('image', ['from' => 'mp'])}">微信服务器</a></li>
+        {if !$only_mp}
+        <li class="<?=$from=='local' ? 'layui-this' : '';?>"><a href="{:url('image', array_merge(input(), ['from' => 'local']))}">本地</a></li>
+        {/if}
+        <li class="<?=$from=='mp' ? 'layui-this' : '';?>"><a href="{:url('image', array_merge(input(), ['from' => 'mp']))}">微信服务器</a></li>
     </ul>
     <div class="layui-tab-content">
         <form class="layui-form" action="" method="post">
@@ -28,7 +30,7 @@
             <div class="layui-row">
                 {volist name="data_list" id="item"}
                 <div class="layui-col-sm2">
-                    <div class="layui-card top-panel" style="background-image: url({$item.url})" id="item-{$item.id}">
+                    <div class="layui-card top-panel" style="background-image: url({$item.url}?imageView2/2/w/100)" id="item-{$item.id}">
                         <!--<div class="layui-card-header">要展示的指标名称</div>-->
                         <div class="layui-card-body">
                             <div class="check-btn">
@@ -39,6 +41,7 @@
                                         value="{$item.id}"
                                         lay-skin="primary"
                                         data-url="{$item.url}"
+                                        data-media_id="{$item.media_id}"
                                 />
                             </div>
                             <div class="picture-title">{$item.title}</div>
@@ -165,7 +168,7 @@
     function clickSure() {
         var list = [];
         $('.id:checked').each(function (i, item) {
-            list.push({id: $(item).val(), url: $(item).data('url')});
+            list.push({id: $(item).val(), url: $(item).data('url'), media_id: $(item).data('media_id')});
         });
         if(list.length < 1){
             layer.alert("请选择图片");

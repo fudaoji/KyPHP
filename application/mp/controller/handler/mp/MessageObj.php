@@ -17,6 +17,7 @@
 
 namespace app\mp\controller\handler\mp;
 
+use app\common\model\MediaNews;
 use EasyWeChat\Kernel\Messages\Image;
 use EasyWeChat\Kernel\Messages\Music;
 use EasyWeChat\Kernel\Messages\News;
@@ -32,25 +33,28 @@ class MessageObj
      * @param $media
      * @return News
      * @author: fudaoji<fdj@kuryun.cn>
+     * 18年10月12日起，被动回复消息与客服消息接口的图文消息类型中图文数目只能为一条 https://mp.weixin.qq.com/cgi-bin/announce?action=getannouncement&announce_id=115383153198yAvN&version=&lang=zh_CN&token=
      */
     public static function news($media){
+        $type_link = ($media['type'] == MediaNews::TYPE_LINK);
         $items = [
             new NewsItem([
                 'title'       => $media['title'],
                 'description' => $media['digest'],
-                'url'         => $media['content_source_url'] != '' ? $media['content_source_url'] : '',
+                'url'         => $type_link ? $media['content_source_url'] : $media['url'],
                 'image'       => $media['cover_url'],
             ]),
         ];
         if($list = model('MediaNews')->getAll([
-            'where' => ['mpid' => $media['mpid'], 'pid' => $media['id']],
-            'order' => ['sort' => 'asc']
+            'where' => ['mpid' => $media['mpid'], 'pid' => $media['id'], 'uid' => $media['uid']],
+            'order' => ['index' => 'asc'],
+            'field' => 'title,cover_url,digest,content_source_url,url'
         ])) {
             foreach ($list as $vo) {
                 array_push($items, new NewsItem([
                     'title'         => $vo['title'],
                     'description'   => $vo['digest'],
-                    'url'           => $vo['content_source_url'] != '' ? $vo['content_source_url'] : '',
+                    'url'           => $type_link ? $vo['content_source_url'] : $vo['url'],
                     'image'         => $vo['cover_url'],
                 ]));
             }

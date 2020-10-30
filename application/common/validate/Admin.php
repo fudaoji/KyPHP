@@ -60,7 +60,7 @@ class Admin extends Validate
      */
     protected function checkId($value, $rule, $data)
     {
-        return model('admin')->getOne((int)$value) ? true : false;
+        return model('admin')->getOne((int)$value) ? '非法操作' : false;
     }
 
     /**
@@ -77,7 +77,7 @@ class Admin extends Validate
             $where['id'] = ['neq', $data['id']];
         }
         $admin = model('admin')->getOneByMap($where);
-        return $admin ? false : true;
+        return $admin ? '账号已被占用' : true;
     }
 
     /**

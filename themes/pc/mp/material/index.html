@@ -48,6 +48,7 @@
     <div class="layui-tab-content">
         {switch name="type"}
         {case value="image"}{include file="material/components/image" /}{/case}
+        {case value="news"}{include file="material/components/news" /}{/case}
         {case value="voice"}{include file="material/components/voice" /}{/case}
         {case value="video"}{include file="material/components/video" /}{/case}
 
@@ -57,6 +58,7 @@
         </div>
     </div>
 </div>
+
 {/block}
 
 {block name="js"}
@@ -122,11 +124,25 @@
         });
     };
 
-    layui.use(['form', 'upload'],function(){
+    layui.use(['form', 'upload', 'jquery'],function(){
         var form = layui.form,
-            upload = layui.upload;
+            upload = layui.upload
+        , $ = layui.jquery;
         //刷新界面 所有元素
         form.render();
+
+        {if $type eq 'news'}
+
+        $('#picker').on('click', function () {
+            layer.open({
+                title:'选择图文类型',
+                type: 1,
+                area: ['560px', '310px'],
+                content: $('#news-type') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+            });
+        });
+
+        {else /}
 
         var upload_index;
         upload.render({
@@ -163,6 +179,7 @@
             }
             //,……
         })
+        {/if}
     });
 </script>
 {/block}

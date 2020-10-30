@@ -139,13 +139,13 @@
             {volist name="data" id="vo"}
             <tr>
                 <td>{$vo.keyword}</td>
-                <td>{$vo.title}</td>
+                <td>{$vo.title ?? '已删除'}</td>
                 <td>
                     <div style="padding: 1px; border: #e6e6e6 solid 1px; width:120px; float: left; ">
-                        <img class="form_logo" src="{$vo.url}" style="max-width: none" width="120" height="60">
+                        <img class="form_logo" src="{$vo.cover_url}" style="max-width: none" width="120" height="60">
                     </div>
                 </td>
-                <td>{$vo.content}</td>
+                <td>{$vo.digest}</td>
                 <td>{if condition="$vo.status=='1'"}使用中{else/}已停用{/if}</td>
                 <td>
                     <div class="">
@@ -156,7 +156,6 @@
                         <a class="bt-a" href="javascript:;" onclick="updateReply('{$vo.id}','1')">开启</a>
                         {/if}
                         <a class="bt-a" href="javascript:;" onclick="delReply('{$vo.id}')">删除</a>
-
                     </div>
                 </td>
             </tr>

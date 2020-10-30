@@ -1,0 +1,520 @@
+{extend name="common/base" /}
+
+{block name="body"}
+<div class="container" id="app">
+    <div class="layui-row">
+        <div class="layui-col-xs4">
+            <div class="media_preview_area">
+                <div class="appmsg multi">
+                    <div class="appmsg_content"
+                         v-for="(item, i) in list" :key="'item-'+i"
+                    >
+                        <div id="appmsgItem1" class="js_appmsg_item"
+                             v-if="i < 1"
+                             :class="{'news-selected': item.selected > 0}"
+                        >
+                            <div class="cover_appmsg_item">
+                                <h4 class="appmsg_title">
+                                    <a href="javascript:void(0);" target="_blank">{{item.title}}</a>
+                                </h4>
+                                <div class="appmsg_thumb_wrp">
+                                    <img class="js_appmsg_thumb appmsg_thumb wx-img-ne-deal"
+                                         :src="item.cover_url"
+                                         v-if="item.cover_url">
+                                    <i class="appmsg_thumb default" v-if="!item.cover_url">封面图片</i>
+                                </div>
+                                <div class="appmsg_edit_mask">
+                                    <a class="js_edit" href="javascript:void(0);"
+                                       @click="clickEdit(item)">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class='appmsg_item js_appmsg_item clearfix'
+                             v-if="i > 0"
+                             :class="{'news-selected': item.selected > 0}"
+                        >
+                            <img class="js_appmsg_thumb appmsg_thumb wx-img-ne-deal"
+                                 :src="item.cover_url"
+                                 v-if="item.cover_url" />
+                            <i class="appmsg_thumb default"
+                               v-if="!item.cover_url"
+                            >缩略图</i>
+                            <h4 class="appmsg_title">
+                                <a href="javascript:void(0);" target="_blank">{{item.title}}</a>
+                            </h4>
+                            <div class="appmsg_edit_mask">
+                                <a class="js_edit" href="javascript:void(0);" @click="clickEdit(item)">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a class="js_delete" href="javascript:void(0);" @click="clickRemove(item, i)">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <a class="create_access_primary appmsg_add"
+                       href="javascript:void(0);"
+                       @click="clickAdd"
+                       v-if="list.length < 8"
+                    >
+                        <i class="fa fa-plus"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs8">
+            <form class="layui-form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        <span class="text-danger">*</span>标题
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text"  autocomplete="off" class="layui-input"
+                               v-model="selectedItem.title"
+                        >
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">不超过32个字符</div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label" >
+                        <span class="text-danger">*</span> 封面图
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="cover_url" class="layui-input" readonly
+                               :placeholder="selectedItem.top > 0 ? '建议尺寸：900x500' : '建议尺寸：200x200' "
+                               v-model="selectedItem.cover_url"
+                        >
+                    </div>
+                    <div class="layui-form-mid layui-word-aux" style="padding: 0 !important;">
+                        <a href="javascript:;" class="layui-btn layui-btn-primary" id="picker-cover_url">选择图片</a>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        跳转链接
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text"  autocomplete="off" class="layui-input"
+                               v-model="selectedItem.content_source_url"
+                        >
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">以http或https开头的合法域名</div>
+                </div>
+                <div class="layui-form-item layui-form-text" v-if="selectedItem.top > 0">
+                    <label class="layui-form-label">摘要</label>
+                    <div class="layui-input-inline">
+                        <textarea placeholder="请输入内容，单独头条才会展示" class="layui-textarea"
+                        v-model="selectedItem.digest"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" v-if="type == 1">
+                    <label class="layui-form-label">作者</label>
+                    <div class="layui-input-inline">
+                        <input type="text"  autocomplete="off" class="layui-input"
+                               v-model="selectedItem.author"
+                        >
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">不超过20个字符</div>
+                </div>
+
+                <div class="layui-form-item layui-form-text" v-if="type == 1">
+                    <label class="layui-form-label"><span class="text-danger">*</span>文章内容</label>
+                    <div class="layui-input-block">
+                        <textarea id="content" style="width: 100%;" ></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" @click="clickSubmit" type="button">{{type == 1 ? '立即提交并同步到微信' : '立即提交'}}</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script src="https://cdn.bootcss.com/vue/2.6.11/vue.min.js"></script>
+{if $type == 1}
+<script src='__STATIC__/libs/ueditor/ueditor.config.js'></script>
+<script src='__STATIC__/libs/ueditor/ueditor.all.min.js'></script>
+<script src='__STATIC__/libs/ueditor/lang/zh-cn/zh-cn.js'></script>
+{/if}
+<script>
+    var app
+        ,type = parseInt("{$type}")
+        ,newsList = {:json_encode($list)};
+
+    //根据iframe传回的值进行当前页面的赋值
+    var setPictureValue = function  (value, field) {
+        app.selectedItem.cover_url = value[0].url;
+        app.selectedItem.thumb_media_id = value[0].media_id;
+    };
+    //图文数据模板
+    var newsTemplate = function () {
+        return  {
+            id: 0, title: '', thumb_media_id:'', cover_url:'', author:'', show_cover_pic:'',
+            digest: '', content: '',content_source_url: '', media_id: '',pid:0,  type: type, selected: 1, top: 0
+        }
+    };
+
+    layui.use(['form'], function () {
+        var form = layui.form;
+        form.render();
+        if(type === 1){
+            var ue_content = UE.getEditor("content", {
+                initialFrameHeight: 300,
+                maximumWords: 50000,
+                serverUrl: "{:url('system/uploader/editorpost')}",
+                autoFloatEnabled: true,
+                topOffset: 60,
+                zIndex: 0
+            });
+        }
+
+        app = new Vue({
+            el: '#app',
+            data:{
+                list: newsList.length ? newsList : [Object.assign(newsTemplate(), {top: 1})],
+                selectedItem: {},
+                type: type
+            },
+            methods:{
+                clickSubmit(){ //提交
+                    this.refreshContent();
+                    let loading_index = layer.load(1);
+                    $.post("{:url('newsadd')}", {news_list: this.list}, function (res) {
+                        layer.close(loading_index);
+                        if(res.code === 1){
+                            layer.msg(res.msg, {time: 1500}, function () {
+                                location.href = res.url;
+                            });
+                        }else{
+                            layer.alert(res.msg);
+                        }
+                    });
+                }
+                , clickAdd(){ //新增条目
+                    if(this.list.length < 8){
+                        this.list.map(item => item.selected = 0);
+                        this.list.push(newsTemplate());
+                        this.refreshContent();
+                        this.selectedItem = this.list[this.list.length-1];
+                    }
+                }
+                ,clickEdit(news){ //编辑条目
+                    this.list.map(item => item.selected = 0);
+                    news.selected = 1;
+                    this.refreshContent(news);
+                    this.selectedItem = news;
+                }
+                , clickRemove(news, i){ //移除条目
+                    this.list.splice(i, 1);
+                    this.selectedItem = Object.assign(this.selectedItem, newsTemplate());
+                },
+                refreshContent(news = null){ //切换文章的时候，内容进行迁移
+                    if(type === 1){
+                        this.selectedItem.content = ue_content.getContent();
+                        ue_content.setContent(news !== null ? news.content : '');
+                    }
+                }
+            },
+            created(){
+                this.selectedItem = this.list[0];
+                type ===1 && ue_content.ready(() => {
+                    ue_content.execCommand('fontfamily','微软雅黑');   //字体
+                    ue_content.execCommand('lineheight', 1.75);          //行间距
+                    ue_content.setContent(this.selectedItem.content);
+                });
+            }
+        });
+
+        $(function () {
+            //点击选择图片
+            $("#picker-cover_url").on('click', function () {
+                layer.open({
+                    type: 2,
+                    title: '选择图片',
+                    shadeClose: false,
+                    shade: 0.8,
+                    area: ['900px', '576px'],
+                    content: ['{:url("mp/material/image", ["field" => "cover_url", "from" => ($type == 1 ? "mp" : "local"), "needmp" => 1, "onlymp"=> ($type == 1 ? 1 : 0)])}', 'no']
+                });
+            });
+        });
+    })
+
+</script>
+{/block}
+
+{block name="css"}
+<style>
+    .layui-form-item .layui-input-inline{width: 300px;}
+    .news-selected{border: 1px solid #44b549 !important;}
+    /*ueditor*/
+    .edui-default .edui-editor-toolbarbox {
+        box-shadow: none;filter: progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);
+        -webkit-filter: grayscale(100%);
+    }
+    .edui-default .edui-editor-toolbarboxouter {
+        background-color: #fff;
+        background-image: -moz-linear-gradient(top, #ffffff, #ffffff);
+        background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#ffffff));
+        background-image: -webkit-linear-gradient(top, #ffffff, #ffffff);
+        background-image: -o-linear-gradient(top, #ffffff, #ffffff);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#fff', GradientType=0);
+        box-shadow: none;
+    }
+    /*ueditor end*/
+    /* 内容区域样式 */
+    .media_preview_area {
+        width: 288px;
+        margin-right: 14px;
+    }
+    .appmsg {
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 20px;
+        border: 1px solid #e7e7eb;
+        background-color: #fff;
+        color: #8d8d8d;
+        min-height: 180px;
+    }
+
+    .appmsg_content {
+        padding: 0 14px;
+        position: relative;
+    }
+    .appmsg_title {
+        font-weight: 400;
+        font-style: normal;
+        font-size: 16px;
+        line-height: 28px;
+        max-height: 160px;
+        overflow: hidden;
+        word-wrap: break-word;
+        word-break: break-all;
+    }
+    .appmsg_title a {
+        display: block;
+        color: #8d8d8d;
+    }
+    .cover_appmsg_item {
+        position: relative;
+    }
+    .cover_appmsg_item .appmsg_title {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.6) !important;
+        filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr='#99000000', endcolorstr='#99000000');
+    }
+    .cover_appmsg_item .appmsg_title a {
+        padding: 8px;
+        color: #fff;
+        line-height: 30px;
+    }
+    .multi .appmsg_content {
+        padding: 0;
+    }
+    .cover_appmsg_item .appmsg_edit_mask {
+        line-height: 160px;
+    }
+    .appmsg_edit_mask {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(229, 229, 229, 0.55) !important;
+        filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr='#d9e5e5e5', endcolorstr='#d9e5e5e5');
+        text-align: center;
+    }
+    .appmsg_edit_mask a {
+        margin-left: 8px;
+        margin-right: 8px;
+        color: #999;
+    }
+    .appmsg_edit_mask a i {
+        font-size: 21px;
+    }
+    .appmsg_edit_mask a:hover {
+        color: #111;
+    }
+
+    .img img {
+        max-width: 100px;
+        display: inline;
+    }
+    input[type="checkbox"] {
+        box-sizing: border-box;
+        padding: 0;
+    }
+
+    .check-cover input {
+        margin-right: 5px;
+    }
+    /* 缩略图区域样式 */
+    .appmsg_thumb_wrp {
+        height: 160px;
+        overflow: hidden;
+    }
+    .appmsg_thumb {
+        width: 288px;
+        height: 160px;
+    }
+    .appmsg_thumb.default {
+        display: block;
+        color: #c0c0c0;
+        text-align: center;
+        line-height: 160px;
+        font-weight: 400;
+        font-style: normal;
+        background-color: #ececec;
+        font-size: 16px;
+    }
+    .appmsg .has_thumb .appmsg_thumb {
+        display: block;
+    }
+    .appmsg .appmsg_thumb .default {
+        display: block;
+    }
+    .appmsg .has_thumb .appmsg_thumb.default {
+        display: none;
+    }
+    .appmsg_item {
+        position: relative;
+        padding: 20px 14px;
+        border-top: 1px solid #e7e7eb;
+        overflow: hidden;
+    }
+    .appmsg_item .appmsg_thumb {
+        float: right;
+        width: 78px;
+        height: 78px;
+        margin-left: 14px;
+    }
+    .appmsg_item .appmsg_thumb.default {
+        line-height: 78px;
+        font-size: 14px;
+    }
+    .appmsg_item .appmsg_title {
+        line-height: 24px;
+        max-height: 48px;
+        overflow: hidden;
+    }
+    .appmsg_item .appmsg_edit_mask {
+        line-height: 118px;
+    }
+    /* 鼠标移入时样式 */
+    .appmsg .cover_appmsg_item:hover .appmsg_edit_mask, .appmsg .appmsg_item:hover .appmsg_edit_mask, .single .appmsg_content:hover .appmsg_edit_mask {
+        display: block;
+    }
+    /*增加一条的样式*/
+    .appmsg_add {
+        margin: 20px 14px;
+    }
+    .create_access_primary {
+        display: block;
+        border: 2px dotted #d9dadc;
+        line-height: 60px;
+        font-size: 0;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .appmsg_add i {
+        line-height: 60px;
+        color: #d9dadc;
+        cursor: pointer;
+        font-size: 24px;
+    }
+    .appmsg_add:hover {
+        border-color: #999;
+    }
+    .operator a {
+        display: inline-block;
+    }
+
+    /*初始化时右侧样式*/
+    .appmsg_editor .arrow {
+        position: absolute;
+        border: 12px dashed transparent;
+        display: block;
+        width: 0;
+        height: 0;
+        top: 44px;
+        border-right-style: solid;
+    }
+    .appmsg_editor .arrow_out {
+        border-left-width: 0;
+        border-right-color: #e7e7eb;
+        left: 0;
+    }
+    .appmsg_editor .arrow_in {
+        border-left-width: 0;
+        border-right-color: #f4f5f9;
+        left: 1px;
+    }
+    .appmsg_editor .inner {
+        padding: 20px;
+        border: 1px solid #e7e7eb;
+        background-color: #f4f5f9;
+        min-height: 280px;
+    }
+    .material-type-wrapper h3 {
+        border-bottom: 1px solid #E7E7EB;
+        padding-bottom: 10px;
+        font-size: 16px;
+    }
+    .material-type-wrapper .type-box {
+        overflow: hidden;
+        margin-top: 18px;
+    }
+    .material-type-wrapper img {
+        width: 90px;
+        height: 90px;
+        float: left;
+    }
+    .material-type-wrapper .type-des {
+        width: 420px;
+        font-size: 14px;
+        float: left;
+        margin-left: 16px;
+    }
+    .material-type-wrapper .type-des p {
+        white-space: pre-line;
+        word-break: break-all;
+        line-height: 1.4;
+    }
+    .material-type-wrapper .material-type-select {
+        margin-top: 20px;
+    }
+    .appmsg_editor textarea, .appmsg_editor .input-wrp input {
+        background-color: #fff;
+        border: 1px solid #E5E6EA;
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
+        -webkit-box-shadow: inset 0 0 0 rgba(0, 0, 0, 0.075);
+        -moz-box-shadow: inset 0 0 0 rgba(0, 0, 0, 0.075);
+        box-shadow: inset 0 0 0 rgba(0, 0, 0, 0.075);
+    }
+    /*标准图文样式*/
+    .appmsg_edit_item label {
+        line-height: 30px;
+    }
+</style>
+{/block}

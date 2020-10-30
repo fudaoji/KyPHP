@@ -117,7 +117,7 @@ class Base extends \app\admin\controller\Base
      * Author: fudaoji<fdj@kuryun.cn>
      */
     protected function uploadMedia2Wx($media_type = 'image', $id = 0){
-        if(!in_array($media_type, ['image', 'voice', 'video', 'news'])){
+        if(!in_array($media_type, ['image', 'voice', 'video'])){
             return  true;
         }
         $media = model('media_' . $media_type)->getOne(['id' => $id, 'uid' => $this->adminId]);
