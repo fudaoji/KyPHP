@@ -63,7 +63,7 @@
 
 #### 使用文档
 
-时间不够，慢慢会推出使用文档
+开发文档：[http://kyphp.kuryun.com/home/guide/index](http://kyphp.kuryun.com/home/guide/index)
 
 #### 参与贡献
 
