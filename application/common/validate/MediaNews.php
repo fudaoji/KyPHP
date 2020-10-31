@@ -66,7 +66,7 @@ class MediaNews extends Validate
      */
     public function sceneLink()
     {
-        return $this->only(['title', 'thumb_media_id', 'cover_url', 'content_source_url', 'digest']);
+        return $this->only(['title', 'cover_url', 'content_source_url', 'digest']);
     }
 
     /**
