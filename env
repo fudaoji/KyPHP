@@ -15,7 +15,7 @@ queue_name=kyphp
 ;数据库配置
 [db]
 hostname=10.105.19.27
-database=rhaphp
+database=kyphp
 username=fdj
 password=fdj@oudewa
 port=3306
