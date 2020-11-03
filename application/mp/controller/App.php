@@ -69,9 +69,9 @@ class App extends Base
         if ($addon_db['addon'] != $addon_local['addon']) {
             $this->error('应用信息不相符，请检查');
         }
+
         //插件的管理菜单
         $addon_menu = isset($addon_local['menu']) ? $addon_local['menu'] : '';
-
         $node = input('node', '');
         if (!empty($addon_menu) && is_array($addon_menu)) {
             foreach ($addon_menu as $key => $val) {
@@ -87,6 +87,7 @@ class App extends Base
                         $addon_menu[$key]['child'][$k]['show'] = 0;
                         if ($node == $addon_menu[$key]['child'][$k]['url']) {
                             $addon_menu[$key]['child'][$k]['show'] = 1;
+                            $addon_menu[$key]['show'] = 1;
                         }
                     }
                 }
@@ -183,7 +184,7 @@ class App extends Base
         $mp_addon = $this->mpAddonM->getOneByMap([
             'mpid' => $this->mpId,
             'addon' => $this->addonName
-        ]);
+        ], true, true);
 
         if (request()->isPost()) {
             $input = input('post.');
@@ -196,14 +197,16 @@ class App extends Base
             } else {
                 $this->mpAddonM->updateOne(['id' => $mp_addon['id'], 'infos' => $data['infos']]);
             }
-
+            model('common/mpAddon')->getOneByMap(['mpid' => $this->mpId, 'addon' => $this->addonName], true, true);
             $this->success('配置成功');
         } else {
             $addon_config_mp = json_decode($mp_addon['infos'], true);
 
             $config = $this->addonCfByFile['config'];
             foreach ($config as $key1 => $val1) {
-                $val1['value'] = (!empty($addon_config_mp) && isset($addon_config_mp[$val1['name']])) ? $addon_config_mp[$val1['name']] : $val1['value'];
+                $val1['value'] = (!empty($addon_config_mp) && isset($addon_config_mp[$val1['name']]))
+                    ? $addon_config_mp[$val1['name']]
+                    : (empty($val1['value']) ? '' : $val1['value']);
                 $config[$key1] = $val1;
             }
 

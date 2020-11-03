@@ -85,7 +85,7 @@
                 {/case}
                 {case value="onsale"}
                 <a class="layui-btn layui-btn-xs layui-btn-normal" href="{:url('edit',['id'=>$vo.id])}">编辑</a>
-                {if $vo.template_id}
+                {if $vo.template_id || $vo.type=='mp'}
                 <button class="layui-btn layui-btn-xs " onclick="installApp('{$vo.addon}')">上架</button>
                 {/if}
                 <button class="layui-btn layui-btn-xs layui-btn-danger" onclick="wipeDataApp('{$vo.addon}')">还原</button>

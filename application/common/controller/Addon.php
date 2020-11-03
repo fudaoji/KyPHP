@@ -61,9 +61,9 @@ class Addon extends BaseCtl
      * Author: fudaoji<fdj@kuryun.cn>
      */
     protected function setMpAddon(){
-        $this->mpAddon = model('common/mpAddon')->getOneByMap(['mpid' => $this->mid, 'addon' => $this->addonName], 'infos');
+        $this->mpAddon = model('common/mpAddon')->getOneByMap(['mpid' => $this->mid, 'addon' => $this->addonName]);
         if(empty($this->mpAddon)){
-            $this->mpAddon = model('common/miniAddon')->getOneByMap(['mini_id' => $this->mid, 'addon' => $this->addonName], 'infos');
+            $this->mpAddon = model('common/miniAddon')->getOneByMap(['mini_id' => $this->mid, 'addon' => $this->addonName]);
         }
         $this->mpAddon && $this->mpAddon['infos'] = json_decode($this->mpAddon['infos'], true);
     }

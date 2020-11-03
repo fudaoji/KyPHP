@@ -139,17 +139,16 @@ class App extends Base
             } else {
                 $this->miniAddonM->updateOne(['id' => $mp_addon['id'], 'infos' => $data['infos']]);
             }
+            model('common/mpAddon')->getOneByMap(['mpid' => $this->miniId, 'addon' => $this->addonName], true, true);
             $this->success('配置成功');
         } else {
             $addon_config_mp = json_decode($mp_addon['infos'], true);
-            /*$config = json_decode($this->addonCfByDb['config'], true);
-            foreach ($config as $key1 => $val1) {
-                $val1['value'] = (!empty($addon_config_mp) && isset($addon_config_mp[$val1['name']])) ? $addon_config_mp[$val1['name']] : '';
-                $config[$key1] = $val1;
-            }*/
+
             $config = $this->addonCfByFile['config'];
             foreach ($config as $key1 => $val1) {
-                $val1['value'] = (!empty($addon_config_mp) && isset($addon_config_mp[$val1['name']])) ? $addon_config_mp[$val1['name']] : $val1['value'];
+                $val1['value'] = (!empty($addon_config_mp) && isset($addon_config_mp[$val1['name']]))
+                    ? $addon_config_mp[$val1['name']]
+                    : (empty($val1['value']) ? '' : $val1['value']);
                 $config[$key1] = $val1;
             }
 

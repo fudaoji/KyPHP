@@ -16,6 +16,8 @@
 
 namespace app\system\controller;
 
+use ky\ErWeiCode;
+
 class Index extends Base
 {
     /**
@@ -54,5 +56,21 @@ class Index extends Base
             'data_info' => $mp_data
         ];
         return $this->show($assign);
+    }
+
+    /**
+     * 在线二维码
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function getQrCode(){
+        $params = input();
+        if(empty($params['text'])){
+            echo '参数错误';exit;
+        }
+        $code_o = new ErWeiCode();
+        $level = empty($params['level']) ? QR_ECLEVEL_M : $params['level'];
+        $size = empty($params['size']) ? 6 : $params['size'];
+        $margin = empty($params['margin']) ? 1 : $params['margin'];
+        $code_o->qrCode($params['text'], false, $level, $size, $margin);
     }
 }
