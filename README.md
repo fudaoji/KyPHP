@@ -80,5 +80,5 @@ QQ交流群：
 
 微信交流群：
 
-![输入图片说明](https://images.gitee.com/uploads/images/2020/1103/175340_b09ed58c_15303.png "forever_code.png")
+![输入图片说明](https://zyx.images.huihuiba.net/1-5fa129cf4c886.png "forever_code.png")
 
