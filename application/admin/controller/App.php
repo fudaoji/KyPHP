@@ -18,6 +18,7 @@
 namespace app\admin\controller;
 
 use app\common\model\AdminStore;
+use think\facade\Log;
 
 class App extends Base
 {
@@ -94,15 +95,11 @@ class App extends Base
                 $this->error($path.'目录没有删除权限');
             }
 
-            $res = controller('common/addon', 'event')->clearAddonData(['name' => $name]);
-            if($res === true){
-                if(del_dir_recursively($path)){
-                    $this->success('应用卸载成功，数据及文件都已删除');
-                }else{
-                    $this->error('删除应用目录失败');
-                }
+            controller('common/addon', 'event')->clearAddonData(['name' => $name]); //再次清空数据
+            if(del_dir_recursively($path)){
+                $this->success('应用卸载成功，数据及文件都已删除');
             }else{
-                $this->error('卸载失败，失败原因请查看日志');
+                $this->error('删除应用目录失败');
             }
         }
     }
@@ -189,7 +186,14 @@ class App extends Base
                     }
                 }
                 if ($addon = $this->addonM->addOne($data)) {
-                    $this->addonInfoM->addOne(['id' => $addon['id']]);
+                    $insert = ['id' => $addon['id']];
+                    $remote_info = $this->fetchApp('groupcode');
+                    if($remote_info !== false){
+                        $insert['detail'] = empty($remote_info['data']['info']['detail']) ? '' : $remote_info['data']['info']['detail'];
+                        $insert['cates'] = empty($remote_info['data']['info']['cates']) ? '' : $remote_info['data']['info']['cates'];
+                        $insert['snapshot'] = empty($remote_info['data']['info']['snapshot']) ? '' : $remote_info['data']['info']['snapshot'];
+                    }
+                    $this->addonInfoM->addOne($insert);
                     $extra_msg = $data['type'] == AdminStore::MINI ? ',您需要为此应用设置模版才可以正式上架' : '';
                     $this->success('安装应用成功' . $extra_msg, url('index', ['type'=>'notinstall']));
                 }else{
@@ -210,7 +214,7 @@ class App extends Base
     {
         if (request()->isPost()) {
             $name = input('name', '');
-            $addon = $this->addonM->getOneByMap(['addon' => $name, 'status' => 1]);
+            $addon = $this->addonM->getOneByMap(['addon' => $name, 'status' => 1], true, true);
             if (empty($addon)) {
                 $this->error('没有要停用的应用');
             }
@@ -309,6 +313,7 @@ class App extends Base
         if(! $data = $this->addonM->getOne(input('id', 0, 'intval'))){
             $this->error('数据不存在');
         }
+
         $data = array_merge($data, $this->addonInfoM->getOne($data['id']));
         $data['cates'] = empty($data['cates']) ? [] : explode(',', $data['cates']);
 
@@ -325,5 +330,27 @@ class App extends Base
             ->setFormData($data);
 
         return $builder->show();
+    }
+
+    /**
+     * 从官方市场获取应用详情
+     * @param int $name
+     * @return mixed
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    protected function fetchApp($name = ''){
+        $request = new \GuzzleHttp\Psr7\Request('post', 'app/getByNamePost');
+        $client = new \GuzzleHttp\Client(['base_uri' => 'https://kyphp.kuryun.com/api/']);
+        try {
+            $res = $client->send($request, [
+                'json' => ['name' => $name]
+            ]);
+            if($res->getStatusCode() == 200){
+                return json_decode($res->getBody()->getContents(), true);
+            }
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+        }
+        return false;
     }
 }

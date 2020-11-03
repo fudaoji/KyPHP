@@ -95,9 +95,9 @@ class Addon extends Base
      */
     function clearAddonData($params = []){
         $name = $params['name'];
+        $addon = model('addons')->getOneByMap(['addon' => $name]);
         Db::startTrans();
         try {
-            $addon = model('addons')->getOneByMap(['addon' => $name]);
             $cf = model('addons')->getAddonConfigByFile($name);
             if (isset($cf['install_sql']) && $cf['install_sql'] != '') {
                 $install_file = ADDON_PATH . $name . DS . $cf['install_sql'];
@@ -112,14 +112,13 @@ class Addon extends Base
                     foreach ($sql as $value) {
                         $value = trim($value);
                         if (!empty($value)) {
-                            if (substr($value, 0, 12) == 'CREATE TABLE') {
+                            if (strpos($value, 'CREATE TABLE') !== false) {
                                 $table_name = '';
                                 preg_match('|EXISTS `(.*?)`|', $value, $table_name1);
                                 preg_match('|TABLE `(.*?)`|', $value, $table_name2);
 
                                 !empty($table_name1[1]) && $table_name = $table_name1[1];
                                 empty($table_name) && !empty($table_name2[1]) && $table_name = $table_name2[1];
-
                                 if ($table_name) {//如果存在表名
                                     $res = model('addons')->query("SHOW TABLES LIKE '{$table_name}'");
                                     if ($res) {//数据库中存在着表，
@@ -134,8 +133,8 @@ class Addon extends Base
 
             model('addonsInfo')->delOne($addon['id']);
             model('addons')->delOne($addon['id']);
-            model('mpAddon')->where('addon', '=', $name)->delete();
-            //todo 删除小程序-应用关联表中的数据
+            model('mpAddon')->delByMap(['addon' => $name]);
+            model('miniAddon')->delByMap(['addon' => $name]);
             Db::commit();
             $res = true;
         }catch (\Exception $e){

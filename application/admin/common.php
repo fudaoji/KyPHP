@@ -74,7 +74,7 @@ function execute_addon_install_sql($sql_path)
             return 'SQL语句包含了DROP TABLE类似的语句';
         }
         if (!empty($value)) {
-            if (substr($value, 0, 12) == 'CREATE TABLE') {
+            if (strpos($value, 'CREATE TABLE') !== false) {
                 $name = '';
                 preg_match('|EXISTS `(.*?)`|', $value, $table_name1);
                 preg_match('|TABLE `(.*?)`|', $value, $table_name2);

@@ -17,7 +17,7 @@
 <div class="body-head">
     <div class="layui-row">
         <div class="layui-col-sm6 layui-col-xs6">
-            <img src="{$mini_info.head_img}" alt="{$mini_info.nick_name}">
+            <img src="{$mini_info.head_img}">
             <span>{$mini_info.nick_name}</span>
             <span class="layui-badge layui-bg-blue">{:controller('common/mini', 'event')->getTypeDesc($mini_info)}</span>
             {if ! $mini_info.is_auth}
