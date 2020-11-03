@@ -78,3 +78,6 @@ QQ交流群：
 
 ![输入图片说明](https://zyx.images.huihuiba.net/1-5f8afb8796b2f.png "KyPHP微信开发框架QQ群聊二维码.png")
 
+微信交流群：
+![输入图片说明](https://images.gitee.com/uploads/images/2020/1103/175340_b09ed58c_15303.png "forever_code.png")
+
