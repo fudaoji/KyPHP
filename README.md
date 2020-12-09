@@ -4,7 +4,8 @@
 基于微信开放平台打造的微信营销SaaS平台，应用载体主要是微信公众号和微信小程序。
 
 体验链接（请在PC端打开）：
-[http://kyphp.fdj.kuryun.cn/](http://kyphp.fdj.kuryun.cn/)（账号：admin， 密码：123456）
+[http://kyphp.fdj.kuryun.cn/](http://kyphp.fdj.kuryun.cn/)（账号：test1， 密码：123456）
+之前开放超管体验号，发现会被恶意破坏数据，因此暂不开放超管体验。
 
 
 主要功能：
