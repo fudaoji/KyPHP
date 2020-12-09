@@ -1,0 +1,65 @@
+{extend name="common/base"}
+
+{block name="tool_bar"}
+<div class="layui-row">
+    <div class="layui-col-xs12 tr">
+        <!--只有通过api创建的小程序才能进行新增和删除-->
+        <a href="https://mp.weixin.qq.com/" target="_blank" class="layui-btn layui-btn-sm bg-success">新增类目</a>
+    </div>
+</div>
+{/block}
+
+{block name="body"}
+<blockquote class="layui-elem-quote">已添加{:count($data_list)}个，最多5个，每月可修改3次</blockquote>
+<table class="layui-table" lay-skin="line">
+    <colgroup>
+        <col width="250">
+        <col >
+    </colgroup>
+    <thead>
+    <tr>
+        <th>名称</th>
+        <th>状态</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {volist name="data_list" id="vo"}
+    <tr>
+        <td>{$vo.first_name} > {$vo.second_name}</td>
+        <td>{$audit_status[$vo.audit_status]}</td>
+        <td>
+            <a href="https://mp.weixin.qq.com/" target="_blank" class="layui-btn layui-btn-danger layui-btn-xs" data-first="{$vo.first}" data-second="{$vo.second}">删除</a>
+        </td>
+    </tr>
+    {/volist}
+    </tbody>
+</table>
+
+{/block}
+
+{block name="js"}
+<script>
+    layui.use(['jquery', 'layer'], function () {
+        var $ = layui.jquery
+        , layer = layui.layer;
+
+        $(function () {
+            $('.js-delete').on('click', function (e) {
+                layer.confirm('确认删除吗？',{title: '警告'}, function () {
+                    requestPost({
+                        url: "{:url('delPost')}",
+                        data: e.currentTarget.dataset,
+                        success(){
+                            location.reload();
+                        }
+                    });
+                }, function (index) {
+                    layer.close(index);
+                });
+            });
+        });
+    });
+
+</script>
+{/block}

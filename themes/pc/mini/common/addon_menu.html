@@ -4,8 +4,8 @@
     {if condition="count($menu_app) > 0"}
     {volist name="menu_app" id="v"}
     <dd class="">
-        <a href="{:url('app/index',['name'=>$v['addon'], 'mini_id'=>$mini_id])}">
-            <img src="{$v['logo']}" alt="" style="width: 30px;height: 30px;border-radius: 5px;">
+        <a href="{$v['admin_url'] ? ($v['admin_url'] . '/mid/'.$mini_id) : url('app/index',['name'=>$v['addon'], 'mini_id'=>$mini_id])}">
+            <img src="{$v['logo']}" style="width: 30px;height: 30px;border-radius: 5px;">
             {$v.name}
         </a>
     </dd>

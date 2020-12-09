@@ -1,0 +1,90 @@
+{extend name="common/base"}
+
+{if empty($data['can_open'])}
+{block name="body"}
+<blockquote class="layui-elem-quote" style="border-left-color: #FF5722;">当前小程序不满足开通条件！</blockquote>
+{/block}
+{else/}
+
+{block name="tool_bar"}
+<blockquote class="layui-elem-quote">用户扫码使用小程序时，即可展示当前公众号，用户可直接关注公众号。</blockquote>
+
+{if !empty($data['is_open'])}
+<div class="layui-row" style="margin-bottom: 30px;">
+    <div class="layui-col-xs4">
+        <div class="layui-row">
+            <div class="layui-col-xs4 tr">
+                <img src="{$data['headimgurl']}" alt="" style="width: 80px;height: 80px;margin-right: 10px;">
+            </div>
+            <div class="layui-col-xs6 tl">
+                <p>{$data.nickname}</p>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-xs2 tr">
+        <button class="layui-btn layui-btn-danger layui-btn-sm js-close"
+                data-appid="{$data.appid}"
+                data-flag="0">关闭</button>
+    </div>
+</div>
+{/if}
+{/block}
+
+{block name="body"}
+<table class="layui-table" lay-skin="line">
+    <colgroup>
+        <col width="250">
+        <col >
+    </colgroup>
+    <tbody>
+    {volist name="data_list" id="vo"}
+    <tr>
+        <td><img src="{$vo.headimg}" alt="" style="width: 80px;"></td>
+        <td>{$vo.nickname}</td>
+        <td>
+            <button type="button"
+                    class="layui-btn layui-btn-xs js-choose"
+                    data-appid="{$vo.appid}"
+                    data-flag="1"
+            >选它</button>
+        </td>
+    </tr>
+    {/volist}
+    </tbody>
+</table>
+{/block}
+
+{block name="js"}
+<script>
+    layui.use(['jquery', 'layer'], function () {
+        var $ = layui.jquery
+            , layer = layui.layer;
+
+        $(function () {
+            $('.js-close').on('click', function (e) {
+                layer.confirm('确认关闭组件吗？',{title: '提示'}, function () {
+                    requestPost({
+                        url: "{:url('updatePost')}",
+                        data: e.currentTarget.dataset
+                    });
+                }, function (index) {
+                    layer.close(index);
+                });
+            });
+
+            $('.js-choose').on('click', function (e) {
+                layer.confirm('确认操作吗？',{title: '提示'}, function () {
+                    requestPost({
+                        url: "{:url('updatePost')}",
+                        data: e.currentTarget.dataset
+                    });
+                }, function (index) {
+                    layer.close(index);
+                });
+            });
+        });
+    });
+
+</script>
+{/block}
+{/if}

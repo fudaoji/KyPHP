@@ -65,6 +65,7 @@ class ErrorMsg
             41009 => '缺失openid参数',
             41010 => '缺失url参数',
             41030 => 'page页面不存在，或者小程序没有发布',
+            41033 =>'只允许通过api创建的小程序使用',
             42001 => 'access_token超时',
             42002 => 'refresh_token超时',
             42003 => 'code超时',

@@ -239,12 +239,13 @@ class Mp extends Base
                     $this->error($res, '', ['token' => request()->token()]);
                 }
                 $post_data['refresh_token'] = get_rand_char(32);
+                $post_data['encodingaeskey'] = get_rand_char(43);
                 $post_data['uid'] = $this->adminId;
                 $post_data['id'] = $store['id'];
                 $res = $this->mpM->addOne($post_data);
                 Db::commit();
             }catch (\Exception $e){
-                Log::write(json_encode($e->getMessage()));
+                Log::write($e->getMessage());
                 $res = false;
                 Db::rollback();
             }

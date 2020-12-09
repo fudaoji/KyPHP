@@ -70,6 +70,60 @@ class BaseModel extends Model
     }
 
     /**
+     *
+     * @param array $params
+     * @return array
+     * @Author  Doogie<461960962@qq.com>
+     */
+    public function getFieldByOrder($params){
+        ksort($params);
+        $where = empty($params['where']) ? [] : $params['where'];
+        $refresh = empty($params['refresh']) ? 0 : $params['refresh'];
+        $field = empty($params['field']) ? true : $params['field'];
+        $order = empty($params['order']) ? [] : $params['order'];
+        unset($params['refresh']);
+        $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) . __FUNCTION__ . serialize($params));
+        $refresh && cache($cache_key, null);
+
+        $selector = $this->getBuilder($where);
+        $this->_where($selector, $where);
+        if($this->isCache){
+            $selector->cache($cache_key, $this->expire, $this->getTrueTable($where));
+        }
+        return $selector->order($order)->column($field);
+    }
+
+    /**
+     * 关联查询获取字段
+     * @param array $params
+     * @return array
+     * @Author  Doogie<461960962@qq.com>
+     */
+    public function getFieldJoin($params){
+        ksort($params);
+        $where = empty($params['where']) ? [] : $params['where'];
+        $refresh = empty($params['refresh']) ? 0 : $params['refresh'];
+        $field = empty($params['field']) ? true : $params['field'];
+        $order = empty($params['order']) ? [] : $params['order'];
+        unset($params['refresh']);
+        $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) . __FUNCTION__ . serialize($params));
+        $refresh && cache($cache_key, null);
+
+        $selector = $this->getBuilder($where);
+        if(!empty($params['alias'])){
+            $selector->alias($params['alias']);
+        }
+        if(!empty($params['join'])){
+            $selector->join($params['join']);
+        }
+        $this->_where($selector, $where);
+        if($this->isCache){
+            $selector->cache($cache_key, $this->expire, $this->getTrueTable($where));
+        }
+        return $selector->order($order)->column($field);
+    }
+
+    /**
      * 根据条件和排序获取单条数据
      * @param array $params
      * @return array|false|\PDOStatement|string|Model
@@ -77,6 +131,7 @@ class BaseModel extends Model
      * @Author: fudaoji <fdj@kuryun.cn>
      */
     public function getOneByOrder($params = []){
+        ksort($params);
         $where = empty($params['where']) ? [] : $params['where'];
         $order = empty($params['order']) ? [] : $params['order'];
         $field = empty($params['field']) ? true : $params['field'];
@@ -125,6 +180,7 @@ class BaseModel extends Model
      * @throws \Exception
      */
     public function totalByTime($params = []){
+        ksort($params);
         if(empty($params['timeFields']) || !is_array($params['timeFields'])){
             exception('timeFields数据格式错误', 10006);
         }
@@ -494,6 +550,7 @@ class BaseModel extends Model
      * @author: Doogie<461960962@qq.com>
      */
     public function getAll($params){
+        ksort($params);
         $where = empty($params['where']) ? [] : $params['where'];
         $order = empty($params['order']) ? [] : $params['order'];
         $field = empty($params['field']) ? true : $params['field'];
@@ -518,6 +575,7 @@ class BaseModel extends Model
      * @Author  Doogie<461960962@qq.com>
      */
     public function distinctField($field = '', $where = [], $refresh = 0){
+        ksort($where);
         $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) . __FUNCTION__ . serialize($field) . serialize($where));
         $refresh && cache($cache_key, null);
         $selector = $this->getBuilder($where);
@@ -538,6 +596,7 @@ class BaseModel extends Model
      * @author: Doogie<461960962@qq.com>
      */
     public function getGroupList($params = []){
+        ksort($params);
         if(empty($params['group_field'])){
             exception("缺少group_filed字段", 10006);
         }
@@ -600,6 +659,7 @@ class BaseModel extends Model
      * @Author  Doogie<461960962@qq.com>
      */
     public function getListJoin($params = []){
+        ksort($params);
         $limit = $params['limit'];
         $where = empty($params['where']) ? [] : $params['where'];
         $order = empty($params['order']) ? [] : $params['order'];
@@ -639,6 +699,7 @@ class BaseModel extends Model
      * @author Jason<dcq@kuryun.cn>
      */
     public function getAllJoin($params = []){
+        ksort($params);
         $where = empty($params['where']) ? [] : $params['where'];
         $order = empty($params['order']) ? [] : $params['order'];
         $field = empty($params['field']) ? true : $params['field'];
@@ -672,6 +733,7 @@ class BaseModel extends Model
      * @author Jason<dcq@kuryun.cn>
      */
     public function totalJoin($params = []){
+        ksort($params);
         $where = empty($params['where']) ? [] : $params['where'];
         $refresh = empty($params['refresh']) ? 0 : $params['refresh'];
         unset($params['refresh']);
@@ -707,6 +769,7 @@ class BaseModel extends Model
      * @throws \think\exception\DbException
      */
     public function pageJoin($params = []){
+        ksort($params);
         $page_size = $params['page_size'];
         $where = empty($params['where']) ? [] : $params['where'];
         $order = empty($params['order']) ? [] : $params['order'];
@@ -740,6 +803,7 @@ class BaseModel extends Model
      * @author: Doogie<461960962@qq.com>
      */
     public function getGroupAll($params = []){
+        ksort($params);
         $refresh = empty($params['refresh']) ? 0 : $params['refresh'];
         $field = empty($params['field']) ? true : $params['field'];
         $where = empty($params['where']) ? [] : $params['where'];
@@ -776,6 +840,7 @@ class BaseModel extends Model
      * @author fudaoji<fdj@kuryun.cn>
      */
     public function getOneJoin($params = []){
+        ksort($params);
         $where = empty($params['where']) ? [] : $params['where'];
         $refresh = empty($params['refresh']) ? 0 : $params['refresh'];
         $field = empty($params['field']) ? true : $params['field'];
@@ -809,6 +874,7 @@ class BaseModel extends Model
      * @author fudaoji<fdj@kuryun.cn>
      */
     public function totalGroup($params = []){
+        ksort($params);
         $where = empty($params['where']) ? [] : $params['where'];
         $having = empty($params['having']) ? '' : $params['having'];
         $group_field = empty($params['group']) ? '' : $params['group'];

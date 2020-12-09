@@ -16,9 +16,6 @@
 
 namespace app\mini\controller;
 
-use app\common\model\AdminStore;
-use ky\ErrorCode;
-
 class Base extends \app\admin\controller\Base
 {
     protected $miniId;
@@ -113,5 +110,14 @@ class Base extends \app\admin\controller\Base
      */
     protected function getAccessToken(){
         return $this->miniApp->access_token->getToken()['authorizer_access_token'];
+    }
+
+    /**
+     * 小程序接口请求客户端
+     * @return \ky\MiniPlatform\RequestClient
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    protected function getClient(){
+        return new \ky\MiniPlatform\RequestClient();
     }
 }

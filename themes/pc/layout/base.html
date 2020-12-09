@@ -226,6 +226,42 @@
             });
         });
     };
+
+    /**
+     * 统一请求
+     * @param params
+     */
+    function requestPost (params){
+        layui.use(['layer', 'jquery'], function () {
+            var $ = layui.jquery
+                , layer = layui.layer;
+
+            var data = params.data ? params.data : {};
+            var loadingIndex = layer.load(1);
+            $.post(params.url, data, function(res){
+                if(res.code === 1){
+                    layer.msg(res.msg, {time: 1500}, function () {
+                        if(typeof params.success !== 'undefined'){
+                            params.success(res);
+                        }else if(res.url) {
+                            location.href = res.url;
+                        }
+                    });
+                }else{
+                    layer.alert(res.msg, function (index) {
+                        if(typeof params.fail !== 'undefined'){
+                            params.fail(res);
+                        }
+                        layer.close(index);
+                    });
+                }
+            }, 'json').complete(function () {
+                layer.close(loadingIndex);
+            }).error(function (xhr, status, info) {
+                layer.alert('系统繁忙，请刷新重试或联系管理员', {title: '提示'});
+            });
+        });
+    };
 </script>
 {include file="../common/kefu" /}
 {block name="js"}{/block}

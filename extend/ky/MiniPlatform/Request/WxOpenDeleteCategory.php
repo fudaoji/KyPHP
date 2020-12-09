@@ -59,7 +59,7 @@ class WxOpenDeleteCategory
      * @author Jason<dcq@kuryun.cn>
      */
     public function setSecond($second) {
-        $this->first = $second;
+        $this->second = $second;
         $this->postParams['second'] = $second;
     }
 

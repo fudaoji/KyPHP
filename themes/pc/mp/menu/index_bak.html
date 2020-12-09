@@ -179,38 +179,15 @@
 <script src="https://cdn.bootcss.com/vue/2.6.11/vue.min.js"></script>
 <script>
     let form, menuList = <?=$menu_list;?>
-    , menuTemplate = function () {
-        return {pid:0, name: '', type: '', key:'', url:'',appid:'',pagepath:'', _child: [], selected:1};
-    };
-    //菜单选中样式更新
-    const removeActive = function () {
-        app.list.map(item => item.selected = 0);
-        for(let i = 0; i < app.list.length; i++){
-            if(app.list[i]['_child'].length){
-                app.list[i]['_child'].map(item => item.selected = 0);
-            }
-        }
-    };
-    //菜单提交检验
-    /*const submitCheck = function () {
-        for(let i = 0; i < app.list.length; i++){
-            if(app.list[i]['_child'].length < 1 && app.list[i]['type'] === ''){
-                layer.msg('请选择菜单' + app.list[i]['name'], {icon: 6});
-            }
-        }
-        for(let i = 0; i < app.list.length; i++){
-            if(app.list[i]['_child'].length){
-                app.list[i]['_child'].map(item => item.selected = 0);
-            }
-        }
-    };*/
+    , menuTemplate = {pid:0, name: '', type: '', key:'', url:'',appid:'',pagepath:'', _child: [], selected:1};
+
     const app = new Vue({
         el: '#app',
         data:{
             list: menuList,
             menuName: '',
             hasSubMenu: true,
-            selectedMenu: menuTemplate()
+            selectedMenu: menuTemplate
         },
         methods:{
             /**
@@ -218,7 +195,6 @@
              */
             onClickSubmit(){
                 let loading_index = layer.load(1);
-                //console.log(this.list);return;
                 $.post("{:url('savePost')}", {menu_list: this.list}, function (res) {
                     layer.close(loading_index);
                     if(res.code === 1){
@@ -240,7 +216,7 @@
                 }else{
                     this.list[i]['_child'].splice(j, 1);
                 }
-                this.selectedMenu = menuTemplate();
+                this.selectedMenu = Object.assign(this.selectedMenu, menuTemplate);
             },
             /**
              * 点击新增菜单
@@ -248,15 +224,13 @@
              * @param index 菜单索引
              */
             onClickAddMenu(level, index){
-                removeActive();
                 if(level == 'top'){
-                    this.list.push(menuTemplate());
+                    this.list.push(menuTemplate);
                     this.selectedMenu = this.list[this.list.length-1];
                 }else{
-                    this.list[index]['_child'].push(menuTemplate());
+                    this.list[index]['_child'].push(menuTemplate);
                     this.selectedMenu = this.list[index]['_child'][this.list[index]['_child'].length-1];
                 }
-                this.selectedMenu.selected = 1;
             },
             /**
              * 点击选中某个菜单
@@ -265,7 +239,12 @@
              * @param index 菜单索引
              */
             onClickMenu(menu, level, index){
-                removeActive();
+                this.list.map(item => item.selected = 0);
+                for(let i = 0; i < this.list.length; i++){
+                    if(this.list[i]['_child'].length){
+                        this.list[i]['_child'].map(item => item.selected = 0);
+                    }
+                }
                 menu.selected = 1;
                 this.selectedMenu = menu;
                 $('#fun-div input[type=radio]').prop('checked', false);

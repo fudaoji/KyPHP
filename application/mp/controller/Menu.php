@@ -46,6 +46,24 @@ class Menu extends Base
             $mp_menu = [];  //提交微信的菜单数组
             $ids = []; //保留旧数据
             foreach ($menu_list as $k => $menu){
+                if(empty($menu['name'])){
+                    $this->error('所有菜单的名称必填');
+                }
+                if(empty($menu['_child'])){
+                    if(empty($menu['type']) || (empty($menu['key']) && empty($menu['url']) && empty($menu['appid']) && empty($menu['pagepath']))){
+                        $this->error('【'.$menu['name'] . '】菜单的信息填写不完整');
+                    }
+                }else{
+                    foreach ($menu['_child'] as $j => $child){
+                        if(empty($child['name'])){
+                            $this->error('所有菜单的名称必填');
+                        }
+                        if(empty($child['type']) || (empty($child['key']) && empty($child['url']) && empty($child['appid']) && empty($child['pagepath']))){
+                            $this->error('【'.$child['name'] . '】菜单的信息填写不完整');
+                        }
+                    }
+                }
+
                 $data = [
                     'name' => $menu['name'],
                     'sort' => $k,
@@ -112,8 +130,10 @@ class Menu extends Base
 
             if(count($mp_menu)){
                 //删除废弃的菜单
-                $del_ids = $this->menuM->getField('id', ['id' => ['notin', $ids]]);
-                count($del_ids) && $this->menuM->delBatch($del_ids);
+                if($ids){
+                    $del_ids = $this->menuM->getField('id', ['id' => ['notin', $ids]]);
+                    count($del_ids) && $this->menuM->delBatch($del_ids);
+                }
 
                 $res = $this->mpApp->menu->create($mp_menu);
                 if($res['errcode'] > 0){
@@ -136,14 +156,14 @@ class Menu extends Base
         if($this->mpInfo['verify_type_info'] < 0 && $this->mpInfo['service_type_info'] != 2){
             $this->error('当前公众号未获得自定义菜单编辑权限');
         }
-        //dump($this->mpApp->menu->current());exit;
+
         $total = $this->menuM->total(['mpid' => $this->mpId], 1);
         if($total < 1){
             $this->coverMenu();
         }
         $menu_list = $this->menuM->getAll([
             'where' => ['mpid' => $this->mpId],
-            'sort' => ['sort' => 'asc'],
+            'order' => ['sort' => 'asc'],
             'refresh' => 1,
             'field' => 'id,pid,name,type,sort,key,url,appid,pagepath'
         ]);
@@ -187,18 +207,15 @@ class Menu extends Base
             if(isset($mp_menu['selfmenu_info']['button']) && count($mp_menu['selfmenu_info']['button'])){
                 $button_list = $mp_menu['selfmenu_info']['button'];
                 $insert_data = [];
-                $types = $this->menuM->types();
                 foreach ($button_list as $k1 => $top_button){
                     $top_button['mpid'] = $this->mpId;
                     $top_button['sort'] = $k1;
                     if(isset($top_button['sub_button']['list']) && count($top_button['sub_button']['list'])){
                         $new = $this->menuM->addOne(['sort' => $k1, 'mpid' => $this->mpId, 'name' => $top_button['name']]);
                         foreach ($top_button['sub_button']['list'] as $k2 => $v){
-                            if(!in_array($v['type'], $types)){
-                                continue;
-                            }
                             $v['sort'] = $k2;
                             $v['pid'] = $new['id'];
+                            $v['mpid'] = $this->mpId;
                             array_push($insert_data, $v);
                         }
                     }else{
