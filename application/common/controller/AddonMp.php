@@ -89,7 +89,8 @@ class AddonMp extends Addon
                 // 未授权登录
                 cookie('target_url' , request()->domain().request()->url());
                 //发起授权
-                $this->mpApp->oauth->redirect(request()->domain() . url('mp/Onmessage/wxAuthCallback', ['mid' => $this->mpId]))->send();exit;
+                $this->mpApp->oauth->scopes(['snsapi_userinfo'])
+                    ->redirect(request()->domain() . url('mp/Onmessage/wxAuthCallback', ['mid' => $this->mpId]))->send();exit;
             }
             $this->followInfo = json_decode(SaveParam::authCode(cookie('weixin_user')), true);
             cookie('weixin_user', SaveParam::authCode(json_encode($this->followInfo), 'ENCODE'), 604800); //保存用户信息
