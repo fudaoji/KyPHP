@@ -38,10 +38,7 @@ class Mp extends Base
             'log' => [
                 'level' => 'error',
                 'file'  => RUNTIME_PATH . 'log/mp-'.$mp_info['id'].'.log',
-            ],
-            'oauth' => [
-                'scopes'   => ['snsapi_userinfo']
-            ],
+            ]
         ];
         if($mp_info['appsecret']){
             $config['aes_key'] = $mp_info['encodingaeskey'];
