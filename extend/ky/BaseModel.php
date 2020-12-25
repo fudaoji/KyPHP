@@ -291,7 +291,7 @@ class BaseModel extends Model
     }
 
     /**
-     * 根据条件更新单条数据
+     * 根据条件更新数据
      * @param array $where
      * @param array $data
      * @return bool|mixed

@@ -396,10 +396,11 @@ function hook($name = '', $params = [])
  * @param null $extra
  * @param string $key
  * @param array $order
+ * @param bool $refresh
  * @return array
  * @author: fudaoji<fdj@kuryun.cn>
  */
-function select_list_as_tree($model, $where = [], $extra = null, $key = 'id', $order=['sort' => 'asc']) {
+function select_list_as_tree($model, $where = [], $extra = null, $key = 'id', $order=['sort' => 'asc'], $refresh = false) {
     //获取列表
     $con['status'] = 1;
     if ($where) {
@@ -408,7 +409,8 @@ function select_list_as_tree($model, $where = [], $extra = null, $key = 'id', $o
 
     $list = $model->getAll([
         'where' => $con,
-        'order' => $order
+        'order' => $order,
+        'refresh' => $refresh
     ]);
 
     $result = [];

@@ -208,6 +208,9 @@ class Api
         $response = self::postXmlCurl($xml, $this->apiUrl['unifiedorder'], false, $timeOut);
         $result = PayResults::Init($response, $this->config['key']);
         self::reportCostTime($this->apiUrl['unifiedorder'], $startTimeStamp, $result);//上报请求花费时间
+	if(strtolower($result['return_code']) === 'fail'){
+            Logger::setMsgAndCode("通信失败，失败原因：".$result['return_msg'], ErrorCode::WxpayException);
+        }
         if(strtolower($result['result_code']) === 'fail'){
             Logger::setMsgAndCode("统一下单失败，失败原因：".$result['err_code_des'], ErrorCode::WxpayException);
         }
