@@ -1564,7 +1564,7 @@ CREATE TABLE `ky_mp_menu` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `mpid` int(10) NOT NULL DEFAULT '0' COMMENT '公众号ID',
   `pid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '父级菜单ID',
-  `type` enum('click','view','miniprogram','scancode_push','scancode_waitmsg','pic_sysphoto','pic_photo_or_album','pic_weixin','location_select','media_id','view_limited') CHARACTER SET utf8mb4 NOT NULL DEFAULT 'click' COMMENT '类型',
+  `type` varchar(10) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'click' COMMENT '类型',
   `name` varchar(10) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '菜单名称',
   `key` varchar(20) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '事件类型对应的key值',
   `url` varchar(200) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '跳转链接和小程序时必填',
