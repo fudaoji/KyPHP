@@ -35,7 +35,7 @@ class AddonAdmin extends Addon
     protected function isLogin(){
         $this->adminId = (int)session("adminId");
         $this->adminInfo = model("common/admin")->getOne($this->adminId);
-        if (empty($this->adminInfo)) {
+        if (empty($this->adminInfo) || $this->getMpInfo()['uid'] != $this->adminId) {
             echo "请先登录";exit;
         }
     }
