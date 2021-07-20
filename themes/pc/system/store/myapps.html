@@ -53,36 +53,43 @@
                     <div class="layui-row">
                         {volist name="data_list" id="v"}
                         <div class="layui-col-xs4 apps-volist">
-                            <a href="{:url('appdetail', ['id' => $v.id])}">
-                                <div class="apps-volists">
-                                    <div class="apps-icon">
-                                        <img src="{$v.logo}">
-                                    </div>
-                                    <div class="app-desc">
-                                        <h2>
-                                            {$v.name}
-                                            <span class="apps-money layui-badge layui-bg-blue">{if $v.type =='mp'}公众号{else /}小程序{/if}</span>
-                                        </h2>
-                                        <div class="app-desc-body">
-                                            <div class="description">{:mb_substr($v.desc,0,16)}</div>
-                                            <div class="tr">
-                                                {if time() + 259200 > $v.deadline}
-                                                <span class="layui-badge layui-bg-danger overtime-tip">{:date('Y-m-d H:i', $v.deadline)}到期</span>
-                                                {/if}
-                                                <input
-                                                        type="checkbox"
-                                                        name="status{$v.id}"
-                                                        lay-filter="status"
-                                                        lay-skin="switch"
-                                                        lay-text="开启|关闭"
-                                                        value="{$v.id}"
-                                                        {if $v.status}checked{/if}
-                                                >
-                                            </div>
+                            <div class="apps-volists">
+                                <div class="apps-icon">
+                                    <img src="{$v.logo}">
+                                </div>
+                                <div class="app-desc">
+                                    <h2>
+                                        {$v.name}
+                                        <!--<span class="apps-money layui-badge layui-bg-blue">{if $v.type =='mp'}公众号{else /}小程序{/if}</span>-->
+                                    </h2>
+                                    <div class="app-desc-body">
+                                        <div class="description">{:mb_substr($v.desc,0,16)}</div>
+                                        <div class="tr">
+                                            {if time() + 259200 > $v.deadline}
+                                            <span class="layui-badge layui-bg-danger overtime-tip">{:date('Y-m-d H:i', $v.deadline)}到期</span>
+                                            {/if}
                                         </div>
                                     </div>
                                 </div>
-                            </a>
+                                <div class="layui-row">
+                                    <div class="layui-col-xs6 tc app-opr">
+                                        <a href="{:url('appdetail', ['id' => $v.id])}"
+                                           style="margin-top: 8px;"
+                                           class="layui-btn layui-btn-xs">&nbsp;了解&nbsp;</a>
+                                    </div>
+                                    <div class="layui-col-xs6 tc app-opr">
+                                        <input
+                                                type="checkbox"
+                                                name="status{$v.id}"
+                                                lay-filter="status"
+                                                lay-skin="switch"
+                                                lay-text="开启|关闭"
+                                                value="{$v.admin_addon_id}"
+                                                {if $v.status}checked{/if}
+                                        >
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         {/volist}
                     </div>
@@ -121,6 +128,10 @@
 
 {block name="css"}
 <style>
+    .apps-volists{padding: 0;}
+    .apps-icon,.app-desc{padding: 5px;}
     .overtime-tip{float: left;}
+    .app-opr{border: 1px solid #F2F2F2;border-left: none;border-bottom: none;padding-bottom: 8px;}
+    .app-opr:last-child{border-right: none;}
 </style>
 {/block}
