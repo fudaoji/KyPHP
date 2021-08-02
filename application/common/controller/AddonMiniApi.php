@@ -92,7 +92,6 @@ class AddonMiniApi extends BaseCtl
         if(empty($appid)){
              Logger::setMsgAndCode('appid参数丢失', ErrorCode::CatchException);
         }
-
         $this->miniInfo = $this->miniM->getOneByMap(['appid' => $appid]);
         if(empty($this->miniInfo)){
             Logger::setMsgAndCode('非法请求,小程序不存在', ErrorCode::CatchException);

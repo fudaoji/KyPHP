@@ -1,0 +1,27 @@
+<style>
+    .body-head{
+        border-bottom: 1px solid #d9dadc;
+        height: 58px;
+        line-height: 58px;
+        background-color: #f8f8f8;
+        padding: 8px 30px;
+        border-radius: 0;
+    }
+    .body-head img{width: 40px;height: 40px;border-radius: 3px;margin-right: 15px;}
+    .body-head .layui-badge{margin-left: 15px;}
+    .body-head .fa{font-size: 21px;color: #949494;margin-right: 8px;}
+    .body-head .simulate{margin-right: 15px;}
+    .body-head .exchange{margin-left: 30px;color: #459ae9;}
+    .body-head .exchange .fa{color: #459ae9;}
+</style>
+<div class="body-head">
+    <div class="layui-row">
+        <div class="layui-col-sm6 layui-col-xs6">
+            <img src="{$addonInfo.logo}">
+            <span>{$addonInfo.name}</span>
+        </div>
+        <div class="layui-col-sm6 layui-col-xs6">
+            <a href="{:url('system/store/myapps')}" class="exchange"><i class="fa fa-exchange"></i>切换应用</a>
+        </div>
+    </div>
+</div>

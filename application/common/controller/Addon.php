@@ -40,7 +40,7 @@ class Addon extends BaseCtl
         $this->addonAction = strtolower($this->request->param('act'));
 
         $this->setAddonInfo();
-        $this->setMpAddon();
+        //$this->setMpAddon();
         $this->addonRoot = ADDON_PATH . $this->addonName . '/';
         session('addonName', $this->addonName);
     }
@@ -51,9 +51,9 @@ class Addon extends BaseCtl
      */
     protected function setMid(){
         $this->mid = input('mid', 0, 'intval');
-        if(empty($this->mid)){
+        /*if(empty($this->mid)){
             $this->error('mid参数错误');
-        }
+        }*/
     }
 
     /**

@@ -38,4 +38,24 @@ class AdminStore extends BaseModel
         ];
         return isset($list[$id]) ? $list[$id] : $list;
     }
+
+    /**
+     * 根据uid获取平台列表
+     * @param $params
+     * @return mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function listByUid($params = []){
+        return $this->getFieldJoin([
+            'alias' => 's',
+            'join' => [
+                [$params['type'] . ' p', 'p.id=s.id']
+            ],
+            'where' => ['s.uid' => $params['uid'], 'p.status' => 1],
+            'field' => ['s.id','p.nick_name']
+        ]);
+    }
 }

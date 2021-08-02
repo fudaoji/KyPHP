@@ -312,7 +312,7 @@ function addon_url($url = '', $vars = '', $suffix = true, $domain = false)
                     break;
             }
         }
-        if (!empty($mid = input('mid'))) {
+        /*if (!empty($mid = input('mid'))) {
             if (is_array($vars)) {
                 $vars = array_merge($vars, ['mid' => $mid]);
             } elseif ($vars != '' && !is_array($vars)) {
@@ -320,6 +320,14 @@ function addon_url($url = '', $vars = '', $suffix = true, $domain = false)
             } else {
                 $vars = ['mid' => $mid];
             }
+        }*/
+        $mid = empty($vars['mid']) ? input('mid', 0) : $vars['mid'];
+        if (is_array($vars)) {
+            $vars = array_merge($vars, ['mid' => $mid]);
+        } elseif ($vars != '' && !is_array($vars)) {
+            $vars = $vars . '&' . 'mid=' . $mid;
+        }else{
+            $vars = ['mid' => $mid];
         }
         $url = \think\facade\Url::build(ADDON_ROUTE . $node, $vars, $suffix, $domain);
         return str_replace('.' . config('template.view_suffix'), '', $url);

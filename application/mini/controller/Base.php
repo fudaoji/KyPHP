@@ -53,8 +53,8 @@ class Base extends \app\admin\controller\Base
 
         if($mini_id <= 0){
             $mini_ids = model('mini')->getAll([
-                'where' => ['status' => 1, 'uid' => $this->adminId, 'is_auth' => 1],
-                'order' => ['update_time' => 'desc'],
+                'where' => ['status' => 1, 'uid' => $this->adminId],
+                'order' => ['is_auth' => 'desc', 'update_time' => 'desc'],
                 'refresh' => 1
             ]);
             if(count($mini_ids)){

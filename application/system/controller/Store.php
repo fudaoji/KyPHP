@@ -266,7 +266,7 @@ class Store extends Base
             ],
             'order' => ['aa.update_time' => 'desc'],
             'page_size' => $this->pageSize,
-            'field' => 'ad.id,aa.deadline,aa.status,a.username,a.mobile,a.realname,aa.id as admin_addon_id,ad.name,ad.logo,ad.desc,ad.type',
+            'field' => 'ad.id,aa.deadline,aa.status,a.username,a.mobile,a.realname,aa.id as admin_addon_id,ad.name,ad.addon,ad.logo,ad.desc,ad.type,ad.admin_url',
             'refresh' => 1,
             'where' => $where
         ]);

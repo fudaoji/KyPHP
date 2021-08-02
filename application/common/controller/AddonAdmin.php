@@ -35,21 +35,11 @@ class AddonAdmin extends Addon
     protected function isLogin(){
         $this->adminId = (int)session("adminId");
         $this->adminInfo = model("common/admin")->getOne($this->adminId);
-        if (empty($this->adminInfo) || $this->getMpInfo()['uid'] != $this->adminId) {
-            echo "请先登录";exit;
+        if (empty($this->adminInfo)) {
+            $this->error('请先登录！', url('admin/auth/login'));
         }
-    }
-
-    /**
-     * 公众号/小程序信息
-     * @return array
-     * Author: fudaoji<fdj@kuryun.cn>
-     */
-    protected function getMpInfo(){
-        $this->mpInfo = model('common/mp')->getOne($this->mid);
-        if(empty($this->mpInfo)){
-            $this->mpInfo = model('common/mini')->getOne($this->mid);
+        if(! model('common/adminAddon')->total(['addon' => $this->addonName, 'uid' => $this->adminId, 'deadline' => ['gt', time()]], 1)){
+            $this->error('应用未开通或已到期', url('system/store/myapps'));
         }
-        return $this->mpInfo;
     }
 }

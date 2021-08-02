@@ -20,6 +20,7 @@ namespace app\common\event;
 use EasyWeChat\Factory;
 use ky\ErrorCode;
 use ky\Upload\Driver\Qiniu;
+use Symfony\Component\Cache\Adapter\RedisAdapter;
 
 class Base
 {
@@ -45,7 +46,10 @@ class Base
             'token'    => $platform['token'],
             'aes_key'  => $platform['aes_key']
         ];
-        return Factory::openPlatform($config);
+        $app = Factory::openPlatform($config);
+        /*$client = new \Predis\Client('tcp://'.config('cache.redis')['host'].':' . config('cache.redis')['port']);
+        $app->rebind('cache', new RedisAdapter($client));*/
+        return  $app;
     }
 
     /**

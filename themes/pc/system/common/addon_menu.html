@@ -1,0 +1,22 @@
+<dl>
+    {if condition="isset($menu_app)"}
+    <dt><i class="type-ico ico-trade fa fa-cubes"></i>{$menu_app_title}</dt>
+    {if condition="count($menu_app) > 0"}
+    {volist name="menu_app" id="v"}
+    <dd class="">
+        <a href="{$v['admin_url'] ? ($v['admin_url'] . '/mid/'.$mp_id) : url('app/index',['name'=>$v['addon'], 'mid'=>$mp_id])}">
+            <img src="{$v['logo']}" style="width: 30px;height: 30px;border-radius: 5px;">
+            {$v.name}
+        </a>
+    </dd>
+    {/volist}
+    {/if}
+    <dd class="" style="margin-top: 5px;">
+        <a href="{:url('system/store/apps')}">
+            <span style="padding: 5px 20px;border: 1px dashed #e7e7eb;">
+                <i class="fa fa-plus" style="color: #98999a;margin-right: 15px;"></i>更多应用
+            </span>
+        </a>
+    </dd>
+    {/if}
+</dl>

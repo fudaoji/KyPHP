@@ -1,0 +1,32 @@
+{extend name="app/base" /}
+
+{block name="body"}
+
+{include file="app/components/header" /}
+
+<iframe
+        id="iframe"
+        onload="initIframe()"
+        frameborder="no"
+        border="0"
+        width="100%"
+        marginwidth="0"
+        marginheight="0"
+        allowtransparency="yes"
+        src="{$url}"
+>
+</iframe>
+
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+    function initIframe(){
+        var iframe = document.getElementById("iframe");
+        var bodyHeight = $("#iframe").contents().find("body").height();
+        if(bodyHeight < 600) bodyHeight = 600;
+        iframe.height = bodyHeight + 50;
+    }
+    window.setTimeout("initIframe()", 500);
+</script>
+{/block}
