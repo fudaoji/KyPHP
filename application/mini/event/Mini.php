@@ -127,7 +127,6 @@ class Mini extends Base
         }
         return [
             'appid'     => $config['appid'],
-            'appsecret' => $config['secret'],
             'mchid'     => $config['merchant_id'], //商户号
             'key'       => $config['key'], //API秘钥
             'sslcert_path' => $cert_path,

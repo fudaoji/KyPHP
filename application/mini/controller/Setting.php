@@ -83,7 +83,6 @@ class Setting extends Base
             case 'wxpay':
                 $builder->setTemplate('common/form')
                     ->addFormItem('appid', 'text', 'AppId', 'AppId', [], 'required maxlength=150')
-                    ->addFormItem('secret', 'text', 'Secret', 'Secret', [], 'required maxlength=150')
                     ->addFormItem('merchant_id', 'text', '商户ID', '商户ID', [], 'required maxlength=100')
                     ->addFormItem('key', 'text', '支付秘钥', '支付秘钥', [], 'required maxlength=32 minlength=32')
                     ->addFormItem('cert_path', 'textarea', '支付证书cert', '请在微信商户后台下载支付证书，用记事本打开apiclient_cert.pem，并复制里面的内容粘贴到这里。', [], 'maxlength=20000')
