@@ -77,7 +77,6 @@ class Setting extends Base
         }else{
             $data = json_decode($setting['value'], true);
         }
-        $data['appid'] = $this->miniInfo['appid'];
         $builder = new FormBuilder();
         switch ($current_name){
             case 'wxpay':
