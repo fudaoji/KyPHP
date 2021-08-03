@@ -62,13 +62,9 @@ class Notice extends Base
     public function setReadPost(){
         if(request()->isPost()){
             $id = input('post.id');
-            $read = $this->readM->getOneByMap(['uid' => $this->adminId]);
-            if($read){
-                strpos($read['notice'], 'id'.$id) === false
-                && $this->readM->updateOne(['id' => $read['id'], 'notice' => $read['notice'] . ',id'.$id]);
-            }else{
-                $this->readM->addOne(['uid' => $this->adminId,'notice' => 'id'.$id]);
-            }
+            $read = $this->readM->getUserRead(['uid' => $this->adminId]);
+            strpos($read['notice'], 'id'.$id) === false
+            && $this->readM->updateOne(['id' => $read['id'], 'notice' => $read['notice'] . ',id'.$id]);
             $this->readM->getOneByMap(['uid' => $this->adminId], true, true); //删除缓存
             $this->success('success');
         }
@@ -80,9 +76,9 @@ class Notice extends Base
      */
     public function hasNewPost(){
         if(request()->isPost()){
-            $read = $this->readM->getOneByMap(['uid' => $this->adminId]);
-            $ids = str_replace('id', '', $read['notice']);
-            $total = $this->noticeM->total(['id' => ['notin', explode(',', $ids)]]);
+            $read = $this->readM->getUserRead(['uid' => $this->adminId]);
+            $ids = explode(',', str_replace('id', '', $read['notice']));
+            $total = $this->noticeM->total(['id' => ['notin', count($ids) ? $ids : [0]]]);
             $this->success('success', '',['total' => $total]);
         }
     }

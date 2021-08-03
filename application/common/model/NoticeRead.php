@@ -22,4 +22,12 @@ class NoticeRead extends BaseModel
 {
     protected $isCache = true;
     protected $autoWriteTimestamp = false;
+
+    public function getUserRead($params = []){
+        $read = $this->getOneByMap(['uid' => $params['uid']]);
+        if(empty($read)){
+            $this->addOne(['uid' => $params['uid']]);
+        }
+        return $this->getOneByMap(['uid' => $params['uid']], true, true);
+    }
 }
