@@ -120,6 +120,7 @@ class Mp extends Base
         return [
             'appid'     => $config['appid'],
             'mchid'     => $config['merchant_id'], //商户号
+            'sub_mchid' => $config['sub_mch_id'],
             'key'       => $config['key'], //API秘钥
             'sslcert_path' => $cert_path,
             'sslkey_path' => $key_path,

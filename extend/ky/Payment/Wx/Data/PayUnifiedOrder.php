@@ -35,6 +35,22 @@ class PayUnifiedOrder extends Base
         return array_key_exists('appid', $this->values);
     }
 
+    /**
+     * 设置微信支付分配的子商户号
+     * @param string $value
+     **/
+    public function SetSubMch_id($value)
+    {
+        $this->values['sub_mch_id'] = $value;
+    }
+    /**
+     * 获取微信支付分配的子商户号的值
+     * @return 值
+     **/
+    public function GetSubMch_id()
+    {
+        return $this->values['sub_mch_id'];
+    }
 
     /**
      * 设置微信支付分配的商户号

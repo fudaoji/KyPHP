@@ -192,7 +192,9 @@ class Api
         if(!$inputObj->IsNotify_urlSet()){
             $inputObj->SetNotify_url($this->config['notify_url']);//异步通知url
         }
-
+        if(!empty($this->config['sub_mchid'])){
+            $inputObj->SetSubMch_id($this->config['sub_mchid']);
+        }
         $inputObj->SetAppid($this->config['appid']);//公众账号ID
         $inputObj->SetMch_id($this->config['mchid']);//商户号
         $inputObj->SetSpbill_create_ip(self::getClientIp());//终端ip
