@@ -466,6 +466,22 @@ class PayUnifiedOrder extends Base
         return array_key_exists('product_id', $this->values);
     }
 
+    /**
+     * trade_type=JSAPI，此参数必传，用户在子商户appid下的唯一标识。openid和sub_openid可以选传其中之一，如果选择传sub_openid,则必须传sub_appid
+     * @param string $value
+     **/
+    public function SetSubOpenid($value)
+    {
+        $this->values['sub_openid'] = $value;
+    }
+    /**
+     * trade_type=JSAPI，此参数必传，用户在子商户appid下的唯一标识。openid和sub_openid可以选传其中之一，如果选择传sub_openid,则必须传sub_appid
+     * @return string
+     **/
+    public function GetSubOpenid()
+    {
+        return $this->values['sub_openid'];
+    }
 
     /**
      * 设置trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识。下单前需要调用【网页授权获取用户信息】接口获取到用户的Openid。

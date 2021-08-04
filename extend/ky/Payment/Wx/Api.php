@@ -25,7 +25,7 @@ class Api
      * @var array
      */
     public $config = [
-       	'appid'             => '',
+        'appid'             => '',
         'appsecret'         => '',
         'mchid'             => '', //商户号
         'key'               => '', //API秘钥
@@ -35,7 +35,7 @@ class Api
         'curl_proxy_port'   => 0, //代理机器端口
         'report_level'      => 1, //信息上报等级，0.关闭上报; 1.仅错误出错上报; 2.全量上报
         'notify_url'        => 'NOTIFY_URL',
-		'rsa_path'          => '', //RSA加密公钥路径
+        'rsa_path'          => '', //RSA加密公钥路径
     ];
 
     /**
@@ -47,9 +47,9 @@ class Api
         'report'            => 'https://api.mch.weixin.qq.com/payitil/report',
         'unifiedorder'      => "https://api.mch.weixin.qq.com/pay/unifiedorder",
         'refund'            => "https://api.mch.weixin.qq.com/secapi/pay/refund",
-		'transferpromotion' => 'https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers',
-		'paybank'           => 'https://api.mch.weixin.qq.com/mmpaysptrans/pay_bank',
-		'getpublickey'      => 'https://fraud.mch.weixin.qq.com/risk/getpublickey',
+        'transferpromotion' => 'https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers',
+        'paybank'           => 'https://api.mch.weixin.qq.com/mmpaysptrans/pay_bank',
+        'getpublickey'      => 'https://fraud.mch.weixin.qq.com/risk/getpublickey',
     ];
 
     /**
@@ -210,7 +210,7 @@ class Api
         $response = self::postXmlCurl($xml, $this->apiUrl['unifiedorder'], false, $timeOut);
         $result = PayResults::Init($response, $this->config['key']);
         self::reportCostTime($this->apiUrl['unifiedorder'], $startTimeStamp, $result);//上报请求花费时间
-	if(strtolower($result['return_code']) === 'fail'){
+        if(strtolower($result['return_code']) === 'fail'){
             Logger::setMsgAndCode("通信失败，失败原因：".$result['return_msg'], ErrorCode::WxpayException);
         }
         if(strtolower($result['result_code']) === 'fail'){
@@ -254,8 +254,8 @@ class Api
             curl_setopt($ch,CURLOPT_SSLCERT, $this->config['sslcert_path']);
             //curl_setopt($ch,CURLOPT_SSLCERT, dirname(__FILE__) . DIRECTORY_SEPARATOR . $this->config['sslcert_path']);
             curl_setopt($ch,CURLOPT_SSLKEYTYPE,'PEM');
-	    curl_setopt($ch,CURLOPT_SSLKEY, $this->config['sslkey_path']);
-	    //curl_setopt($ch,CURLOPT_SSLKEY, dirname(__FILE__) . DIRECTORY_SEPARATOR . $this->config['sslkey_path']);
+            curl_setopt($ch,CURLOPT_SSLKEY, $this->config['sslkey_path']);
+            //curl_setopt($ch,CURLOPT_SSLKEY, dirname(__FILE__) . DIRECTORY_SEPARATOR . $this->config['sslkey_path']);
         }
         //post提交方式
         curl_setopt($ch, CURLOPT_POST, TRUE);
@@ -711,42 +711,42 @@ class Api
      * Author: Doogie<fdj@kuryun.cn>
      * @throws \Exception
      */
-	public function transferPromotion($params = [], $timeOut = 6){
-		//检测必填参数
-		$inputObj = new TransferPromotion();
-		if(isset($params['check_name']) && $params['check_name']){
-			$inputObj->SetCheck_name('FORCE_CHECK');
-		}else{
-			$inputObj->SetCheck_name('NO_CHECK');
-		}
-		if($inputObj->GetCheck_name() == 'FORCE_CHECK' && isset($params['re_user_name'])){
-			$inputObj->SetRe_user_name($params['re_user_name']);
-		}else{
-		//	Logger::setMsgAndCode('退款申请接口中，check_name为FORCE_CHECK时re_user_name必填！', ErrorCode::WxpayException);
-		}
+    public function transferPromotion($params = [], $timeOut = 6){
+        //检测必填参数
+        $inputObj = new TransferPromotion();
+        if(isset($params['check_name']) && $params['check_name']){
+            $inputObj->SetCheck_name('FORCE_CHECK');
+        }else{
+            $inputObj->SetCheck_name('NO_CHECK');
+        }
+        if($inputObj->GetCheck_name() == 'FORCE_CHECK' && isset($params['re_user_name'])){
+            $inputObj->SetRe_user_name($params['re_user_name']);
+        }else{
+            //	Logger::setMsgAndCode('退款申请接口中，check_name为FORCE_CHECK时re_user_name必填！', ErrorCode::WxpayException);
+        }
 
-		if(!isset($params['partner_trade_no'], $params['openid'], $params['amount'], $params['desc'])){
-			Logger::setMsgAndCode('缺少必填参数', ErrorCode::WxpayException);
-		}
+        if(!isset($params['partner_trade_no'], $params['openid'], $params['amount'], $params['desc'])){
+            Logger::setMsgAndCode('缺少必填参数', ErrorCode::WxpayException);
+        }
 
-		$inputObj->SetMch_Appid($this->config['appid']);//公众账号ID
-		$inputObj->SetMchid($this->config['mchid']);//商户号
-		$inputObj->SetPartner_trade_no($params['partner_trade_no']);
-		$inputObj->SetOpenid($params['openid']);
-		$inputObj->SetAmount($params['amount']);
-		$inputObj->SetDesc($params['desc']);
-		$inputObj->SetSpbill_create_ip(self::getClientIp());
-		$inputObj->SetNonce_str(self::getNonceStr());//随机字符串
+        $inputObj->SetMch_Appid($this->config['appid']);//公众账号ID
+        $inputObj->SetMchid($this->config['mchid']);//商户号
+        $inputObj->SetPartner_trade_no($params['partner_trade_no']);
+        $inputObj->SetOpenid($params['openid']);
+        $inputObj->SetAmount($params['amount']);
+        $inputObj->SetDesc($params['desc']);
+        $inputObj->SetSpbill_create_ip(self::getClientIp());
+        $inputObj->SetNonce_str(self::getNonceStr());//随机字符串
 
-		$inputObj->SetSign($this->config['key']);//签名
-		$xml = $inputObj->ToXml();
-		$startTimeStamp = self::getMillisecond();//请求开始时间
-		$response = self::postXmlCurl($xml, $this->apiUrl['transferpromotion'], true, $timeOut);
-		$result = $inputObj->FromXml($response);
-		self::reportCostTime($this->apiUrl['transferpromotion'], $startTimeStamp, $result);//上报请求花费时间
+        $inputObj->SetSign($this->config['key']);//签名
+        $xml = $inputObj->ToXml();
+        $startTimeStamp = self::getMillisecond();//请求开始时间
+        $response = self::postXmlCurl($xml, $this->apiUrl['transferpromotion'], true, $timeOut);
+        $result = $inputObj->FromXml($response);
+        self::reportCostTime($this->apiUrl['transferpromotion'], $startTimeStamp, $result);//上报请求花费时间
 
-		return $result;
-	}
+        return $result;
+    }
 
     /**
      * 企业付款到银行卡
@@ -756,101 +756,100 @@ class Api
      * @throws \Exception
      * @author Jason<1589856452@qq.com>
      */
-	public function payBank($params = [], $timeOut = 6){
-		//检测必填参数
-		$inputObj = new PayBank();
-		if(!isset($params['partner_trade_no'], $params['enc_bank_no'], $params['enc_true_name'], $params['bank_code'], $params['amount'], $params['desc'])){
-			Logger::setMsgAndCode('缺少必填参数', ErrorCode::WxpayException);
-		}
+    public function payBank($params = [], $timeOut = 6){
+        //检测必填参数
+        $inputObj = new PayBank();
+        if(!isset($params['partner_trade_no'], $params['enc_bank_no'], $params['enc_true_name'], $params['bank_code'], $params['amount'], $params['desc'])){
+            Logger::setMsgAndCode('缺少必填参数', ErrorCode::WxpayException);
+        }
 
-		$inputObj->SetMch_id($this->config['mchid']);//商户号
-		$inputObj->SetPartner_trade_no($params['partner_trade_no']);
-		$inputObj->SetEnc_bank_no(self::getRsaEncrypt($params['enc_bank_no']));
-		$inputObj->SetEnc_true_name(self::getRsaEncrypt($params['enc_true_name']));
-		$inputObj->SetBank_code($params['bank_code']);
-		$inputObj->SetAmount($params['amount']);
-		$inputObj->SetDesc($params['desc']);
-		$inputObj->SetNonce_str(self::getNonceStr());//随机字符串
+        $inputObj->SetMch_id($this->config['mchid']);//商户号
+        $inputObj->SetPartner_trade_no($params['partner_trade_no']);
+        $inputObj->SetEnc_bank_no(self::getRsaEncrypt($params['enc_bank_no']));
+        $inputObj->SetEnc_true_name(self::getRsaEncrypt($params['enc_true_name']));
+        $inputObj->SetBank_code($params['bank_code']);
+        $inputObj->SetAmount($params['amount']);
+        $inputObj->SetDesc($params['desc']);
+        $inputObj->SetNonce_str(self::getNonceStr());//随机字符串
 
-		$inputObj->SetSign($this->config['key']);//签名
-		$xml = $inputObj->ToXml();
-		$startTimeStamp = self::getMillisecond();//请求开始时间
-		$response = self::postXmlCurl($xml, $this->apiUrl['paybank'], true, $timeOut);
-		$result = $inputObj->FromXml($response);
-		self::reportCostTime($this->apiUrl['paybank'], $startTimeStamp, $result);//上报请求花费时间
+        $inputObj->SetSign($this->config['key']);//签名
+        $xml = $inputObj->ToXml();
+        $startTimeStamp = self::getMillisecond();//请求开始时间
+        $response = self::postXmlCurl($xml, $this->apiUrl['paybank'], true, $timeOut);
+        $result = $inputObj->FromXml($response);
+        self::reportCostTime($this->apiUrl['paybank'], $startTimeStamp, $result);//上报请求花费时间
 
-		return $result;
-	}
+        return $result;
+    }
 
-	/**
-	 * 获取客户端IP地址
-	 * @param integer $type 返回类型 0 返回IP地址 1 返回IPV4地址数字
-	 * @param boolean $adv 是否进行高级模式获取（有可能被伪装）
-	 * @return mixed
-	 */
-	public static function getClientIp($type = 0, $adv=false) {
-		$type       =  $type ? 1 : 0;
-		static $ip  =   NULL;
-		if ($ip !== NULL) return $ip[$type];
-		if($adv){
-			if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-				$arr    =   explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-				$pos    =   array_search('unknown',$arr);
-				if(false !== $pos) unset($arr[$pos]);
-				$ip     =   trim($arr[0]);
-			}elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
-				$ip     =   $_SERVER['HTTP_CLIENT_IP'];
-			}elseif (isset($_SERVER['REMOTE_ADDR'])) {
-				$ip     =   $_SERVER['REMOTE_ADDR'];
-			}
-		}elseif (isset($_SERVER['REMOTE_ADDR'])) {
-			$ip     =   $_SERVER['REMOTE_ADDR'];
-		}
-		// IP地址合法验证
-		$long = sprintf("%u",ip2long($ip));
-		$ip   = $long ? array($ip, $long) : array('0.0.0.0', 0);
-		return $ip[$type];
-	}
+    /**
+     * 获取客户端IP地址
+     * @param integer $type 返回类型 0 返回IP地址 1 返回IPV4地址数字
+     * @param boolean $adv 是否进行高级模式获取（有可能被伪装）
+     * @return mixed
+     */
+    public static function getClientIp($type = 0, $adv=false) {
+        $type       =  $type ? 1 : 0;
+        static $ip  =   NULL;
+        if ($ip !== NULL) return $ip[$type];
+        if($adv){
+            if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $arr    =   explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+                $pos    =   array_search('unknown',$arr);
+                if(false !== $pos) unset($arr[$pos]);
+                $ip     =   trim($arr[0]);
+            }elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
+                $ip     =   $_SERVER['HTTP_CLIENT_IP'];
+            }elseif (isset($_SERVER['REMOTE_ADDR'])) {
+                $ip     =   $_SERVER['REMOTE_ADDR'];
+            }
+        }elseif (isset($_SERVER['REMOTE_ADDR'])) {
+            $ip     =   $_SERVER['REMOTE_ADDR'];
+        }
+        // IP地址合法验证
+        $long = sprintf("%u",ip2long($ip));
+        $ip   = $long ? array($ip, $long) : array('0.0.0.0', 0);
+        return $ip[$type];
+    }
 
-	/**
-	 * 获取RSA加密公钥
-	 * @param int $timeOut
-	 * @return string $result
-	 * @author Jason<1589856452@qq.com>
-	 */
-	public function getPublicKey($timeOut = 6) {
-		$inputObj = new GetPublicKey();
+    /**
+     * 获取RSA加密公钥
+     * @param int $timeOut
+     * @return string $result
+     * @author Jason<1589856452@qq.com>
+     */
+    public function getPublicKey($timeOut = 6) {
+        $inputObj = new GetPublicKey();
 
-		$inputObj->SetMch_id($this->config['mchid']);//商户号
-		$inputObj->SetSign_type('MD5');
-		$inputObj->SetNonce_str(self::getNonceStr());//随机字符串
+        $inputObj->SetMch_id($this->config['mchid']);//商户号
+        $inputObj->SetSign_type('MD5');
+        $inputObj->SetNonce_str(self::getNonceStr());//随机字符串
 
-		$inputObj->SetSign($this->config['key']);//签名
-		$xml = $inputObj->ToXml();
-		$startTimeStamp = self::getMillisecond();//请求开始时间
-		$response = self::postXmlCurl($xml, $this->apiUrl['getpublickey'], true, $timeOut);
-		$result = $inputObj->FromXml($response);
-		self::reportCostTime($this->apiUrl['getpublickey'], $startTimeStamp, $result);//上报请求花费时间
+        $inputObj->SetSign($this->config['key']);//签名
+        $xml = $inputObj->ToXml();
+        $startTimeStamp = self::getMillisecond();//请求开始时间
+        $response = self::postXmlCurl($xml, $this->apiUrl['getpublickey'], true, $timeOut);
+        $result = $inputObj->FromXml($response);
+        self::reportCostTime($this->apiUrl['getpublickey'], $startTimeStamp, $result);//上报请求花费时间
 
-		return $result;
-	}
+        return $result;
+    }
 
-	/**
-	 * 获取以RSA公钥加密并转base64之后的密文
-	 * @param string $str
-	 * @return string
-	 * @author Jason<1589856452@qq.com>
-	 */
-	public function getRsaEncrypt($str) {
-		$pub_key = openssl_pkey_get_public(file_get_contents($this->config['rsa_path']));  //读取公钥内容
-		$encrypted_block = '';
-		$encrypted = '';
-		//用标准的RSA加密库对敏感信息进行加密，选择RSA_PKCS1_OAEP_PADDING填充模式
-		openssl_public_encrypt($str, $encrypted_block, $pub_key,OPENSSL_PKCS1_OAEP_PADDING);
-		//得到进行rsa加密并转base64之后的密文
-		$str_base64 = base64_encode($encrypted.$encrypted_block);
+    /**
+     * 获取以RSA公钥加密并转base64之后的密文
+     * @param string $str
+     * @return string
+     * @author Jason<1589856452@qq.com>
+     */
+    public function getRsaEncrypt($str) {
+        $pub_key = openssl_pkey_get_public(file_get_contents($this->config['rsa_path']));  //读取公钥内容
+        $encrypted_block = '';
+        $encrypted = '';
+        //用标准的RSA加密库对敏感信息进行加密，选择RSA_PKCS1_OAEP_PADDING填充模式
+        openssl_public_encrypt($str, $encrypted_block, $pub_key,OPENSSL_PKCS1_OAEP_PADDING);
+        //得到进行rsa加密并转base64之后的密文
+        $str_base64 = base64_encode($encrypted.$encrypted_block);
 
-		return $str_base64;
-	}
+        return $str_base64;
+    }
 }
-

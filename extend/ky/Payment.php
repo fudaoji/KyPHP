@@ -122,6 +122,7 @@ class Payment
                 $input->SetNotify_url($params['notify_url']);
                 $input->SetTrade_type($this->tradeType[$channel]);
                 $input->SetOpenid($params['openid']);
+                $input->SetSubOpenid($params['openid']);
                 if(isset($params['attach'])){
                     $input->SetAttach($params['attach']);
                 }
