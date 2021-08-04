@@ -117,17 +117,25 @@ class Payment
                     logger('支付参数不完整', ErrorCode::WxpayException);
                 }
                 $input = new PayUnifiedOrder();
+                if(empty($this->config['p_mchid'])){ //服务商模式支付
+                    $input->SetOpenid($params['openid']);
+                    $input->SetAppid($this->config['appid']);
+                    $input->SetMch_id($this->config['mchid']);//商户号
+                }else{
+                    $input->SetSubOpenid($params['openid']);
+                    $input->SetAppid($this->config['p_appid']);
+                    $input->SetMch_id($this->config['p_mchid']);//商户号
+                    $input->SetSubAppid($this->config['appid']);
+                    $input->SetSubMch_id($this->config['mchid']);//商户号
+                }
+
                 $input->SetBody($params['body']);
                 // 附加数据，在查询API和支付通知中原样返回，可作为自定义参数使用
                 $input->SetOut_trade_no($params['out_trade_no']);
                 $input->SetTotal_fee($params['total_fee']);
                 $input->SetNotify_url($params['notify_url']);
                 $input->SetTrade_type($this->tradeType[$channel]);
-                if(empty($this->config['sub_mchid'])){ //服务商模式支付
-                    $input->SetOpenid($params['openid']);
-                }else{
-                    $input->SetSubOpenid($params['openid']);
-                }
+
                 if(isset($params['attach'])){
                     $input->SetAttach($params['attach']);
                 }

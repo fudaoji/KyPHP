@@ -11,6 +11,23 @@ namespace ky\Payment\Wx\Data;
 class PayUnifiedOrder extends Base
 {
     /**
+     * 设置子商户APPID
+     * @param string $value
+     **/
+    public function SetSubAppid($value)
+    {
+        $this->values['appid'] = $value;
+    }
+    /**
+     * 获取子商户APPID
+     * @return string
+     **/
+    public function GetSubAppid()
+    {
+        return $this->values['appid'];
+    }
+
+    /**
      * 设置微信分配的公众账号ID
      * @param string $value
      **/
