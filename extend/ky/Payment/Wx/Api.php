@@ -378,9 +378,17 @@ class Api
         }else{
             Logger::setMsgAndCode("订单查询接口中，out_trade_no、transaction_id至少填一个！", ErrorCode::WxpayException);
         }
-
-        $inputObj->SetAppid($this->config['appid']);//公众账号ID
-        $inputObj->SetMch_id($this->config['mchid']);//商户号
+        if(empty($this->config['p_mchid'])){ //服务商模式支付
+            $inputObj->SetAppid($this->config['appid']);
+            $inputObj->SetMch_id($this->config['mchid']);//商户号
+        }else{
+            $inputObj->SetAppid($this->config['p_appid']);
+            $inputObj->SetMch_id($this->config['p_mchid']);//商户号
+            $inputObj->SetSubAppid($this->config['appid']);
+            $inputObj->SetSubMch_id($this->config['mchid']);//商户号
+        }
+        /*$inputObj->SetAppid($this->config['appid']);//公众账号ID
+        $inputObj->SetMch_id($this->config['mchid']);//商户号*/
         $inputObj->SetNonce_str(self::getNonceStr());//随机字符串
 
         $inputObj->SetSign($this->config['key']);//签名
