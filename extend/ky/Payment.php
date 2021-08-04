@@ -33,6 +33,7 @@ class Payment
     protected $api;
     protected $driver;
     protected $error;
+    protected $config = [];
 
     /**
      * 交易类型
@@ -51,6 +52,7 @@ class Payment
         empty($driver) && $driver = config('pay_type') ? config('pay_type') : 'wx';
         $this->driver = ucfirst(strtolower($driver));
         $class = '\\ky\\Payment\\' . $this->driver . '\\Api';
+        $this->config = $config;
         $this->api = new $class($config);
         if(!$this->api){
             throw new \Exception("不存在支付驱动：{$driver}");
@@ -121,8 +123,11 @@ class Payment
                 $input->SetTotal_fee($params['total_fee']);
                 $input->SetNotify_url($params['notify_url']);
                 $input->SetTrade_type($this->tradeType[$channel]);
-                //$input->SetOpenid($params['openid']);
-                $input->SetSubOpenid($params['openid']);
+                if(empty($this->config['sub_mchid'])){ //服务商模式支付
+                    $input->SetOpenid($params['openid']);
+                }else{
+                    $input->SetSubOpenid($params['openid']);
+                }
                 if(isset($params['attach'])){
                     $input->SetAttach($params['attach']);
                 }
