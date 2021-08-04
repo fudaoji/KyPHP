@@ -16,7 +16,7 @@ class PayUnifiedOrder extends Base
      **/
     public function SetSubAppid($value)
     {
-        $this->values['appid'] = $value;
+        $this->values['sub_appid'] = $value;
     }
     /**
      * 获取子商户APPID
@@ -24,7 +24,7 @@ class PayUnifiedOrder extends Base
      **/
     public function GetSubAppid()
     {
-        return $this->values['appid'];
+        return $this->values['sub_appid'];
     }
 
     /**
