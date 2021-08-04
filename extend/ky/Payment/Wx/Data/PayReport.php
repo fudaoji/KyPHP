@@ -11,6 +11,40 @@ namespace ky\Payment\Wx\Data;
 class PayReport extends Base
 {
     /**
+     * 设置子商户APPID
+     * @param string $value
+     **/
+    public function SetSubAppid($value)
+    {
+        $this->values['sub_appid'] = $value;
+    }
+    /**
+     * 获取子商户APPID
+     * @return string
+     **/
+    public function GetSubAppid()
+    {
+        return $this->values['sub_appid'];
+    }
+
+    /**
+     * 设置微信支付分配的子商户号
+     * @param string $value
+     **/
+    public function SetSubMch_id($value)
+    {
+        $this->values['sub_mch_id'] = $value;
+    }
+    /**
+     * 获取微信支付分配的子商户号的值
+     * @return 值
+     **/
+    public function GetSubMch_id()
+    {
+        return $this->values['sub_mch_id'];
+    }
+
+    /**
      * 设置微信分配的公众账号ID
      * @param string $value
      **/

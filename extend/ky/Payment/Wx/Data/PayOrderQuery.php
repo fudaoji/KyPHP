@@ -27,7 +27,6 @@ class PayOrderQuery extends Base
         return $this->values['sub_appid'];
     }
 
-
     /**
      * 设置微信分配的公众账号ID
      * @param string $value

@@ -387,8 +387,6 @@ class Api
             $inputObj->SetSubAppid($this->config['appid']);
             $inputObj->SetSubMch_id($this->config['mchid']);//商户号
         }
-        /*$inputObj->SetAppid($this->config['appid']);//公众账号ID
-        $inputObj->SetMch_id($this->config['mchid']);//商户号*/
         $inputObj->SetNonce_str(self::getNonceStr());//随机字符串
 
         $inputObj->SetSign($this->config['key']);//签名
@@ -425,9 +423,16 @@ class Api
         } if(!$inputObj->IsExecute_time_Set()) {
             Logger::setMsgAndCode("接口耗时，缺少必填参数execute_time_！", ErrorCode::WxpayException);
         }
-        $inputObj->SetAppid($this->config['appid']);//公众账号ID
-        $inputObj->SetMch_id($this->config['mchid']);//商户号
-        $inputObj->SetUser_ip(get_client_ip());//终端ip
+        if(empty($this->config['p_mchid'])){ //服务商模式支付
+            $inputObj->SetAppid($this->config['appid']);
+            $inputObj->SetMch_id($this->config['mchid']);//商户号
+        }else{
+            $inputObj->SetAppid($this->config['p_appid']);
+            $inputObj->SetMch_id($this->config['p_mchid']);//商户号
+            $inputObj->SetSubAppid($this->config['appid']);
+            $inputObj->SetSubMch_id($this->config['mchid']);//商户号
+        }
+        $inputObj->SetUser_ip($this->getClientIp());//终端ip
         $inputObj->SetTime(date("YmdHis"));//商户上报时间
         $inputObj->SetNonce_str(self::getNonceStr());//随机字符串
 
@@ -498,9 +503,16 @@ class Api
         $inputObj->SetOut_refund_no($params['out_refund_no']);
         $inputObj->SetTotal_fee($params['total_fee']);
         $inputObj->SetRefund_fee($params['refund_fee']);
-        $inputObj->SetOp_user_id($this->config['mchid']);
-        $inputObj->SetAppid($this->config['appid']);//公众账号ID
-        $inputObj->SetMch_id($this->config['mchid']);//商户号
+        if(empty($this->config['p_mchid'])){ //服务商模式支付
+            $inputObj->SetAppid($this->config['appid']);
+            $inputObj->SetMch_id($this->config['mchid']);//商户号
+            $inputObj->SetOp_user_id($this->config['mchid']); //操作商户号
+        }else{
+            $inputObj->SetAppid($this->config['p_appid']);
+            $inputObj->SetMch_id($this->config['p_mchid']);//商户号
+            $inputObj->SetSubAppid($this->config['appid']);
+            $inputObj->SetSubMch_id($this->config['mchid']);//商户号
+        }
         $inputObj->SetNonce_str(self::getNonceStr());//随机字符串
 
         $inputObj->SetSign($this->config['key']);//签名
