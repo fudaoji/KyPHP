@@ -181,7 +181,7 @@ class Api
         }
 
         //关联参数
-        if($inputObj->GetTrade_type() == "JSAPI" && !$inputObj->IsOpenidSet()){
+        if($inputObj->GetTrade_type() == "JSAPI" && (!$inputObj->IsOpenidSet() && !$inputObj->IsSubOpenidSet())){
             Logger::setMsgAndCode("统一支付接口中，缺少必填参数openid！trade_type为JSAPI时，openid为必填参数！", ErrorCode::WxpayException);
         }
         if($inputObj->GetTrade_type() == "NATIVE" && !$inputObj->IsProduct_idSet()){
