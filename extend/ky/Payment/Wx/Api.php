@@ -149,7 +149,7 @@ class Api
             Logger::setMsgAndCode("参数错误", ErrorCode::WxpayException);
         }
         $jsapi = new PayJsApiPay();
-        $jsapi->SetAppid($unified_order_result["appid"]);
+        $jsapi->SetAppid(array_key_exists("sub_appid", $unified_order_result) ? $unified_order_result["sub_appid"] : $unified_order_result["appid"]);
         $timeStamp = time();
         $jsapi->SetTimeStamp("$timeStamp");
         $jsapi->SetNonceStr(self::getNonceStr());
