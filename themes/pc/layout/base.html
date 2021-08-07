@@ -112,7 +112,7 @@
         <div class="content-hd">
             <div class="content-breadcrumb">
                 {block name="breadcrumb"}
-                <?php if($current_menu['type'] == 2 && $side_menu):?>
+                <?php if($current_menu && $current_menu['type'] == 2 && $side_menu):?>
                 <h2>
                     <span class="layui-breadcrumb" lay-separator="/">
                         <a href="{:url($side_menu['url'])}">
