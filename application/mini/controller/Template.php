@@ -295,7 +295,7 @@ class Template extends Base
             'limit' => [0, 1],
             'order' => ['id' => 'desc'],
             'where' => [
-                'id' => ['gt', count($publish) ? $publish['id'] : 0],
+                'mtl.id' => ['gt', count($publish) ? $publish['id'] : 0],
                 'mini_id' => $this->miniId,
                 'mtl.status' => ['in', [MiniTemplateLog::VERIFYING, MiniTemplateLog::SUCCESS, MiniTemplateLog::FAIL, MiniTemplateLog::DELAY]]
             ],
