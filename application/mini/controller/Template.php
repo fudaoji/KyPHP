@@ -284,7 +284,8 @@ class Template extends Base
             'field' => 'a.logo,a.name,mtl.*',
             'refresh' => true
         ]);
-        $this->assign['publish'] = count($publish_list) ? $publish_list[0] : [];
+        $publish = count($publish_list) ? $publish_list[0] : [];
+
 
         $verify_list = $this->model->getListJoin([
             'alias' => 'mtl',
@@ -294,8 +295,10 @@ class Template extends Base
             'limit' => [0, 1],
             'order' => ['id' => 'desc'],
             'where' => [
+                'id' => ['gt', count($publish) ? $publish['id'] : 0],
                 'mini_id' => $this->miniId,
-                'mtl.status' => ['in', [MiniTemplateLog::VERIFYING, MiniTemplateLog::SUCCESS, MiniTemplateLog::FAIL, MiniTemplateLog::DELAY]]],
+                'mtl.status' => ['in', [MiniTemplateLog::VERIFYING, MiniTemplateLog::SUCCESS, MiniTemplateLog::FAIL, MiniTemplateLog::DELAY]]
+            ],
             'field' => 'a.logo,a.name,mtl.*',
             'refresh' => true
         ]);
@@ -310,6 +313,7 @@ class Template extends Base
             'field' => 'a.logo,a.name,mtl.*',
             'refresh' => true
         ]);
+        $this->assign['publish'] = $publish;
         return $this->show();
     }
 
