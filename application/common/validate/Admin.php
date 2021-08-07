@@ -60,7 +60,7 @@ class Admin extends Validate
      */
     protected function checkId($value, $rule, $data)
     {
-        return model('admin')->getOne((int)$value) ? '非法操作' : false;
+        return model('admin')->getOne((int)$value) ? true : '非法操作';
     }
 
     /**
