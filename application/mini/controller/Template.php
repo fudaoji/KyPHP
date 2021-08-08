@@ -35,6 +35,7 @@ use ky\MiniPlatform\Request\WxaSubmitAudit;
 use ky\MiniPlatform\Request\WxaUndoCodeAudit;
 use ky\MiniPlatform\RequestClient;
 use think\Db;
+use think\facade\Log;
 
 class Template extends Base
 {
@@ -430,6 +431,7 @@ class Template extends Base
             $addon_template = model('addonsTemplate')->getOneByMap(['addon' => $post_data['addon']], true, true);
             $request = new WxaCommit();
             $request->setTemplateId($addon_template['template_id']);
+            Log::error('region:' . Upload::qnRegions(config('system.upload.qiniu_region_url')));
             $ext_json = json_encode([
                 'ext' => [
                     'appId' => $this->miniInfo['appid'],
