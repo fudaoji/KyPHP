@@ -438,6 +438,7 @@ class Template extends Base
                     'env' => [
                         "restUrl" => "https://".$http_host."/app/".$post_data['addon']."/",
                         "qiniuRegion" => Upload::qnRegions(config('system.upload.qiniu_region_url')),
+                        "region" => Upload::qnRegions(config('system.upload.qiniu_region_url')),
                         "qiniuDomain" => config('system.upload.qiniu_domain'),
                         "appKey" => config('app_key'),
                         "mapKey" => config('system.common.map_qq_key'),
