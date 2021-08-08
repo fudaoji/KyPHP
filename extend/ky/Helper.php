@@ -221,4 +221,46 @@ class Helper
         $total *= 9;
         return $last_n == ($total%10);
     }
+
+    /**
+     * 判断是否为统一社会信用代码
+     * @param string $str
+     * @return string|bool
+     */
+    static function checkCreditCode($str = ''){
+        $one = '159Y';//第一位可以出现的字符
+        $two = '12391';//第二位可以出现的字符
+        $str = strtoupper($str);
+        if (!strstr($one, $str[1]) && !strstr($two, $str[2]) && !empty($array[substr($str, 2, 6)])) {
+            return false;
+        }
+        //加权因子数值
+        $wi = array(1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28);
+        $str_organization = substr($str, 0, 17);
+        $num = 0;
+        for ($i = 0; $i < 17; $i++) {
+            $num += self::transformation($str_organization[$i]) * $wi[$i];
+        }
+        switch ($num % 31) {
+            case '0':
+                $result = 0;
+                break;
+            default:
+                $result = 31 - $num % 31;
+                break;
+        }
+        if (substr($str, -1, 1) == self::transformation($result, true)) {
+            return $str;
+        }
+        return false;
+    }
+
+    private static function transformation($num, $status = false){
+        //值转换
+        $list = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'A' => 10, 'B' => 11, 'C' => 12, 'D' => 13, 'E' => 14, 'F' => 15, 'G' => 16, 'H' => 17, 'J' => 18, 'K' => 19, 'L' => 20, 'M' => 21, 'N' => 22, 'P' => 23, 'Q' => 24, 'R' => 25, 'T' => 26, 'U' => 27, 'W' => 28, 'X' => 29, 'Y' => 30);
+        if ($status == true) {
+            $list = array_flip($list);
+        }
+        return $list[$num];
+    }
 }

@@ -386,13 +386,21 @@ class Template extends Base
             $total = model('miniTemplateLog')->total(['mini_id' => $this->miniId], true);
             $http_host = request()->server()['HTTP_HOST'];
             if(! $total){ //有版本记录的说明设置过域名了
+                switch (config('system.upload.driver')){
+                    case 'qiniu':
+                        $upload_domain = config('system.upload.qiniu_domain');
+                        break;
+                    default :
+                        $upload_domain = 'https://' . $http_host;
+                        break;
+                }
                 //1、设置服务器域名
                 $request = new WxaModifyDomain();
                 $request->setAction('set');
                 $request->setRequestDomain(['https://' . $http_host]);
                 $request->setWsRequestDomain(['wss://' . $http_host]);
-                $request->setUploadDomain(['https://' . $http_host]);
-                $request->setDownloadDomain(['https://' . $http_host]);
+                $request->setUploadDomain([$upload_domain]);
+                $request->setDownloadDomain([$upload_domain]);
                 $response = $this->client->execute($request, $access_token);
 
                 if($response['errcode'] != 0) {
