@@ -19,6 +19,7 @@ namespace app\mini\controller;
 
 use app\admin\controller\FormBuilder;
 use app\common\model\MiniTemplateLog;
+use app\common\model\Upload;
 use ky\ErrorCode;
 use ky\Helper;
 use ky\MiniPlatform\Request\WxaCommit;
@@ -386,12 +387,11 @@ class Template extends Base
             $total = model('miniTemplateLog')->total(['mini_id' => $this->miniId], true);
             $http_host = request()->server()['HTTP_HOST'];
             if(! $total){ //有版本记录的说明设置过域名了
+                $upload_domains = ['https://' . $http_host];
                 switch (config('system.upload.driver')){
                     case 'qiniu':
-                        $upload_domain = config('system.upload.qiniu_domain');
-                        break;
-                    default :
-                        $upload_domain = 'https://' . $http_host;
+                        $upload_domains[] = config('system.upload.qiniu_domain');
+                        $upload_domains[] = config('system.upload.qiniu_region_url');
                         break;
                 }
                 //1、设置服务器域名
@@ -399,8 +399,8 @@ class Template extends Base
                 $request->setAction('set');
                 $request->setRequestDomain(['https://' . $http_host]);
                 $request->setWsRequestDomain(['wss://' . $http_host]);
-                $request->setUploadDomain([$upload_domain]);
-                $request->setDownloadDomain([$upload_domain]);
+                $request->setUploadDomain($upload_domains);
+                $request->setDownloadDomain($upload_domains);
                 $response = $this->client->execute($request, $access_token);
 
                 if($response['errcode'] != 0) {
@@ -435,7 +435,7 @@ class Template extends Base
                     'appId' => $this->miniInfo['appid'],
                     'env' => [
                         "restUrl" => "https://".$http_host."/app/".$post_data['addon']."/",
-                        //"qiniuRegion" => "SCN",
+                        "qiniuRegion" => Upload::qnRegions(config('system.upload.qiniu_region_url')),
                         "qiniuDomain" => config('system.upload.qiniu_domain'),
                         "appKey" => config('app_key'),
                         "mapKey" => config('system.common.map_qq_key'),

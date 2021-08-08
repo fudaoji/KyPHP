@@ -124,6 +124,7 @@ class Setting extends Base
                     ->addFormItem('qiniu_sk', 'text', '七牛secretKey', '七牛secretKey')
                     ->addFormItem('qiniu_bucket', 'text', '七牛bucket', '七牛bucket')
                     ->addFormItem('qiniu_domain', 'url', '七牛domain', '七牛domain')
+                    ->addFormItem('qiniu_region_url', 'url', '七牛源站上传域名', '七牛源站上传域名')
                     ->addFormItem('image_title', 'legend', '图片设置', '图片设置')
                     ->addFormItem('image_size', 'number', '图片大小限制', '单位B', [], 'required min=1 max=1000000000')
                     ->addFormItem('image_ext', 'text', '图片格式支持', '多个用逗号隔开', [], 'required')

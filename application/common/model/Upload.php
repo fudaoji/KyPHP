@@ -42,6 +42,30 @@ class Upload extends BaseModel
     }
 
     /**
+     * 七牛区域
+     * @param null $id
+     * @return array|mixed
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public static function qnRegions($id = null){
+        /**
+         *
+        华南	SCN
+        北美	NA	https://up-na0.qbox.me
+        新加坡	ASG	https://up-as0.qbox.me
+         */
+        $list = [
+            'https://up.qiniup.com'=>'ECN' , //华东
+            'https://up-z1.qiniup.com'=>'NCN' , //华北
+            'https://up-z2.qiniup.com' => 'SCN', //华南
+            'https://up-na0.qiniup.com' => 'NA', //北美
+            'https://up-as0.qiniup.com' => 'ASG', //东南亚
+            'https://up-cn-east-2.qiniup.com' => 'cn-east-2' //
+        ];
+        return isset($list[$id]) ? $list[$id] : $list;
+    }
+
+    /**
      * 驱动字典
      * @param null $id
      * @return array|mixed
