@@ -431,14 +431,13 @@ class Template extends Base
             $addon_template = model('addonsTemplate')->getOneByMap(['addon' => $post_data['addon']], true, true);
             $request = new WxaCommit();
             $request->setTemplateId($addon_template['template_id']);
-            Log::error('region:' . Upload::qnRegions(config('system.upload.qiniu_region_url')));
+
             $ext_json = json_encode([
                 'ext' => [
                     'appId' => $this->miniInfo['appid'],
                     'env' => [
                         "restUrl" => "https://".$http_host."/app/".$post_data['addon']."/",
                         "qiniuRegion" => Upload::qnRegions(config('system.upload.qiniu_region_url')),
-                        "region" => Upload::qnRegions(config('system.upload.qiniu_region_url')),
                         "qiniuDomain" => config('system.upload.qiniu_domain'),
                         "appKey" => config('app_key'),
                         "mapKey" => config('system.common.map_qq_key'),
