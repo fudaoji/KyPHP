@@ -67,7 +67,12 @@ class App extends Base
             $mini_template = ['addon' => $data['addon']];
         }
         $mini_template['addon_name'] = $data['name'];
-        $templates = model('miniTemplate')->getField('template_id, user_desc', ['type' => \app\common\model\MiniTemplate::TEMPLATE], true);
+        $templates = model('miniTemplate')->getFieldByOrder([
+            'field' => 'template_id, user_desc',
+            'where' => ['type' => \app\common\model\MiniTemplate::TEMPLATE],
+            'order' => ['id' => 'desc'],
+            'refresh' => true
+        ]);
         $builder = new FormBuilder();
         $builder->addFormItem('addon', 'hidden', 'addon', 'addon')
             ->addFormItem('addon_name', 'static', '应用','应用')

@@ -398,7 +398,7 @@ class Template extends Base
                 //1、设置服务器域名
                 $request = new WxaModifyDomain();
                 $request->setAction('set');
-                $request->setRequestDomain(['https://' . $http_host]);
+                $request->setRequestDomain(['https://' . $http_host, 'https://apis.map.qq.com']);
                 $request->setWsRequestDomain(['wss://' . $http_host]);
                 $request->setUploadDomain($upload_domains);
                 $request->setDownloadDomain($upload_domains);
