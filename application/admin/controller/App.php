@@ -327,6 +327,7 @@ class App extends Base
         $builder = new FormBuilder();
         $builder->addFormItem('id', 'hidden', 'id', 'id')
             ->addFormItem('cates', 'chosen_multi', '分类标签', '可多选', array_combine($cates, $cates), 'required')
+            ->addFormItem('version', 'text', '版本', '版本', [], 'required')
             ->addFormItem('sale_num_show', 'number', '虚拟销量', '前台显示的数字', [], 'required min=0')
             ->addFormItem('old_price', 'text', '原价', '原价', [], 'required min="0"')
             ->addFormItem('price', 'text', '售价', '每年的费用', [], 'required min="0"')
