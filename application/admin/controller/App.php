@@ -312,6 +312,8 @@ class App extends Base
         if(request()->isPost()){
             $post_data = input('post.');
             unset($post_data['__token__']);
+            $this->addonM->updateOne(['id' => $post_data['id'], 'version' => $post_data['version']]);
+            unset($post_data['version']);
             $this->addonInfoM->updateOne($post_data);
             $this->success('保存成功', url('index'));
         }
