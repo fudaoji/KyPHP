@@ -57,7 +57,7 @@ class RequestClient
                     $postBodyString = '{}';
                     break;
                 }
-                if(is_string($v) && "@" != @substr($v, 0, 1)) { // 判断是不是文件上传
+                if("@" != @substr($v, 0, 1)) { // 判断是不是文件上传
                     $postBodyString = json_encode($postFields, JSON_UNESCAPED_UNICODE);
                 }else {
                     //文件上传用multipart/form-data, 否则用www-form-urlencode

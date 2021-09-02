@@ -15,11 +15,7 @@
         <form class="layui-form" action="{$post_url ?? ''}" id="ajax-form" method="post">
 
             {if condition="!empty($tip)"}
-            <blockquote class="layui-elem-quote">{$tip}</blockquote>
-            <fieldset class="layui-elem-field">
-                <legend></legend>
-                <div class="layui-field-box">{$tip}</div>
-            </fieldset>
+            <blockquote class="layui-elem-quote">{$tip|raw}</blockquote>
             {/if}
 
             <input type="hidden" id="__token__" name="__token__" value="{:request()->token()}" />
