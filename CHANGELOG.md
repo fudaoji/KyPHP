@@ -1,10 +1,15 @@
 ## V2.0（2021-07-30）
 
 主要更新：
-* 新增客户的系统配置（admin_setting）
-* 调整应用使用场景，将以公众号或小程序为基础的强依赖改为以应用为基础
+* 调整应用使用场景，打破平台仅限于公众号或小程序的限制，调整为以应用为基础，通常一个完整的应用会包含多个平台
+* 新增客户端的系统配置（对应表：admin_setting）
+* composer依赖库新增intervention/image
 * 修复相关bug
-
+* 平台运营端安装好小程序应用后，增加相关配置，例如：requestDomain、uploadDomain、extJson配置项等
+* 数据表结构变化
+    *新增表admin_setting
+    *ky_addons表字段type类型改为varchar(30)
+    
 ## V1.2.2（2021-01-04）
 
 主要更新：
