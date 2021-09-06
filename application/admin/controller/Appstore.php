@@ -321,7 +321,9 @@ class Appstore extends Base
         $res = $this->doRequest(['uri' => self::$apis['getAppInfo'], 'data' => $params]);
         if($res['code'] == 1){
             $this->getAppCates();
-            $this->assign['info'] = $res['data']['info'];
+            $info = $res['data']['info'];
+            $info['type'] = explode(',', $info['type']);
+            $this->assign['info'] = $info;
             $this->assign['upgrade_list'] = $res['data']['upgrade_list'];
         }else{
             $this->error($res['msg']);

@@ -52,7 +52,7 @@ class Material extends Base
             'aa.uid' => $this->adminId,
             'a.status' => 1,
             'aa.deadline' => ['gt', time()],
-            'a.type' => AdminStore::MINI
+            'a.type' => ['like', '%'.AdminStore::MINI.'%']
         ];
         $data_list = $this->adminAddonM->pageJoin([
             'alias' => 'aa',

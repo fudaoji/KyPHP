@@ -16,6 +16,7 @@
 
 namespace app\common\event;
 
+
 class Mini extends Base
 {
     /**

@@ -19,7 +19,8 @@ namespace app\admin\controller;
 use app\common\controller\BaseCtl;
 use ky\KyTree;
 
-class Base extends BaseCtl {
+class Base extends BaseCtl
+{
     protected $adminId;
     protected $adminInfo;
     protected $pageSize = 15;

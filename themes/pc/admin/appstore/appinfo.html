@@ -11,13 +11,19 @@
         <div class="layui-row">
             <div class="layui-col-xs9">
                 <span class="apps-info-title">{$info.title}
-                    <span class="layui-badge layui-bg-gray">{$types[$info.type]}</span>
                     <span class="layui-badge layui-bg-blue">{$info.price>0 ? ('￥' . $info.price) : '免费'}</span>
                 </span>
                 <div class="apps-info-desc">
                     <p>版本：{$info.version}</p>
                     <p>作者：{$info.author}，分类：{:implode('|', explode(',', $info['cates']))}</p>
                     <p>发布时间：{$info.create_time|date="Y-m-d"}，更新时间：{$info.update_time|date="Y-m-d"}</p>
+                    <p>
+                        {foreach $info.type as $k => $v}
+                        {if isset($types[$v])}
+                        <span class="layui-badge layui-bg-orange">{$types[$v]}</span>
+                        {/if}
+                        {/foreach}
+                    </p>
                     <div class="install-btn">
                         <button onclick="downloadApp('{$info.id}')" class="layui-btn layui-btn-sm">
                             <i class="layui-icon">&#xe601;</i>立即下载

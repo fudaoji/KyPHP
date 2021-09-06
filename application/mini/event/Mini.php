@@ -20,11 +20,53 @@ use app\common\event\Base;
 use app\common\model\AdminStore;
 use EasyWeChat\Factory;
 use ky\ErrorCode;
+use ky\Logger;
+use ky\MiniPlatform\ErrorMsg;
 use think\Db;
 use think\facade\Log;
 
 class Mini extends Base
 {
+    /**
+     * 生成活动小程序码
+     * @param array $params {mini_info,filename,type,path,filename}
+     * @return bool|string
+     * Author: Doogie<fdj@kuryun.cn>
+     * @throws \Exception
+     */
+    public function generateQr($params = []){
+        //生成活动小程序码
+        $app = $this->getApp($params['mini_info']);
+        //生成活动小程序码
+        if(isset($params['type']) && $params['type'] == 'unlimit'){
+            $response = $app->app_code->getUnlimit($params['scene'], [
+                'page'  => $params['path'],
+            ]);
+        }else{
+            $response = $app->app_code->get($params['path']);
+        }
+        if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
+            $save_path = UPLOAD_PATH . '/qrcode/';
+            if(!is_dir($save_path)){
+                @mkdir($save_path, 0777, true);
+            }
+            $code_name = $response->saveAs($save_path, $params['filename']);
+            $code_url = '/public/uploads/qrcode/' . $code_name;  //小程序码访问url
+
+            $qiniuClass = $this->getQiniu();
+            $qiniu_key = $qiniuClass->fetch(request()->domain() . $code_url, time() . $params['filename']);
+            if($qiniu_key){
+                @unlink('.' . $code_url);
+                return $qiniuClass->downLink($qiniu_key);
+            }else{
+                Logger::write('生成小程序码失败: ' . $qiniuClass->getError());
+            }
+        }else{
+            Logger::write('生成小程序码失败: ' . ErrorMsg::getErrorMsg($response['errcode']));
+        }
+        return false;
+    }
+
     /**
      * 获取公众号APP
      * @param $mini_info

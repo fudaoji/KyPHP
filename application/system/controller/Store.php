@@ -204,7 +204,7 @@ class Store extends Base
         $search_key = input('search_key', '');
         $cate = input('cate', 'all');
         $where = ['a.status' => 1];
-        $type && $where['a.type'] = $type;
+        $type && $where['a.type'] = ['like', '%'.$type.'%'];
         $search_key && $where['a.name|a.desc'] = ['like', '%'.$search_key.'%'];
         $cate !== 'all' && $where['ai.cates'] = ['like', '%'.$cate.'%'];
         $data_list = $this->addonM->pageJoin([
@@ -255,7 +255,7 @@ class Store extends Base
         $where = [
             'aa.deadline' => ['gt', time()], 'aa.uid' => $this->adminId,
         ];
-        $type && $where['ad.type'] = $type;
+        $type && $where['ad.type'] = ['like', '%'.$type.'%'];
         $status != -1 && $where['ad.status'] = $status;
         $search_key && $where['ad.name|ad.desc'] = ['like', '%'.$search_key.'%'];
         $data_list = $this->adminAddonM->pageJoin([
@@ -295,7 +295,7 @@ class Store extends Base
         $where = [
             'aa.deadline' => ['lt', time()], 'aa.uid' => $this->adminId,
         ];
-        $type && $where['ad.type'] = $type;
+        $type && $where['ad.type'] = ['like', '%'.$type.'%'];
         $search_key && $where['ad.name|ad.desc'] = ['like', '%'.$search_key.'%'];
         $data_list = $this->adminAddonM->pageJoin([
             'alias' => 'aa',

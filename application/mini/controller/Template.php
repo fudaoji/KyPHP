@@ -385,6 +385,93 @@ class Template extends Base
             $addon = model('addons')->getOneByMap(['addon' => $post_data['addon']]);
             $post_data['user_version'] = $addon['version']; //将应用的版本号作为小程序的版本号
             $access_token = $this->miniApp->access_token->getToken()['authorizer_access_token'];
+            $config = json_decode($addon['config'], true);
+
+            //1、设置服务器域名
+            $request = new WxaModifyDomain();
+            $request->setAction('set');
+            $request->setRequestDomain($config['request_domain']);
+            $request->setWsRequestDomain($config['socket_domain']);
+            $request->setUploadDomain($config['upload_domain']);
+            $request->setDownloadDomain($config['download_domain']);
+            $response = $this->client->execute($request, $access_token);
+
+            if($response['errcode'] != 0) {
+                $this->error($response['errmsg'], '', ['token' => request()->token]);
+            }
+            //2、设置业务域名
+            if(!empty($config['webview_domain']) && $this->miniInfo['principal_name'] !== '个人'){
+                $request = new WxaSetWebViewDomain();
+                $request->setAction('set');
+                $request->setWebViewDomain($config['webview_domain']);
+                $response = $this->client->execute($request, $access_token);
+                if($response['errcode'] != 0) {
+                    $this->error($response['errmsg'], '', ['token' => request()->token]);
+                }
+            }
+
+            //3.上传代码
+            $addon_template = model('addonsTemplate')->getOneByMap(['addon' => $post_data['addon']], true, true);
+            $request = new WxaCommit();
+            $request->setTemplateId($addon_template['template_id']);
+
+            $ext_json = json_encode([
+                'ext' => [
+                    'appId' => $this->miniInfo['appid'],
+                    'env' => array_merge(['version' => $post_data['user_version']], $config['ext_json']),
+                ]
+            ]); //还要加其他的配置参数，例如地图key，七牛key等
+            $request->setExtJson($ext_json);
+
+            $request->setUserVersion($post_data['user_version']);
+            $request->setUserDesc($post_data['user_desc']);
+            $response = $this->client->execute($request, $access_token);
+            if($response['errcode'] == 0) {
+                //用户模板选购
+                $data = [
+                    'uid'           => $this->adminId,
+                    'mini_id'       => $this->miniId,
+                    'addon'         => $post_data['addon'],
+                    'template_id'   => $addon_template['template_id'],
+                    'ext_json'      => $ext_json,
+                    'user_version'  => $post_data['user_version'],
+                    'user_desc'     => $post_data['user_desc']
+                ];
+                Db::startTrans();
+                try {
+                    $this->model->updateByMap(['mini_id' => $this->miniId, 'is_current' => 1], ['is_current' => 0]);
+                    $result = $this->model->addOne($data);
+                    Db::commit();
+                }catch (\Exception $e){
+                    $result = false;
+                    Db::rollback();
+                }
+                if($result === false){
+                    $this->error('系统出错，请刷新重试', '', ['token' => request()->token]);
+                }
+
+            }else {
+                $this->error($response['errmsg'], '', ['token' => request()->token]);
+            }
+            $this->success('代码提交成功，在正式提交审核之前建议您先扫码体验', url('index'));
+        }
+    }
+
+    /**
+     * 为第三方小程序进行参数设置
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    public function choosePostBak(){
+        //设置服务器域名-》设置业务域名（个人号跳过此步骤）-》上传代码-》下载体验二维码
+        if(request()->isPost()){
+            $post_data = input('post.');
+            if(empty($post_data['user_desc']) ||
+                empty($post_data['addon'])){
+                $this->error('请完善必填项', '', ['token' => request()->token]);
+            }
+            $addon = model('addons')->getOneByMap(['addon' => $post_data['addon']]);
+            $post_data['user_version'] = $addon['version']; //将应用的版本号作为小程序的版本号
+            $access_token = $this->miniApp->access_token->getToken()['authorizer_access_token'];
             $total = model('miniTemplateLog')->total(['mini_id' => $this->miniId], true);
             $http_host = request()->server()['HTTP_HOST'];
             if(! $total){ //有版本记录的说明设置过域名了

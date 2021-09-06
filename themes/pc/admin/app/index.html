@@ -95,7 +95,8 @@
                 <button class="layui-btn layui-btn-xs layui-btn-danger" onclick="uninstallApp('{$vo.addon}')">卸载</button>
                 {/case}
                 {/switch}
-                {if $vo.type == 'mini' and $type != 'notinstall'}
+                {if in_array('mini', $vo.type) and $type != 'notinstall'}
+                <a class="layui-btn layui-btn-xs layui-btn-warm" href="{:url('config',['id'=>$vo.id])}">配置</a>
                 <a class="layui-btn layui-btn-xs layui-btn-warm" href="{:url('setTemplate',['id'=>$vo.id])}">设置模版</a>
                 {/if}
             </td>

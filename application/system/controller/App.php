@@ -173,58 +173,6 @@ class App extends Base
     }
 
     /**
-     * 参数配置
-     */
-    public function config()
-    {
-        $mp_addon = $this->mpAddonM->getOneByMap([
-            'mpid' => $this->mpId,
-            'addon' => $this->addonName
-        ], true, true);
-
-        if (request()->isPost()) {
-            $input = input('post.');
-            $data['mpid'] = $this->mpId;
-            $data['addon'] = $this->addonName;
-            $data['infos'] = json_encode($input);
-
-            if (empty($mp_addon)) {
-                $this->mpAddonM->addOne($data);
-            } else {
-                $this->mpAddonM->updateOne(['id' => $mp_addon['id'], 'infos' => $data['infos']]);
-            }
-            model('common/mpAddon')->getOneByMap(['mpid' => $this->mpId, 'addon' => $this->addonName], true, true);
-            $this->success('配置成功');
-        } else {
-            $addon_config_mp = json_decode($mp_addon['infos'], true);
-
-            $config = $this->addonCfByFile['config'];
-            foreach ($config as $key1 => $val1) {
-                $val1['value'] = (!empty($addon_config_mp) && isset($addon_config_mp[$val1['name']]))
-                    ? $addon_config_mp[$val1['name']]
-                    : (empty($val1['value']) ? '' : $val1['value']);
-                $config[$key1] = $val1;
-            }
-
-            $themes = [];
-            $selected = '';
-            if (isset($this->addonCfByFile['is_theme']) && $this->addonCfByFile['is_theme'] == true) {
-                $themes = controller('common/addon', 'event')->getAddonThemes(['name' => $this->addonName]);
-                if (isset($addon_config_mp['theme']) && !empty($addon_config_mp['theme'])) {
-                    $selected = $addon_config_mp['theme'];
-                }
-            }
-
-            $assign = [
-                'selected' => $selected,
-                'themes' => $themes,
-                'config' => $config
-            ];
-            return $this->show($assign);
-        }
-    }
-
-    /**
      * 应用的业务控制台
      * @param $node
      * @return mixed

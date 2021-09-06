@@ -9,6 +9,49 @@
 // | Author: 流年 <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
+if(! function_exists('text_ellipsis')){
+    /**
+     * 超过长度的字符串用...
+     * @param $text
+     * @param int $max
+     * @param string $suffix
+     * @return string
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    function text_ellipsis($text, $max = 1, $suffix='...'){
+        return strlen($text) > $max ? mb_substr($text, 0, $max) . $suffix : $text;
+    }
+}
+
+if(! function_exists('parse')){
+    /**
+     * 根据配置类型解析配置
+     * @param  string $type  配置类型
+     * @param  string  $value 配置值
+     * @return mixed
+     * @author fudaoji <fdj@kuryun.cn>
+     */
+    function parse($type, $value){
+        switch ($type) {
+            case 'enum':
+            case 'array': //解析数组
+                $array = preg_split('/[,;\r\n]+/', trim($value, ",;\r\n"));
+                if(strpos($value,':')){
+                    $value  = [];
+                    foreach ($array as $val) {
+                        list($k, $v) = explode(':', $val);
+                        $value[$k]   = $v;
+                    }
+                }else{
+                    $value = $array;
+                }
+                break;
+        }
+        return $value;
+    }
+
+}
+
 /**
  * 短连接生成
  * @param string $url
