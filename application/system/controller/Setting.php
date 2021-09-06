@@ -37,11 +37,14 @@ class Setting extends Base
     /**
      * 设置
      * @return mixed
+     * @throws \think\Exception
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
      * @author: fudaoji<fdj@kuryun.cn>
      */
     public function index(){
         $current_name = input('name', 'sms');
-        $setting = $this->settingM->getOneByMap(['name' => $current_name]);
+        $setting = $this->settingM->getOneByMap(['name' => $current_name, 'uid' => $this->adminId]);
         if(request()->isPost()){
             $post_data = input('post.');
             unset($post_data['__token__']);

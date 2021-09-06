@@ -1,9 +1,14 @@
 ## V2.0（2021-07-30）
 
 主要更新：
+* 修复客户端的系统设置bug
+
+## V2.0（2021-07-30）
+
+主要更新：
 * 调整应用使用场景，打破平台仅限于公众号或小程序的限制，调整为以应用为基础，通常一个完整的应用会包含多个平台
 * 新增客户端的系统配置（对应表：admin_setting）
-* composer依赖库新增intervention/image
+* composer依赖库新增intervention/image、topthink/think-testing
 * 修复相关bug
 * 平台运营端安装好小程序应用后，增加相关配置，例如：requestDomain、uploadDomain、extJson配置项等
 * 数据表结构变化
