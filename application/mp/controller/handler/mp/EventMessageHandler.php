@@ -56,6 +56,16 @@ class EventMessageHandler extends MessageHandler
     }
 
     /**
+     * 用户订阅消息事件
+     * @param $event
+     * link https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/subscribe-message.html
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function eventSubscribeMsgSentEvent($event){
+        Log::error('小程序订阅消息事件：' . var_export($event, true));
+    }
+
+    /**
      * 关注事件
      * @param $event
      * @return bool|mixed
