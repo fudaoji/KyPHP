@@ -39,7 +39,7 @@ class Base
      */
     public function generatePoster($list = [])
     {
-        Image::configure();
+        Image::configure(['driver' => 'imagick']);
         //背景图片
         $image = Image::make($list['bg']);
         foreach ($list['items'] as $params){
