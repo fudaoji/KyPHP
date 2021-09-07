@@ -386,6 +386,9 @@ class Template extends Base
             $post_data['user_version'] = $addon['version']; //将应用的版本号作为小程序的版本号
             $access_token = $this->miniApp->access_token->getToken()['authorizer_access_token'];
             $config = json_decode($addon['config'], true);
+            if(empty($config)){
+                $this->error('请让平台运营方先对此应用进行配置', '', ['token' => request()->token]);
+            }
 
             //1、设置服务器域名
             $request = new WxaModifyDomain();

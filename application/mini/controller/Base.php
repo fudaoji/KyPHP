@@ -23,10 +23,12 @@ class Base extends \app\admin\controller\Base
     protected $miniApp;
     protected $openPlatform;
     protected $needMiniId = true;
+    protected $needAppAuth = false;
 
     public function initialize(){
         parent::initialize();
         $this->setMiniInfo();
+        $this->checkIsAppAuth();
         $this->setApp();
     }
 
@@ -119,5 +121,11 @@ class Base extends \app\admin\controller\Base
      */
     protected function getClient(){
         return new \ky\MiniPlatform\RequestClient();
+    }
+
+    protected function checkIsAppAuth(){
+        if($this->needAppAuth && $this->miniInfo['is_auth'] <= 0){
+            $this->error('请先授权小程序', url('system/mini/info'));
+        }
     }
 }

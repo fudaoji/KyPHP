@@ -21,6 +21,7 @@ use ky\MiniPlatform\RequestClient;
 
 class Index extends Base
 {
+    protected $needAppAuth = true;
     /**
      * @var RequestClient
      */
