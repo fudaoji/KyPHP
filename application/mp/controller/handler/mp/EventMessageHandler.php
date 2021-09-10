@@ -62,7 +62,7 @@ class EventMessageHandler extends MessageHandler
      * Author: fudaoji<fdj@kuryun.cn>
      */
     public function eventSubscribeMsgSentEvent($event){
-        Log::error('小程序订阅消息事件：' . var_export($event, true));
+        //Log::error('小程序订阅消息事件：' . var_export($event, true));
     }
 
     /**

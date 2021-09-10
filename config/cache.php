@@ -22,7 +22,7 @@ return [
 
     // 默认使用的缓存
     'default' => [
-        'type'  => 'File',
+        'type'  => 'memcached',
         // 缓存前缀
         'prefix' => Env::get('app_prefix', 'kyphp_'),
         'path'   => env('runtime_path').'cache/',
