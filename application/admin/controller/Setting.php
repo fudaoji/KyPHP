@@ -98,7 +98,8 @@ class Setting extends Base
                 break;
             case 'site':
                 empty($data) && $data['close'] = 0;
-                $builder->addFormItem('close', 'radio', '关闭站点', '关闭站点', [1 => '是', 0 => '否'], 'required')
+                $builder->addFormItem('title', 'text', '网站名称', '网站名称')
+                    ->addFormItem('close', 'radio', '关闭站点', '关闭站点', [1 => '是', 0 => '否'], 'required')
                     ->addFormItem('close_reason', 'textarea', '关闭原因', '不超过100个字', [], 'maxlength=100')
                     ->addFormItem('icp', 'text', '备案号', '备案号')
                     ->addFormItem('logo', 'picture_url', 'LOGO', '250x36')

@@ -70,6 +70,34 @@ class BaseModel extends Model
     }
 
     /**
+     * sum join
+     * @param array $params
+     * @return float|BaseModel
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    public function sumsJoin($params = []){
+        ksort($params);
+        $where = empty($params['where']) ? [] : $params['where'];
+        $refresh = empty($params['refresh']) ? 0 : $params['refresh'];
+        $field = $params['field'];
+        unset($params['refresh']);
+        $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) . __FUNCTION__ . serialize($params));
+        $refresh && cache($cache_key, null);
+        $selector = $this->getBuilder($where);
+        if($this->isCache){
+            $selector->cache($cache_key, $this->expire, $this->getTrueTable($where));
+        }
+        if(!empty($params['alias'])){
+            $selector->alias($params['alias']);
+        }
+        if(!empty($params['join'])){
+            $selector->join($params['join']);
+        }
+        $this->_where($selector, $where);
+        return $selector->sum($field);
+    }
+
+    /**
      *
      * @param array $params
      * @return array
@@ -485,7 +513,7 @@ class BaseModel extends Model
      * @Author: fudaoji <fdj@kuryun.cn>
      */
     public function getOneByMap($where=[], $field = true, $refresh = 0, $order = []){
-        $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) . __FUNCTION__ . serialize($where) . serialize($order));
+        $cache_key = md5(config('database.hostname') . config('database.database') . $this->getTrueTable($where) . __FUNCTION__ . serialize($where). serialize($field) . serialize($order));
         $refresh && cache($cache_key, null);
         $selector = $this->getBuilder($where)->field($field);
         $this->_where($selector, $where);
@@ -549,7 +577,7 @@ class BaseModel extends Model
      * @throws \think\exception\DbException
      * @author: Doogie<461960962@qq.com>
      */
-    public function getAll($params){
+    public function getAll($params = []){
         ksort($params);
         $where = empty($params['where']) ? [] : $params['where'];
         $order = empty($params['order']) ? [] : $params['order'];

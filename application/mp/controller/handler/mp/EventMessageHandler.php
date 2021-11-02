@@ -89,10 +89,10 @@ class EventMessageHandler extends MessageHandler
                 'nickname'      => $wx_user['nickname'],
                 'subscribe'     => $wx_user['subscribe'],
                 'headimgurl'    => $wx_user['headimgurl'],
-                'country'       => $wx_user['country'],
+                /*'country'       => $wx_user['country'],
                 'province'      => $wx_user['province'],
                 'city'          => $wx_user['city'],
-                'sex'           => $wx_user['sex'],
+                'sex'           => $wx_user['sex'],*/
                 'remark'        => $wx_user['remark'],
                 'language'      => $wx_user['language'],
                 'groupid'       => $wx_user['groupid'],

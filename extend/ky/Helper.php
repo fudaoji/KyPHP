@@ -30,8 +30,9 @@ class Helper
     public static function checkTimestamp($timestamp)
     {
         if(strtotime(date('Y-m-d H:i:s',$timestamp)) === $timestamp) {
-            return true;
-        } else return false;
+            return $timestamp;
+        }
+        return false;
     }
 
     public static function checkUrl($url)
