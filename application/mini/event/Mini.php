@@ -162,10 +162,15 @@ class Mini extends Base
         $cert_path = $base_path . md5($mini_id . '_apiclient_cert.pem');
         $key_path = $base_path . md5($mini_id . '_apiclient_key.pem');
         $rsa_path = $base_path . md5($mini_id . '_public_rsa.pem');
-        if(!file_exists($key_path) || !file_exists($cert_path) || !file_exists($rsa_path)){
-            !empty($config['cert_path']) && file_put_contents($cert_path, $config['cert_path']);
-            !empty($config['key_path']) && file_put_contents($key_path, $config['key_path']);
-            !empty($config['rsa_path']) && file_put_contents($rsa_path, $config['rsa_path']);
+
+        if(!file_exists($key_path) || file_get_contents($key_path) != $config['key_path']){
+            file_put_contents($key_path, $config['key_path']);
+        }
+        if(!file_exists($cert_path) || file_get_contents($cert_path) != $config['cert_path']){
+            file_put_contents($cert_path, $config['cert_path']);
+        }
+        if(!file_exists($rsa_path) || file_get_contents($rsa_path) != $config['rsa_path']){
+            file_put_contents($rsa_path, $config['rsa_path']);
         }
         return [
             'appid'     => $config['appid'], //appid

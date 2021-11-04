@@ -201,7 +201,7 @@ class Payment
         switch($params['channel']){
             case self::WX_JSAPI:
                 $res = $this->api->refund($params);
-                if($res['result_code'] === 'SUCCESS' && $res['return_code'] === 'SUCCESS'){
+                if(isset($res['return_code']) && $res['return_code'] === 'SUCCESS' && $res['result_code'] === 'SUCCESS'){
                     $res['ky_refund_result'] = true;
                 }else{
                     $res['ky_refund_result'] = false;

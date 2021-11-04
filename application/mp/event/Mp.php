@@ -112,15 +112,20 @@ class Mp extends Base
         $cert_path = $base_path . md5($mpid . '_apiclient_cert.pem');
         $key_path = $base_path . md5($mpid . '_apiclient_key.pem');
         $rsa_path = $base_path . md5($mpid . '_public_rsa.pem');
-        if(!file_exists($key_path) || !file_exists($cert_path) || !file_exists($rsa_path)){
-            !empty($config['cert_path']) && file_put_contents($cert_path, $config['cert_path']);
-            !empty($config['key_path']) && file_put_contents($key_path, $config['key_path']);
-            !empty($config['rsa_path']) && file_put_contents($rsa_path, $config['rsa_path']);
+        if(!file_exists($key_path) || file_get_contents($key_path) != $config['key_path']){
+            file_put_contents($key_path, $config['key_path']);
+        }
+        if(!file_exists($cert_path) || file_get_contents($cert_path) != $config['cert_path']){
+            file_put_contents($cert_path, $config['cert_path']);
+        }
+        if(!file_exists($rsa_path) || file_get_contents($rsa_path) != $config['rsa_path']){
+            file_put_contents($rsa_path, $config['rsa_path']);
         }
         return [
-            'appid'     => $config['appid'],
-            'mchid'     => $config['merchant_id'], //商户号
-            'sub_mchid' => $config['sub_mch_id'],
+            'appid'     => $config['appid'], //appid
+            'mchid'     => $config['mchid'], //商户号
+            'p_appid'     => $config['p_appid'], //服务商appid
+            'p_mchid' => $config['p_mchid'], //服务商户号
             'key'       => $config['key'], //API秘钥
             'sslcert_path' => $cert_path,
             'sslkey_path' => $key_path,
