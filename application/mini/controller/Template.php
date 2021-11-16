@@ -297,7 +297,8 @@ class Template extends Base
      */
     public function log(){
         $where = [
-            'mini_id' => $this->miniId
+            'mini_id' => $this->miniId,
+            'status' => MiniTemplateLog::PUBLISHED
         ];
         $data_list = $this->model->pageJoin([
             'alias' => 'mtl',

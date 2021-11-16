@@ -130,7 +130,7 @@ class App extends Base
 restUrl|http://demo.com
 appKey|123456')
                 ->addFormItem('privacy', 'legend', '用户隐私设置', '用户隐私保护指引参数设置')
-                ->addFormItem('contact_phone', 'number', '开发者手机号', '请填写真实手机号')
+                ->addFormItem('contact_phone', 'number', '开发者手机号', '请填写真实手机号',[], 'required')
                 ->addFormItem('notice_method', 'text', '通知方式', '指的是当开发者收集信息有变动时，通过该方式通知用户。这里服务商需要按照实际情况填写，例如通过弹窗或者公告或者其他方式',[], 'required')
                 ->addFormItem('setting_list', 'textarea', '要收集的信息', '一行一对配置，例如：
 UserInfo|个人中心显示个人信息
