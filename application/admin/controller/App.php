@@ -56,12 +56,20 @@ class App extends Base
                 'udp_domain' => explode(';', $post_data['udp_domain']),
                 'tcp_domain' => explode(';', $post_data['tcp_domain']),
                 'webview_domain' => explode(';', $post_data['webview_domain']),
-                'ext_json' => []
+                'ext_json' => [],
+                'contact_phone' => $post_data['contact_phone'],
+                'notice_method' => $post_data['notice_method'],
+                'setting_list' => [],
             ];
             $ext_json_arr = preg_split('/[\r\n]+/', trim($post_data['ext_json'], "\r\n"));
             foreach ($ext_json_arr as $item){
                 list($k, $v) = explode('|', $item);
                 $configs['ext_json'][$k] = $v;
+            }
+            $setting_arr = preg_split('/[\r\n]+/', trim($post_data['setting_list'], "\r\n"));
+            foreach ($setting_arr as $item){
+                list($k, $v) = explode('|', $item);
+                $configs['setting_list'][$k] = $v;
             }
             $data['config'] = json_encode($configs, JSON_UNESCAPED_UNICODE);
 
@@ -79,7 +87,8 @@ class App extends Base
                     'udp_domain' => [],
                     'tcp_domain' => [],
                     'webview_domain' => ['https://' . $http_host],
-                    'ext_json' => ''
+                    'ext_json' => '',
+                    'contact_phone' => $this->adminInfo['mobile']
                 ];
             }else{
                 $ext_json_arr = [];
@@ -87,6 +96,13 @@ class App extends Base
                     $ext_json_arr[] .= $k . '|' . $v;
                 }
                 $config['ext_json'] = implode("\r\n", $ext_json_arr);
+                if(!empty($config['setting_list'])){
+                    $setting_arr = [];
+                    foreach ($config['setting_list'] as $k => $v){
+                        $setting_arr[] .= $k . '|' . $v;
+                    }
+                    $config['setting_list'] = implode("\r\n", $setting_arr);
+                }
             }
             $config['request_domain'] = implode(';', $config['request_domain']);
             $config['socket_domain'] = implode(';', $config['socket_domain']);
@@ -112,13 +128,14 @@ class App extends Base
                 ->addFormItem('extJson', 'legend', 'extJson参数', 'extJson参数')
                 ->addFormItem('ext_json', 'textarea', 'extJson', '一行一对配置，例如：
 restUrl|http://demo.com
-appKey|123456');
-            /*
-             *
-             $config_file = $this->addonM->getAddonConfigByFile($addon['addon'])['config'];
-             foreach ($config_file as $k => $v){
-                $builder->addFormItem($v['name'], $v['type'], $v['title'], $v['tip'], empty($v['options']) ? [] : $v['options'], empty($v['extra_attr']) ? '' : $v['extra_attr']);
-            }*/
+appKey|123456')
+                ->addFormItem('privacy', 'legend', '用户隐私设置', '用户隐私保护指引参数设置')
+                ->addFormItem('contact_phone', 'number', '开发者手机号', '请填写真实手机号')
+                ->addFormItem('notice_method', 'text', '通知方式', '指的是当开发者收集信息有变动时，通过该方式通知用户。这里服务商需要按照实际情况填写，例如通过弹窗或者公告或者其他方式',[], 'required')
+                ->addFormItem('setting_list', 'textarea', '要收集的信息', '一行一对配置，例如：
+UserInfo|个人中心显示个人信息
+Location|提供最近的服务');
+
             $config['id'] = $addon['id'];
             $builder->setFormData($config);
             return $builder->show();

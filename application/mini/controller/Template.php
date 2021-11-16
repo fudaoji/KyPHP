@@ -22,6 +22,8 @@ use app\common\model\MiniTemplateLog;
 use app\common\model\Upload;
 use ky\ErrorCode;
 use ky\Helper;
+use ky\MiniPlatform\Request\ComponentGetPrivacySetting;
+use ky\MiniPlatform\Request\ComponentSetPrivacySetting;
 use ky\MiniPlatform\Request\WxaCommit;
 use ky\MiniPlatform\Request\WxaGetAuditStatus;
 use ky\MiniPlatform\Request\WxaGetCategory;
@@ -89,7 +91,7 @@ class Template extends Base
         if(request()->isPost()){
             $id = input('post.id');
             $request = new WxaRelease();
-            $response = $this->client->setCheckRequest(false)->execute($request, $this->getAccessToken());
+            $response = $this->client->execute($request, $this->getAccessToken());
             if($response['errcode'] == 0){
                 $this->model->updateOne([
                     'id' => $id,
@@ -114,7 +116,7 @@ class Template extends Base
         if(request()->isPost()){
             $id = input('post.id');
             $request = new WxaUndoCodeAudit();
-            $response = $this->client->setCheckRequest(false)->execute($request, $this->getAccessToken());
+            $response = $this->client->execute($request, $this->getAccessToken());
             if($response['errcode'] == 0){
                 $this->model->updateOne(['id' => $id, 'status' => MiniTemplateLog::CANCEL]);
                 $this->success('操作成功');
@@ -163,6 +165,51 @@ class Template extends Base
     }
 
     /**
+     * 设置用户隐私保护协议
+     * @param array $params
+     * @throws \Exception
+     * @author: fudaoji<fdj@kuryun.cn>
+     */
+    private function setPrivacySetting($params = []){
+        $access_token = $this->getAccessToken();
+        $request = new ComponentGetPrivacySetting();
+        $response = $this->client->execute($request, $access_token);
+        if(intval($response['errcode']) !== 0) {
+            $this->error($response['errmsg']);
+        }
+
+        if($response['update_time'] == 0 || !empty($params['refresh'])){
+            $addon = model('addons')->getOneByMap(['addon' => $params['addon']]);
+            $config = json_decode($addon['config'], true);
+            if(empty($config)){
+                $this->error('请让平台运营方先对此应用进行配置', '', ['token' => request()->token]);
+            }
+            $request = new ComponentSetPrivacySetting();
+            $request->setOwnerSetting([
+                'contact_phone' => $config['contact_phone'],
+                'notice_method' => $config['notice_method']
+            ]);
+
+            $setting_list = [];
+            foreach ($config['setting_list'] as $k => $v){
+                $setting_list[] = [
+                    'privacy_key' => $k,
+                    'privacy_text' => $v
+                ];
+            }
+            $request->setOwnerSetting([
+                'contact_phone' => $config['contact_phone'],
+                'notice_method' => $config['notice_method']
+            ]);
+            $request->setSettingList($setting_list);
+            $response = $this->client->execute($request, $access_token);
+            if(intval($response['errcode']) !== 0) {
+                $this->error($response['errmsg']);
+            }
+        }
+    }
+
+    /**
      * 提交审核
      * @return mixed
      * Author: fudaoji<fdj@kuryun.cn>
@@ -175,6 +222,7 @@ class Template extends Base
         $token = $this->getAccessToken();
         if(request()->isPost()){
             $post_data = input('post.');
+            $this->setPrivacySetting(['addon' => $log['addon'], 'refresh' => $post_data['refresh_privacy']]); //用户隐私保护
             $category_list = cache('mini_category_list');
             $item = [];
             $ids = explode('-',$post_data['category']);
@@ -208,9 +256,8 @@ class Template extends Base
         $this->assign['version_desc'] = $log['user_desc'];
         $this->assign['log_id'] = $log['id'];
         $request = new WxaGetPage();
-        $this->client->checkRequest = false;
 
-        $response = $this->client->setCheckRequest(false)->execute($request, $token);
+        $response = $this->client->execute($request, $token);
         if($response['errcode'] == 0) {
             $this->assign['page'] = $response['page_list'][0];
         }else {
@@ -218,7 +265,7 @@ class Template extends Base
         }
 
         $request = new WxaGetCategory();
-        $response = $this->client->setCheckRequest(false)->execute($request, $token);
+        $response = $this->client->execute($request, $token);
 
         if($response['errcode'] == 0) {
             $category_list = [];
@@ -332,7 +379,7 @@ class Template extends Base
             }
             if(empty($log['qr_code'])){
                 $request = new WxaGetQrcode();
-                $response = $this->client->setCheckRequest(false)->execute(
+                $response = $this->client->execute(
                     $request,
                     $this->miniApp->access_token->getToken()['authorizer_access_token'],
                     true

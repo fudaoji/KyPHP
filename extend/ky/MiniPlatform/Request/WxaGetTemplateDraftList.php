@@ -22,6 +22,7 @@ class WxaGetTemplateDraftList
     private $url = "https://api.weixin.qq.com/wxa/gettemplatedraftlist";
     private $getParams = array();
     private $postParams = array();
+    public $checkRequest = false;
 
     /**
      * 获取请求url

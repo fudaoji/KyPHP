@@ -1,25 +1,24 @@
 <?php
 /**
  * Created by PhpStorm.
- * Script Name: WxaGetShowWxaItem.php
- * Create: 2020/11/17 11:12
- * Description: 获取展示的公众号信息
- * @link https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/subscribe_component/getshowwxaitem.html
- * Author: fudaoji<fdj@kuryun.cn>
+ * Script Name: ComponentGetPrivacySetting.php
+ * Create: 2021/11/11 09:24
+ * Description: 查询小程序用户隐私保护指引
+ * link: https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/privacy_config/get_privacy_setting.html
+ * Author: fdj<fdj@kuryun.cn>
  */
-
 namespace ky\MiniPlatform\Request;
 
-class WxaGetShowWxaItem
+class ComponentGetPrivacySetting
 {
-    private $url = "https://api.weixin.qq.com/wxa/getshowwxaitem";
+    private $url = "https://api.weixin.qq.com/cgi-bin/component/getprivacysetting";
     private $getParams = array();
-    private $postParams = array();
+    private $postParams = array('{}');
     public $checkRequest = false;
 
     /**
      * 获取请求url
-     * @author fudaoji<fdj@kuryun.cn>
+     * @author Jason<dcq@kuryun.cn>
      */
     public function getUrl(){
         return $this->url;
@@ -28,7 +27,7 @@ class WxaGetShowWxaItem
     /**
      * 设置请求地址
      * @param string $url
-     * @author fudaoji<fdj@kuryun.cn>
+     * @author Jason<dcq@kuryun.cn>
      */
     public function setUrl($url) {
         $this->url = $url;
@@ -36,7 +35,7 @@ class WxaGetShowWxaItem
 
     /**
      * get请求参数
-     * @author fudaoji<fdj@kuryun.cn>
+     * @author Jason<dcq@kuryun.cn>
      */
     public function getParams() {
         return $this->getParams;
@@ -44,7 +43,7 @@ class WxaGetShowWxaItem
 
     /**
      * post请求参数
-     * @author fudaoji<fdj@kuryun.cn>
+     * @author Jason<dcq@kuryun.cn>
      */
     public function postParams() {
         return $this->postParams;

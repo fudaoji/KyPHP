@@ -13,6 +13,7 @@ class WxaGetCategory
     private $url = "https://api.weixin.qq.com/wxa/get_category";
     private $getParams = array();
     private $postParams = array();
+    public $checkRequest = false;
 
     /**
      * 获取请求url

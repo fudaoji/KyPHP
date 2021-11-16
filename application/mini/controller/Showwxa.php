@@ -36,7 +36,7 @@ class Showwxa extends Base
      */
     public function index(){
         $request = new WxaGetShowWxaItem();
-        $response = $this->getClient()->setCheckRequest(false)->execute($request, $this->getAccessToken());
+        $response = $this->getClient()->execute($request, $this->getAccessToken());
         $data = [];
         if($response['errcode'] == 0){
             $data = [

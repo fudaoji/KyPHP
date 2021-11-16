@@ -52,7 +52,7 @@ class Category extends Base
      */
     public function index(){
         $request = new WxOpenGetCategory();
-        $response = $this->getClient()->setCheckRequest(false)->execute($request, $this->getAccessToken());
+        $response = $this->getClient()->execute($request, $this->getAccessToken());
         if($response['errcode'] !== 0){
             $this->error($response['errmsg']);
         }
@@ -88,7 +88,7 @@ class Category extends Base
 
     public function test(){
         $request = new WxaGetShowWxaItem();
-        $response = $this->getClient()->setCheckRequest(false)->execute($request, $this->getAccessToken());
+        $response = $this->getClient()->execute($request, $this->getAccessToken());
         if($response['errcode'] !== 0){
             $this->error($response['errmsg']);
         }

@@ -26,7 +26,7 @@ class RequestClient
      * @return RequestClient
      */
     public function setCheckRequest($flag = true){
-        $this->checkRequest = $flag;
+        //$this->checkRequest = $flag;
         return $this;
     }
 
@@ -101,7 +101,10 @@ class RequestClient
      * @author Jason<dcq@kuryun.cn>
      */
     public function execute($request, $accessToken = null, $download = false) {
-        if($this->checkRequest) {
+        /*if($this->checkRequest) {
+            $request->check();
+        }*/
+        if(!property_exists($request, 'checkRequest') || $request->checkRequest === true) {
             $request->check();
         }
 

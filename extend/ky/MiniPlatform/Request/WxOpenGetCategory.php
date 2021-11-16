@@ -13,6 +13,7 @@ class WxOpenGetCategory
     private $url = "https://api.weixin.qq.com/cgi-bin/wxopen/getcategory";
     private $getParams = array();
     private $postParams = array();
+    public $checkRequest = false;
 
     /**
      * 获取请求url

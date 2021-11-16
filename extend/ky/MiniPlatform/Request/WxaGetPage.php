@@ -13,6 +13,7 @@ class WxaGetPage
     private $url = "https://api.weixin.qq.com/wxa/get_page";
     private $getParams = array();
     private $postParams = array();
+    public $checkRequest = false;
 
     /**
      * 获取请求url

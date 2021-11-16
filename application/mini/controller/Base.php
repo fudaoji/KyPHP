@@ -107,10 +107,14 @@ class Base extends \app\admin\controller\Base
 
     /**
      * 获取小程序app的access token
+     * @param bool $refresh
      * @return mixed
      * Author: fudaoji<fdj@kuryun.cn>
      */
-    protected function getAccessToken(){
+    protected function getAccessToken($refresh = false){
+        if($refresh){
+            return $this->miniApp->access_token->getToken(true)['authorizer_access_token'];
+        }
         return $this->miniApp->access_token->getToken()['authorizer_access_token'];
     }
 

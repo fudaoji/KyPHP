@@ -26,6 +26,7 @@ class HttpTestCase extends TestCase
      * @param bool $auth
      * @return mixed
      * Author: Jason<dcq@kuryun.cn>
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function request($params, $api_url, $auth = true) {
         $api_url = $this->baseUrl . $api_url;

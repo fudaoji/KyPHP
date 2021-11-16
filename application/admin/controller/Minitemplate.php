@@ -103,7 +103,7 @@ class Minitemplate extends Base
         if(request()->isPost()){
             $token = controller('mini/mini', 'event')->getOpenPlatform()->access_token->getToken()['component_access_token'];
             $request = new WxaGetTemplateList();
-            $response = $this->client->setCheckRequest(false)->execute($request, $token);
+            $response = $this->client->execute($request, $token);
 
             if(isset($response['errcode']) && $response['errcode'] === 0) {
                 $list = $response['template_list'];
@@ -154,7 +154,7 @@ class Minitemplate extends Base
             try {
                 $token = controller('mini/mini', 'event')->getOpenPlatform()->access_token->getToken()['component_access_token'];
                 $request = new WxaGetTemplateDraftList();
-                $response = $this->client->setCheckRequest(false)->execute($request, $token);
+                $response = $this->client->execute($request, $token);
 
                 if(isset($response['errcode']) && $response['errcode'] === 0) {
                     $list = $response['draft_list'];
