@@ -40,7 +40,7 @@
             <td>{$vo.user_desc}</td>
             <td>{:date('Y-m-d H:i:s', $vo.upload_time)}</td>
             <td>
-                <a class="bt-a" onclick="del('{$vo.template_id}')">删除</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" onclick="del('{$vo.template_id}')">删除</a>
             </td>
         </tr>
         {/volist}
@@ -65,7 +65,7 @@
             <td>{$vo.user_desc}</td>
             <td>{:date('Y-m-d H:i:s', $vo.upload_time)}</td>
             <td>
-                <a class="bt-a" onclick="addToTemplate('{$vo.template_id}')">设为模板</a>
+                <a class="layui-btn layui-btn-xs" onclick="addToTemplate('{$vo.template_id}')">设为模板</a>
             </td>
         </tr>
         {/volist}

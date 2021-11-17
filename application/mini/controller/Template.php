@@ -22,6 +22,7 @@ use app\common\model\MiniTemplateLog;
 use app\common\model\Upload;
 use ky\ErrorCode;
 use ky\Helper;
+use ky\Logger;
 use ky\MiniPlatform\Request\ComponentGetPrivacySetting;
 use ky\MiniPlatform\Request\ComponentSetPrivacySetting;
 use ky\MiniPlatform\Request\WxaCommit;
@@ -298,7 +299,7 @@ class Template extends Base
     public function log(){
         $where = [
             'mini_id' => $this->miniId,
-            'status' => MiniTemplateLog::PUBLISHED
+            'mtl.status' => MiniTemplateLog::PUBLISHED
         ];
         $data_list = $this->model->pageJoin([
             'alias' => 'mtl',
@@ -419,6 +420,38 @@ class Template extends Base
     }
 
     /**
+     * 设置服务器域名和业务域名
+     * @param array $params
+     * @throws \Exception
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    private function setDomains($params = []){
+        $config = $params['config'];
+        $access_token = $params['access_token'];
+        $request = new WxaModifyDomain();
+        $request->setAction('set');
+        $request->setRequestDomain($config['request_domain']);
+        $request->setWsRequestDomain($config['socket_domain']);
+        $request->setUploadDomain($config['upload_domain']);
+        $request->setDownloadDomain($config['download_domain']);
+        $response = $this->client->execute($request, $access_token);
+
+        if($response['errcode'] != 0) {
+            $this->error($response['errmsg'], '', ['token' => request()->token]);
+        }
+        //2、设置业务域名
+        if(!empty($config['webview_domain']) && $this->miniInfo['principal_name'] !== '个人'){
+            $request = new WxaSetWebViewDomain();
+            $request->setAction('set');
+            $request->setWebViewDomain($config['webview_domain']);
+            $response = $this->client->execute($request, $access_token);
+            if($response['errcode'] != 0) {
+                $this->error($response['errmsg'], '', ['token' => request()->token]);
+            }
+        }
+    }
+
+    /**
      * 为第三方小程序进行参数设置
      * @author: fudaoji<fdj@kuryun.cn>
      */
@@ -438,30 +471,10 @@ class Template extends Base
                 $this->error('请让平台运营方先对此应用进行配置', '', ['token' => request()->token]);
             }
 
-            //1、设置服务器域名
-            $request = new WxaModifyDomain();
-            $request->setAction('set');
-            $request->setRequestDomain($config['request_domain']);
-            $request->setWsRequestDomain($config['socket_domain']);
-            $request->setUploadDomain($config['upload_domain']);
-            $request->setDownloadDomain($config['download_domain']);
-            $response = $this->client->execute($request, $access_token);
+            //1、设置服务器域名和业务域名
+            $this->setDomains(['config' => $config, 'access_token' => $access_token]);
 
-            if($response['errcode'] != 0) {
-                $this->error($response['errmsg'], '', ['token' => request()->token]);
-            }
-            //2、设置业务域名
-            if(!empty($config['webview_domain']) && $this->miniInfo['principal_name'] !== '个人'){
-                $request = new WxaSetWebViewDomain();
-                $request->setAction('set');
-                $request->setWebViewDomain($config['webview_domain']);
-                $response = $this->client->execute($request, $access_token);
-                if($response['errcode'] != 0) {
-                    $this->error($response['errmsg'], '', ['token' => request()->token]);
-                }
-            }
-
-            //3.上传代码
+            //2.上传代码
             $addon_template = model('addonsTemplate')->getOneByMap(['addon' => $post_data['addon']], true, true);
             $request = new WxaCommit();
             $request->setTemplateId($addon_template['template_id']);
@@ -473,7 +486,7 @@ class Template extends Base
                 ]
             ]); //还要加其他的配置参数，例如地图key，七牛key等
             $request->setExtJson($ext_json);
-
+            
             $request->setUserVersion($post_data['user_version']);
             $request->setUserDesc($post_data['user_desc']);
             $response = $this->client->execute($request, $access_token);
