@@ -93,7 +93,6 @@ class Setting extends Base
                     if($response['errcode'] == 0) {
                         $data['webview_domain'] = implode(';', $response['webviewdomain']);
                     }
-                    dump($data);exit;
                     break;
             }
         }
