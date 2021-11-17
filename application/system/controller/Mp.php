@@ -161,13 +161,13 @@ class Mp extends Base
             $weixin_setting['platform'] = $data;
             $res = model('setting')->updateOne([
                 'id' => $setting['id'],
-                'value' => json_encode($weixin_setting)
+                'value' => json_encode($weixin_setting, JSON_UNESCAPED_UNICODE)
             ]);
-            model('setting')->settings(true);  //refresh cache
             if($res){
                 if(!empty($post_data['wxa_server_domain'])){
                     $this->setWxaServerDomain($post_data);
                 }
+                model('setting')->settings(true);  //refresh cache
                 $this->success('保存成功');
             }else{
                 $this->error('保存失败，请刷新重试');
