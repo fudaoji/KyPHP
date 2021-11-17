@@ -70,13 +70,6 @@
             </td>
             <td><a href="javascript:;" class="bt-a js-zclip" data-name="auth_url">点击复制</a></td>
         </tr>
-        <!--<tr>
-            <td>发起授权页的体验URL</td>
-            <td>
-
-            </td>
-            <td><a href="javascript:;" class="bt-a js-zclip" data-name="url">点击复制</a></td>
-        </tr>-->
         <tr>
             <td>授权事件接受URL</td>
             <td class="ticket_url">
@@ -143,6 +136,42 @@
             <td><a href="javascript:;" class="bt-a js-zclip" data-name="url">点击复制</a></td>
         </tr>
         <tr>
+            <td>平台服务器域名</td>
+            <td>
+                <div class="layui-input-inline">
+                    <textarea
+                            title="配置第三方平台服务器域名"
+                            name="wxa_server_domain"
+                            placeholder="设置第三方小程序服务器域名将继承自此"
+                            autocomplete="off"
+                            class="layui-input"
+                            style="max-width: 100%;height: auto;"
+                            rows="4"
+                    >{$platform.wxa_server_domain}</textarea>
+                </div>
+                <a href="javascript:;" class="layui-btn submit-btn" data-field="wxa_server_domain">保存并同步到开放平台</a>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>平台业务域名</td>
+            <td>
+                <div class="layui-input-inline">
+                    <input
+                            title="第三方平台业务域名"
+                            type="text"
+                            value="{$platform.wxa_jump_h5_domain}"
+                            name="appid"
+                            placeholder="此域名的下的页面才可用于webview"
+                            autocomplete="off"
+                            class="layui-input"
+                            ／>
+                </div>
+                <a href="javascript:;" class="layui-btn submit-btn" data-field="appid">保存并同步到开放平台</a>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
             <td>检验文件</td>
             <td>
                 <div class="layui-input-inline">
@@ -198,7 +227,7 @@
 
         $('.submit-btn').on('click', function () {
             let field = $(this).data('field');
-            let value = $.trim($("input[name="+field+"]").val());
+            let value = $.trim($("[name="+field+"]").val());
             if(value === ''){
                 layer.alert('请输入内容');
                 return;

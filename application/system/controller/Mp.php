@@ -19,6 +19,8 @@ namespace app\system\controller;
 
 use app\admin\controller\FormBuilder;
 use app\common\model\AdminStore;
+use ky\MiniPlatform\Request\ComponentModifyWxaServerDomain;
+use ky\MiniPlatform\RequestClient;
 use think\Db;
 use think\facade\Log;
 
@@ -80,9 +82,47 @@ class Mp extends Base
     }
 
     /**
+     * 获取开放平台正式版服务器域名
+     * @return string
+     * @throws \Exception
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    private function getWxaServerDomain(){
+        $client = new RequestClient();
+        $access_token = controller('mp/mp', 'event')->getOpenPlatform()->access_token->getToken()['component_access_token'];
+        $request = new ComponentModifyWxaServerDomain();
+        $request->setAction('get');
+        $response = $client->execute($request, $access_token);
+        if(!empty($response['published_wxa_server_domain'])){
+            return $response['published_wxa_server_domain'];
+        }
+        return '';
+    }
+
+    /**
+     * 设置开放平台正式版服务器域名
+     * @return string
+     * @throws \Exception
+     * Author: fudaoji<fdj@kuryun.cn>
+     */
+    private function setWxaServerDomain($params = []){
+        $client = new RequestClient();
+        $access_token = controller('mp/mp', 'event')->getOpenPlatform()->access_token->getToken()['component_access_token'];
+        $request = new ComponentModifyWxaServerDomain();
+        $request->setAction('set');
+        $request->setIsModifyPublishedTogether(true);
+        $request->setWxaServerDomain($params['wxa_server_domain']);
+        $response = $client->execute($request, $access_token);
+        if(intval($response['errcode']) !== 0) {
+            $this->error($response['errmsg']);
+        }
+    }
+
+    /**
      * 开放平台信息
      * @return mixed
      * Author: fudaoji<fdj@kuryun.cn>
+     * @throws \Exception
      */
     public function platform(){
         $setting = model('setting')->getOneByMap(['name' => 'weixin']);
@@ -91,7 +131,9 @@ class Mp extends Base
             'appsecret' => '',
             'token'  => get_rand_char(32),
             'aes_key' => get_rand_char(43),
-            'verify_file' => ''
+            'verify_file' => '',
+            'wxa_server_domain' => $this->getWxaServerDomain(),
+            'wxa_jump_h5_domain' => ''
         ];
         if(empty($setting)){
             $weixin_setting = ['platform' => $platform];
@@ -123,6 +165,9 @@ class Mp extends Base
             ]);
             model('setting')->settings(true);  //refresh cache
             if($res){
+                if(!empty($post_data['wxa_server_domain'])){
+                    $this->setWxaServerDomain($post_data);
+                }
                 $this->success('保存成功');
             }else{
                 $this->error('保存失败，请刷新重试');
