@@ -32,7 +32,7 @@
         <th>昵称</th>
         <th>头像</th>
         <th>手机号</th>
-        <th>地区</th>
+        <th>首次访问</th>
     </tr>
     </thead>
     <tbody>
@@ -43,7 +43,7 @@
         <td><img src="{$vo.headimgurl}" alt="{$vo.headimgurl}" style="width: 60px;"></td>
         <td>{$vo.mobile}</td>
         <td>
-            {$vo.province}{$vo.city}
+            {:date('Y-m-d H:i', $vo.create_time)}
         </td>
     </tr>
     {/volist}

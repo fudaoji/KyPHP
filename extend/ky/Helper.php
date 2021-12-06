@@ -199,6 +199,9 @@ class Helper
      */
     public static function checkBank($no='')
     {
+        if (!preg_match('/^\d{16,19}$/', $no)) {
+            return false;
+        }
         $arr_no = str_split($no);
         $last_n = $arr_no[count($arr_no)-1];
         krsort($arr_no);

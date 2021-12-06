@@ -21,6 +21,7 @@ use ky\BaseModel;
 class Setting extends BaseModel
 {
     protected $cacheTag = 'setting';
+    protected $isCache = true;
 
     /**
      * 全局设置

@@ -28,7 +28,7 @@ return [
     // 应用调试模式
     'app_debug'              => Env::get('app_debug', false),
     // 应用Trace
-    'app_trace'              => false,
+    'app_trace'              => Env::get('app_debug', false),
     // 是否支持多模块
     'app_multi_module'       => true,
     // 入口自动绑定模块

@@ -39,7 +39,7 @@ class Follow extends Base
         $where = ['mini_id' => $this->miniId];
         $search_key = input('search_key', '');
         $search_key && $where['nickname|mobile'] = ['like', '%'.$search_key.'%'];
-        $data = $this->followM->page($this->pageSize, $where, ['update_time' => 'desc'], true, 1);
+        $data = $this->followM->page($this->pageSize, $where, ['update_time' => 'desc'], ['id','openid','nickname','headimgurl','mobile','create_time'], 1);
         $page = $data->appends(['search_key' => $search_key])->render();
         $assign = ['search_key' => $search_key, 'data' => $data, 'page' => $page];
         return $this->show($assign);
