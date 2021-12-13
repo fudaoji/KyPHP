@@ -114,6 +114,25 @@
                         <?php endif;?>
                     </div>
                 </div>
+                <script>
+                    //有审核版本时，自动刷新一次
+                    (function isWindowActive() {
+                        var userAgent = navigator.userAgent;
+                        var isIE = userAgent.indexOf('Trident') > -1;
+                        if(isIE){
+                            $(window).focus(function () {
+                                location.reload();
+                            })
+                        }else{
+                            var bowhidden="hidden" in document?"hidden": "webkithidden" in document?"webkithidden": "mozhidden" in document ?"mozhidden": null;
+                            var vibchage="visibilitychange" || "webkitvisibilitychange" || "mozvisibilitychange";
+                            document.addEventListener(vibchage,function () {
+                                if(!document[bowhidden])  location.reload();
+                            });
+                        }
+                        return false;
+                    })();
+                </script>
                 <?php else:?>
                 <div class="empty-box">
                     <p class="empty-tips">
@@ -288,7 +307,6 @@
             }
         });
     });
-
 </script>
 {/block}
 
