@@ -7,6 +7,6 @@ thinkphp
 .DS_Store
 *.txt
 favicon.ico
-*/composer.lock
+composer.lock
 /addons/*
 dictionary
