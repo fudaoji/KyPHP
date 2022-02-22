@@ -463,7 +463,7 @@ class Template extends Base
                 empty($post_data['addon'])){
                 $this->error('请完善必填项', '', ['token' => request()->token]);
             }
-            $addon = model('addons')->getOneByMap(['addon' => $post_data['addon']]);
+            $addon = model('addons')->getOneByMap(['addon' => $post_data['addon']], true, true);
             $post_data['user_version'] = $addon['version']; //将应用的版本号作为小程序的版本号
             $access_token = $this->miniApp->access_token->getToken()['authorizer_access_token'];
             $config = json_decode($addon['config'], true);

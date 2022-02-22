@@ -7,7 +7,7 @@
         <tr>
             <th style="width: 200px">微信开放平台开发信息</th>
             <th class="tr">
-                <a href="{:url('mp/auth/index')}" class="layui-btn layui-btn-sm bg-success"><i class="fa fa-wechat"></i>微信公众号登录授权</a>
+                <a href="https://open.weixin.qq.com/" class="layui-btn layui-btn-sm bg-success" target="_blank"><i class="fa fa-wechat"></i>登录微信开放平台</a>
             </th>
         </tr>
         </thead>
@@ -68,14 +68,14 @@
             <td class="auth_url">
                 {:request()->host()} <span class="tip-auth_url bt-a text-green"></span>
             </td>
-            <td><a href="javascript:;" class="bt-a js-zclip" data-name="auth_url">点击复制</a></td>
+            <td><a href="javascript:;" class="bt-a js-zclip" data-clipboard-target=".auth_url">点击复制</a></td>
         </tr>
         <tr>
             <td>授权事件接受URL</td>
             <td class="ticket_url">
                 {:request()->domain() . url('mp/api/ticket')} <span class="tip-ticket_url bt-a text-green"></span>
             </td>
-            <td><a href="javascript:;" class="bt-a js-zclip" data-name="ticket_url">点击复制</a></td>
+            <td><a href="javascript:;" class="bt-a js-zclip" data-clipboard-target=".ticket_url">点击复制</a></td>
         </tr>
         <tr>
             <td>公众号消息校验Token</td>
@@ -95,7 +95,7 @@
                 <span class="tip-token bt-a text-green"></span>
             </td>
             <td>
-                <a href="javascript:;" class="bt-a js-zclip" data-name="token">点击复制</a>
+                <a href="javascript:;" class="bt-a js-zclip" data-clipboard-target=".token">点击复制</a>
             </td>
         </tr>
         <tr>
@@ -116,7 +116,7 @@
                 <span class="tip-aes_key bt-a text-green"></span>
             </td>
             <td>
-                <a href="javascript:;" class="bt-a js-zclip" data-name="aes_key">点击复制</a>
+                <a href="javascript:;" class="bt-a js-zclip" data-clipboard-target=".aes_key">点击复制</a>
             </td>
         </tr>
         <tr>
@@ -125,7 +125,7 @@
                 {:request()->domain() . '/mp/api/index/appid/$APPID$'}
                 <span class="tip-message_url bt-a text-green"></span>
             </td>
-            <td><a href="javascript:;" class="bt-a js-zclip" data-name="message_url">点击复制</a></td>
+            <td><a href="javascript:;" class="bt-a js-zclip" data-clipboard-target=".message_url">点击复制</a></td>
         </tr>
         <tr>
             <td>网页开发域名</td>
@@ -133,7 +133,7 @@
                 {:request()->host()}
                 <span class="tip-url bt-a text-green"></span>
             </td>
-            <td><a href="javascript:;" class="bt-a js-zclip" data-name="url">点击复制</a></td>
+            <td><a href="javascript:;" class="bt-a js-zclip" data-clipboard-target=".url">点击复制</a></td>
         </tr>
         <tr>
             <td>平台服务器域名</td>
@@ -195,7 +195,7 @@
 {/block}
 
 {block name="js"}
-{js href='__STATIC__/libs/zclip/jquery.zclip.min.js' /}
+{js href='__STATIC__/libs/clipboard.min.js' /}
 <script>
     $(function () {
         layui.use(['upload'],function(){
@@ -258,19 +258,18 @@
             });
         });
 
-        $('.js-zclip').zclip({
-            path: '__STATIC__/libs/zclip/ZeroClipboard.swf',
-            copy: function(){
-                var name = $(this).data('name');
-                $(".tip-"+name).show();
-                var value = $('.' + name).text();
-                if(!value) value = $('.' + name).val();
-                return value;
-            },
-            afterCopy: function(){
-                var name = $(this).data('name');
-                $(".tip-" + name).insertAfter($('.tip-' + name)).html('复制成功').fadeOut(2000);
-            }
+        var clipboard = new ClipboardJS('.js-zclip');
+        clipboard.on('success', function (e) {
+            var name = $(e.trigger).data('clipboard-target').substring(1);
+            $(".tip-" + name).show().insertAfter($('.tip-' + name)).html('复制成功').fadeOut(2000);
+            //console.info('Action:', e.action);
+            //console.info('Text:', e.text);
+            //console.info('Trigger:', e.trigger);
+            e.clearSelection();
+        });
+        clipboard.on('error', function (e) {
+            console.error('Action:', e.action);
+            console.error('Trigger:', e.trigger);
         });
     });
 </script>
